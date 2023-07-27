@@ -26,6 +26,7 @@ pipeline {
                     def returnCode = sh(
                         returnStatus: true,
                         script: '''
+                            cd openapi
                             chmod +x ./build.sh
                             ./build.sh
                         '''
