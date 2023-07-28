@@ -1,7 +1,4 @@
 # See https://redocly.com/docs/cli/configuration/ for more information.
-apis:
-  checkout_orders@v2:
-    root: openapi/checkout_orders_v2.json
 extends:
   - recommended
 # rules:

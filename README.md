@@ -4,6 +4,32 @@ This repository contains the specification files for [PayPal's REST APIs](https:
 
 You can try our REST APIs in Postman without a PayPal Developer account. Learn more in our (Postman guide)[https://developer.paypal.com/api/rest/postman/].
 
+## Usage
+
+Available scripts can be executed agains the required API by using the following command:
+>`npm run-script <script_name> -- <path_to_required_api> [<additional_script_arguments>]`
+
+Example:
+> `npm run-script codegen-java -- openapi/checkout_orders_v2.json`
+
+```
+$ npm run
+Scripts available in paypal-rest-api-specifications@1.0.0 via `npm run-script`:
+  preview
+    redocly preview-docs
+  bundle
+    redocly bundle
+  lint-redocly
+    redocly --format summary lint
+  lint-spectral
+    spectral --format pretty lint
+  lint-openapi
+    openapi-generator-cli validate -i
+  codegen-java
+    openapi-generator-cli generate -g java -o generated/java -i
+  codegen-typescript-node
+    openapi-generator-cli generate -g typescript-node -o generated/typescript-node -i
+```
 
 ## Available specifications
 
