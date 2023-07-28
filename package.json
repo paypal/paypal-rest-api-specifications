@@ -2,6 +2,7 @@
   "name": "paypal-rest-api-specifications",
   "version": "1.0.0",
   "description": "This repository contains the specification files for PayPal's REST APIs.",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git@github.paypal.com:sraj/paypal-rest-api-specifications.git"
