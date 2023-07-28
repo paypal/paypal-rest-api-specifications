@@ -1,0 +1,22 @@
+# See https://redocly.com/docs/cli/configuration/ for more information.
+apis:
+  checkout_orders@v2:
+    root: openapi/checkout_orders_v2.json
+extends:
+  - recommended
+# rules:
+#  no-unused-components: error
+theme:
+  openapi:
+    htmlTemplate: ./docs/index.html
+    theme:
+      colors:
+        primary:
+          main: "#32329f"
+    generateCodeSamples:
+      languages:  # Array of language config objects; indicates in which languages to generate code samples.
+        - lang: curl
+        - lang: Node.js
+        - lang: JavaScript
+        - lang: PHP
+        - lang: Python

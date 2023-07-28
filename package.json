@@ -1,0 +1,24 @@
+{
+  "name": "paypal-rest-api-specifications",
+  "version": "1.0.0",
+  "description": "This repository contains the specification files for PayPal's REST APIs.",
+  "repository": {
+    "type": "git",
+    "url": "git@github.paypal.com:sraj/paypal-rest-api-specifications.git"
+  },
+  "dependencies": {
+    "@openapitools/openapi-generator-cli": "^2.7.0",
+    "@redocly/cli": "^1.0.0",
+    "@stoplight/spectral-cli": "^6.10.0",
+    "ibm-openapi-validator": "^1.1.2"
+  },
+  "scripts": {
+    "preview": "redocly preview-docs",
+    "bundle": "redocly bundle -o generated/bundle/sample.yaml",
+    "lint-redocly": "redocly --format summary lint",
+    "lint-spectral": "spectral lint openapi/checkout_orders_v2.json",
+    "lint-openapi": "openapi-generator-cli validate -i openapi/checkout_orders_v2.json",
+    "codegen-java": "openapi-generator-cli generate -i openapi/checkout_orders_v2.json -g java -o generated/java",
+    "codegen-typescript-node": "openapi-generator-cli generate -i openapi/checkout_orders_v2.json -g typescript-node -o generated/typescript-node"
+  }
+}
