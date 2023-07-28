@@ -1,5 +1,5 @@
 {
-  "name": "paypal-rest-api-specifications",
+  "name": "@paypal/paypal-rest-api-specifications",
   "version": "1.0.0",
   "description": "This repository contains the specification files for PayPal's REST APIs.",
   "license": "MIT",
