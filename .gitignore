@@ -3,6 +3,3 @@ node_modules/
 
 # Optional npm cache directory
 .npm
-
-# Generated from codegen
-generated/
