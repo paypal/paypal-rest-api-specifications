@@ -6,6 +6,35 @@ You can try our REST APIs in Postman without a PayPal Developer account. Learn m
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://god.gw.postman.com/run-collection/19024122-92a85d0e-51e7-47da-9f83-c45dcb1cdf24?action=collection%2Ffork&collection-url=entityId%3D19024122-92a85d0e-51e7-47da-9f83-c45dcb1cdf24%26entityType%3Dcollection%26workspaceId%3D345300e6-346e-42e0-aed1-53717919aef0)
 
+## Usage
+
+Available scripts can be executed against the required API by using the following command:
+>`npm run-script <script_name> -- <path_to_required_api> [<additional_script_arguments>]`
+
+Example:
+> `npm run-script codegen-java -- openapi/checkout_orders_v2.json`
+
+```
+ npm run
+Scripts available in @paypal/paypal-rest-api-specifications@1.0.0 via `npm run-script`:
+  preview
+    redocly preview-docs
+  bundle
+    redocly bundle
+  bundle-deref
+    redocly bundle -d true
+  lint-redocly
+    redocly --format summary lint
+  lint-spectral
+    spectral --format pretty lint
+  lint-openapi
+    openapi-generator-cli validate -i
+  codegen-java
+    openapi-generator-cli generate -g java -o generated/java -i
+  codegen-typescript-node
+    openapi-generator-cli generate -g typescript-node -o generated/typescript-node -i
+```
+
 ## Available specifications
 
 ### OpenAPI 3.0.3

@@ -6,5 +6,21 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/paypal/paypal-rest-api-specifications.git"
+  },
+  "dependencies": {
+    "@openapitools/openapi-generator-cli": "^2.7.0",
+    "@redocly/cli": "^1.0.0",
+    "@stoplight/spectral-cli": "^6.10.0",
+    "ibm-openapi-validator": "^1.1.2"
+  },
+  "scripts": {
+    "preview": "redocly preview-docs",
+    "bundle": "redocly bundle",
+    "bundle-deref": "redocly bundle -d true",
+    "lint-redocly": "redocly --format summary lint",
+    "lint-spectral": "spectral --format pretty lint",
+    "lint-openapi": "openapi-generator-cli validate -i",
+    "codegen-java": "openapi-generator-cli generate -g java -o generated/java -i",
+    "codegen-typescript-node": "openapi-generator-cli generate -g typescript-node -o generated/typescript-node -i"
   }
 }
