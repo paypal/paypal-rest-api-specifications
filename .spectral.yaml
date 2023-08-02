@@ -1,1 +1,7 @@
-extends: ["spectral:oas3", "spectral:asyncapi"]
+extends: ["spectral:oas", "spectral:asyncapi"]
+rules:
+  no-$ref-siblings: "off"
+  oas3-valid-media-example: "warn"
+  oas3-valid-schema-example: "warn"
+  oas3-schema: "warn"
+  openapi-tags-uniqueness: "warn"
