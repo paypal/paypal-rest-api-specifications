@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Payouts",
     "description": "Use the Payouts API to make payments to multiple PayPal or Venmo recipients. The Payouts API is a fast, convenient way to send commissions, rebates, rewards, and general disbursements. You can send up to 15,000 payments per call. If you integrated the Payouts API before September 1, 2017, you receive transaction reports through <a href=\"https://developer.paypal.com/docs/archive/mass-pay/integration-guide/MassPayReporting/\">Mass Payments Reporting</a>. Otherwise, <a href=\"https://developer.paypal.com/docs/payouts/standard/reports/\">view reports from your PayPal Business account</a>. The Payouts API uses the <a href=\"https://tools.ietf.org/html/rfc3339#section-5.6\">ISO 8601 Internet date and time format</a>.",
@@ -45,13 +45,6 @@
             }
           }
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/payments/payouts"
-            ]
-          }
-        ],
         "tags": [
           "payouts"
         ]
@@ -94,13 +87,6 @@
             "$ref": "#/components/parameters/total_required"
           }
         ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/payments/payouts"
-            ]
-          }
-        ],
         "tags": [
           "payouts"
         ]
@@ -129,13 +115,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/payout_item_id"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/payments/payouts"
-            ]
           }
         ],
         "tags": [
@@ -168,13 +147,6 @@
             "$ref": "#/components/parameters/payout_item_id"
           }
         ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/payments/payouts"
-            ]
-          }
-        ],
         "tags": [
           "payouts-item"
         ]
@@ -200,16 +172,45 @@
     }
   ],
   "externalDocs": {
-    "url": "/docs/payouts/"
+    "url": "https://developer.paypal.com/docs/api/payments.payouts-batch/v1/"
   },
   "servers": [
     {
-      "url": "https://api-m.paypal.com/v1/payments"
+      "url": "https://api-m.sandbox.paypal.com/v1/payments",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com/v1/payments",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "security": [
+    {
+      "sandbox": [
+        "https://uri.paypal.com/payments/payouts"
+      ]
+    },
+    {
+      "production": [
+        "https://uri.paypal.com/payments/payouts"
+      ]
     }
   ],
   "components": {
     "securitySchemes": {
-      "Oauth2": {
+      "sandbox": {
+        "type": "oauth2",
+        "description": "Oauth 2.0 authentication",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://api-m.sandbox.paypal.com/v1/oauth2/token",
+            "scopes": {
+              "https://uri.paypal.com/payments/payouts": "Payout to a list of recipients."
+            }
+          }
+        }
+      },
+      "production": {
         "type": "oauth2",
         "description": "Oauth 2.0 authentication",
         "flows": {

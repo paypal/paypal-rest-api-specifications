@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Payments",
     "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the Payments REST API to easily and securely accept online and mobile payments. The payments name space contains resource collections for payments, sales, refunds, authorizations, captures, and orders.<blockquote><strong>Important:</strong> The use of the PayPal REST <code>/payments</code> APIs to accept credit card payments is restricted. Instead, you can accept credit card payments with <a href=\"https://www.braintreepayments.com/products/braintree-direct\">Braintree Direct</a>.</blockquote>You can enable customers to make PayPal and credit card payments with only a few clicks, depending on the country. You can accept an immediate payment or authorize a payment and capture it later. You can show details for completed payments, refunds, and authorizations. You can make full or partial refunds. You also can void or re-authorize authorizations. For more information, see the <a href=\"/docs/integration/direct/payments/\">Payments overview</a>.",
@@ -47,27 +47,52 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/realtimepayment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/paymentcard"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/channelpartner"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/realtimepayment"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/paymentcard"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/channelpartner"
             ]
           }
@@ -123,27 +148,52 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/realtimepayment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment/authcapture"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/checkout/onetimepayment"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/realtimepayment"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment/authcapture"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/checkout/onetimepayment"
             ]
           }
@@ -180,22 +230,42 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/realtimepayment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/payment/authcapture"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/realtimepayment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/payment/authcapture"
             ]
           }
@@ -244,22 +314,42 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/realtimepayment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/channelpartner"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/realtimepayment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/channelpartner"
             ]
           }
@@ -316,17 +406,32 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/realtimepayment"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/realtimepayment"
             ]
           }
@@ -363,22 +468,42 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/realtimepayment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/payment/authcapture"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/realtimepayment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/payment/authcapture"
             ]
           }
@@ -441,22 +566,42 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/refund"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/unilateralrefund"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/refund"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/unilateralrefund"
             ]
           }
@@ -498,22 +643,42 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/realtimepayment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/payment/authcapture"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/realtimepayment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/payment/authcapture"
             ]
           }
@@ -553,17 +718,32 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/payment/authcapture"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/payment/authcapture"
             ]
           }
@@ -613,17 +793,32 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/payment/authcapture"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/payment/authcapture"
             ]
           }
@@ -669,17 +864,32 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/payment/authcapture"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/payment/authcapture"
             ]
           }
@@ -721,22 +931,42 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/realtimepayment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/payment/authcapture"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/realtimepayment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/payment/authcapture"
             ]
           }
@@ -776,17 +1006,32 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/payment/authcapture"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/payment/authcapture"
             ]
           }
@@ -826,17 +1071,32 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/payment/authcapture"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/payment/authcapture"
             ]
           }
@@ -882,17 +1142,32 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/payment/authcapture"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/payment/authcapture"
             ]
           }
@@ -929,22 +1204,42 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/realtimepayment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/payment/authcapture"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/realtimepayment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/payment/authcapture"
             ]
           }
@@ -1007,22 +1302,42 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/refund"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/unilateralrefund"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/refund"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/unilateralrefund"
             ]
           }
@@ -1059,17 +1374,32 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://api.paypal.com/v1/payments/.*"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/payments/payment"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/refund"
+            ]
+          },
+          {
+            "production": [
+              "https://api.paypal.com/v1/payments/.*"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/payments/payment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/refund"
             ]
           }
@@ -1115,11 +1445,16 @@
     }
   ],
   "externalDocs": {
-    "url": "/docs/checkout/"
+    "url": "https://developer.paypal.com/docs/api/payments/v1/"
   },
   "servers": [
     {
-      "url": "https://api-m.paypal.com/v1/payments"
+      "url": "https://api-m.sandbox.paypal.com/v1/payments",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com/v1/payments",
+      "description": "PayPal Live Environment"
     }
   ],
   "components": {
@@ -1154,7 +1489,28 @@
       }
     },
     "securitySchemes": {
-      "Oauth2": {
+      "sandbox": {
+        "type": "oauth2",
+        "description": "Oauth 2.0 authentication",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://api-m.sandbox.paypal.com/v1/oauth2/token",
+            "scopes": {
+              "https://api.paypal.com/v1/payments/.*": "Deprecated. Legacy payment scope. It will be replaced with new scopes",
+              "https://uri.paypal.com/services/payments/payment": "New special privileged scope available to do payment. This will be available to internal clients only",
+              "https://uri.paypal.com/services/payments/realtimepayment": "Permission to do any real time payment, with support for sale/authorize/order intents",
+              "https://uri.paypal.com/services/payments/payment/authcapture": "Permission to do non-real time payments like authorization on order or capture on authorization or an order ",
+              "https://uri.paypal.com/services/payments/refund": "Permission to initiate a refund/reversal on a sale or capture transaction",
+              "https://uri.paypal.com/services/payments/paymentcard": "Permission to do unbranded credit or debit card payments",
+              "https://uri.paypal.com/services/payments/futurepayments": "Permission for future or pre-approved payment.",
+              "https://uri.paypal.com/services/payments/channelpartner": "Permission to explicitly specify the receiver of a payment on request payload.",
+              "https://uri.paypal.com/services/payments/unilateralrefund": "This scope enables partners/facilitators to perform unilateralrefund and also refund.",
+              "https://uri.paypal.com/services/checkout/onetimepayment": "This scope enable buyer's checkout flow to load payment information."
+            }
+          }
+        }
+      },
+      "production": {
         "type": "oauth2",
         "description": "Oauth 2.0 authentication",
         "flows": {

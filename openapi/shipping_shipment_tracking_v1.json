@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Shipment Tracking",
     "description": "Merchants can use the PayPal Add Tracking API to manage tracking information. Merchants can add tracking numbers and associated information to PayPal. After adding these details to PayPal, merchants can:<ul><li>Update tracking details.</li><li>Show tracking details.</li><li>Cancel tracking numbers.</li></ul>For more information, see the <a href=\"/docs/tracking/\">Add Tracking API Overview</a> and <a href=\"/docs/tracking/integrate/\">Add Tracking API Integration Guide</a>.",
@@ -38,17 +38,17 @@
             "$ref": "#/components/responses/default"
           }
         },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/authorization"
-          }
-        ],
         "requestBody": {
           "$ref": "#/components/requestBodies/tracker_collection"
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/shipping/trackers/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/shipping/trackers/readwrite"
             ]
           }
@@ -78,17 +78,17 @@
             "$ref": "#/components/responses/default"
           }
         },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/authorization"
-          }
-        ],
         "requestBody": {
           "$ref": "#/components/requestBodies/tracker_collection"
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/shipping/trackers/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/shipping/trackers/readwrite"
             ]
           }
@@ -118,9 +118,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/transaction_id"
           },
           {
@@ -129,7 +126,12 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/shipping/trackers/read"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/shipping/trackers/read"
             ]
           }
@@ -154,9 +156,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/id"
           }
         ],
@@ -171,7 +170,12 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/shipping/trackers/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/shipping/trackers/readwrite"
             ]
           }
@@ -206,15 +210,17 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/id"
           }
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/shipping/trackers/read"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/shipping/trackers/read"
             ]
           }
@@ -248,11 +254,16 @@
     }
   ],
   "externalDocs": {
-    "url": "/docs/tracking/"
+    "url": "https://developer.paypal.com/docs/api/tracking/v1/"
   },
   "servers": [
     {
-      "url": "https://api-m.paypal.com/v1/shipping"
+      "url": "https://api-m.sandbox.paypal.com/v1/shipping",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com/v1/shipping",
+      "description": "PayPal Production Environment"
     }
   ],
   "components": {
@@ -273,7 +284,7 @@
       }
     },
     "securitySchemes": {
-      "Oauth2": {
+      "sandbox": {
         "type": "oauth2",
         "description": "Oauth 2.0 authentication",
         "flows": {
@@ -285,17 +296,22 @@
             }
           }
         }
+      },
+      "production": {
+        "type": "oauth2",
+        "description": "Oauth 2.0 authentication",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "scopes": {
+              "https://uri.paypal.com/services/shipping/trackers/readwrite": "Create or update tracking information",
+              "https://uri.paypal.com/services/shipping/trackers/read": "Retrieve tracking information"
+            }
+          }
+        }
       }
     },
     "parameters": {
-      "authorization": {
-        "name": "Authorization",
-        "in": "header",
-        "description": "Bearer access token for authorization purpose.",
-        "schema": {
-          "type": "string"
-        }
-      },
       "transaction_id": {
         "name": "transaction_id",
         "in": "query",

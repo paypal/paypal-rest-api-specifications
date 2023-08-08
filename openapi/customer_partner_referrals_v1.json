@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Partner Referrals",
     "description": "<blockquote><strong>Deprecation notice:</strong> This integration method is deprecated. PayPal continues to support existing merchants using this method, but be advised that new features and enhancements will not be applied to these integrations. For details, see <a href=\"/docs/multiparty/seller-onboarding/\">Onboard Sellers</a>.</blockquote> Partners can use the Partner Referrals API to add PayPal seller accounts using the <a href=\"/docs/platforms/seller-onboarding/before-payment/\">before payment</a> onboarding model. With this API, you collect seller data and pass it to the account creation and setup forms, reducing the burden on sellers during the signup and setup process.",
@@ -43,7 +43,12 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/customer/partner-referrals/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/customer/partner-referrals/readwrite"
             ]
           }
@@ -80,12 +85,22 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
               "https://uri.paypal.com/services/customer/partner-referrals/readwrite"
             ]
           },
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/customer/partner-referrals"
+            ]
+          },
+          {
+            "production": [
+              "https://uri.paypal.com/services/customer/partner-referrals/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/customer/partner-referrals"
             ]
           }
@@ -114,13 +129,6 @@
           },
           {
             "$ref": "#/components/parameters/tracking_id"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/customer/partner"
-            ]
           }
         ],
         "tags": [
@@ -159,13 +167,6 @@
             "$ref": "#/components/parameters/fields"
           }
         ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/customer/partner"
-            ]
-          }
-        ],
         "tags": [
           "merchant-integration"
         ]
@@ -194,13 +195,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/partner_id"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/customer/partner"
-            ]
           }
         ],
         "tags": [
@@ -232,12 +226,43 @@
   },
   "servers": [
     {
-      "url": "https://api-m.paypal.com/v1/customer"
+      "url": "https://api-m.sandbox.paypal.com/v1/customer",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com/v1/customer",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "security": [
+    {
+      "sandbox": [
+        "https://uri.paypal.com/services/customer/partner"
+      ]
+    },
+    {
+      "production": [
+        "https://uri.paypal.com/services/customer/partner"
+      ]
     }
   ],
   "components": {
     "securitySchemes": {
-      "Oauth2": {
+      "sandbox": {
+        "type": "oauth2",
+        "description": "Oauth 2.0 authentication",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://api-m.sandbox.paypal.com/v1/oauth2/token",
+            "scopes": {
+              "https://uri.paypal.com/services/customer/partner": "Manage seller resources.",
+              "https://uri.paypal.com/services/customer/partner-referrals/readwrite": "Manage external referral data with PayPal",
+              "https://uri.paypal.com/services/customer/partner-referrals": "Manage referral data shared by Partner with PayPal. To be used by only internal apps"
+            }
+          }
+        }
+      },
+      "production": {
         "type": "oauth2",
         "description": "Oauth 2.0 authentication",
         "flows": {

@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Invoicing",
     "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Use the Invoicing API to create, send, and manage invoices. You can also use the API or webhooks to track invoice payments. When you send an invoice to a customer, the invoice moves from draft to payable state. PayPal then emails the customer a link to the invoice on the PayPal website. Customers with a PayPal account can log in and pay the invoice with PayPal. Alternatively, customers can pay as a guest with a debit card or credit card. For more information, see <a href=\"/docs/invoicing/\">Invoicing Overview</a> and the <a href=\"docs/archive/invoicing/integrate/\">Invoicing Integration Guide</a>.",
@@ -29,13 +29,6 @@
         "requestBody": {
           "$ref": "#/components/requestBodies/invoice"
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
-          }
-        ],
         "tags": [
           "invoices"
         ]
@@ -68,13 +61,6 @@
           },
           {
             "$ref": "#/components/parameters/total_count_required"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
           }
         ],
         "tags": [
@@ -111,13 +97,6 @@
             }
           }
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
-          }
-        ],
         "tags": [
           "search"
         ]
@@ -144,13 +123,6 @@
             "$ref": "#/components/parameters/notify_merchant"
           }
         ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
-          }
-        ],
         "tags": [
           "invoices"
         ]
@@ -172,13 +144,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/invoice_id"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
           }
         ],
         "tags": [
@@ -213,13 +178,6 @@
             }
           }
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
-          }
-        ],
         "tags": [
           "invoices"
         ]
@@ -252,13 +210,6 @@
             }
           }
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
-          }
-        ],
         "tags": [
           "invoices"
         ]
@@ -291,13 +242,6 @@
             }
           }
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
-          }
-        ],
         "tags": [
           "invoices"
         ]
@@ -330,13 +274,6 @@
             }
           }
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
-          }
-        ],
         "tags": [
           "invoices"
         ]
@@ -365,13 +302,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/invoice_id"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
           }
         ],
         "tags": [
@@ -408,13 +338,6 @@
         "requestBody": {
           "$ref": "#/components/requestBodies/invoice"
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
-          }
-        ],
         "tags": [
           "invoices"
         ]
@@ -434,13 +357,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/invoice_id"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
           }
         ],
         "tags": [
@@ -469,13 +385,6 @@
             "$ref": "#/components/parameters/transaction_id"
           }
         ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
-          }
-        ],
         "tags": [
           "invoices"
         ]
@@ -500,13 +409,6 @@
           },
           {
             "$ref": "#/components/parameters/transaction_id"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
           }
         ],
         "tags": [
@@ -545,13 +447,6 @@
             "$ref": "#/components/parameters/height"
           }
         ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
-          }
-        ],
         "tags": [
           "invoices"
         ]
@@ -577,13 +472,6 @@
             "$ref": "#/components/responses/default"
           }
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
-          }
-        ],
         "tags": [
           "invoices"
         ]
@@ -612,13 +500,6 @@
         "requestBody": {
           "$ref": "#/components/requestBodies/template"
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
-          }
-        ],
         "tags": [
           "templates"
         ]
@@ -645,13 +526,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/fields"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
           }
         ],
         "tags": [
@@ -684,13 +558,6 @@
             "$ref": "#/components/parameters/template_id"
           }
         ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
-          }
-        ],
         "tags": [
           "templates"
         ]
@@ -710,13 +577,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/template_id"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
           }
         ],
         "tags": [
@@ -750,13 +610,6 @@
         "requestBody": {
           "$ref": "#/components/requestBodies/template"
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/invoicing"
-            ]
-          }
-        ],
         "tags": [
           "templates"
         ]
@@ -790,11 +643,28 @@
     }
   ],
   "externalDocs": {
-    "url": "/docs/invoicing/"
+    "url": "https://developer.paypal.com/docs/api/invoicing/v1/"
   },
   "servers": [
     {
-      "url": "https://api-m.paypal.com/v1/invoicing"
+      "url": "https://api-m.sandbox.paypal.com/v1/invoicing",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com/v1/invoicing",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "security": [
+    {
+      "sandbox": [
+        "https://uri.paypal.com/services/invoicing"
+      ]
+    },
+    {
+      "production": [
+        "https://uri.paypal.com/services/invoicing"
+      ]
     }
   ],
   "components": {
@@ -819,7 +689,19 @@
       }
     },
     "securitySchemes": {
-      "Oauth2": {
+      "sandbox": {
+        "type": "oauth2",
+        "description": "Oauth 2.0 authentication",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://api-m.sandbox.paypal.com/v1/oauth2/token",
+            "scopes": {
+              "https://uri.paypal.com/services/invoicing": "Manage invoice resource."
+            }
+          }
+        }
+      },
+      "production": {
         "type": "oauth2",
         "description": "Oauth 2.0 authentication",
         "flows": {

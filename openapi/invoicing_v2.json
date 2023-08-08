@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Invoices",
     "description": "Use the Invoicing API to create, send, and manage invoices. You can also use the API or webhooks to track invoice payments. When you send an invoice to a customer, the invoice moves from draft to payable state. PayPal then emails the customer a link to the invoice on the PayPal website. Customers with a PayPal account can log in and pay the invoice with PayPal. Alternatively, customers can pay as a guest with a debit card or credit card. For more information, see the <a href=\"/docs/invoicing/\">Invoicing Overview</a> and the <a href=\"/docs/invoicing/basic-integration/\">Invoicing Integration Guide</a>.",
@@ -127,7 +127,12 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/readwrite"
             ]
           }
@@ -220,7 +225,12 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/read"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/read"
             ]
           }
@@ -352,7 +362,12 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/readwrite"
             ]
           }
@@ -499,7 +514,12 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/readwrite"
             ]
           }
@@ -606,7 +626,12 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/readwrite"
             ]
           }
@@ -766,7 +791,12 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/readwrite"
             ]
           }
@@ -843,7 +873,12 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/readwrite"
             ]
           }
@@ -1003,7 +1038,12 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/readwrite"
             ]
           }
@@ -1080,7 +1120,12 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/readwrite"
             ]
           }
@@ -1169,7 +1214,12 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/readwrite"
             ]
           }
@@ -1211,7 +1261,12 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/readwrite"
             ]
           }
@@ -1295,7 +1350,12 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/read"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/read"
             ]
           }
@@ -1454,7 +1514,12 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/readwrite"
             ]
           }
@@ -1519,7 +1584,12 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/readwrite"
             ]
           }
@@ -1626,7 +1696,12 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/read"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/read"
             ]
           }
@@ -1718,7 +1793,12 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/read"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/read"
             ]
           }
@@ -1821,7 +1901,12 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/readwrite"
             ]
           }
@@ -1915,7 +2000,12 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/read"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/read"
             ]
           }
@@ -2022,7 +2112,12 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/readwrite"
             ]
           }
@@ -2124,7 +2219,12 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/invoicing/invoices/readwrite"
             ]
           }
@@ -2154,16 +2254,34 @@
     }
   ],
   "externalDocs": {
-    "url": "/docs/invoicing/v2/"
+    "url": "https://developer.paypal.com/docs/api/invoicing/v1/"
   },
   "servers": [
     {
-      "url": "https://api-m.paypal.com/v2/invoicing"
+      "url": "https://api-m.sandbox.paypal.com/v2/invoicing",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com/v2/invoicing",
+      "description": "PayPal Live Environment"
     }
   ],
   "components": {
     "securitySchemes": {
-      "Oauth2": {
+      "sandbox": {
+        "type": "oauth2",
+        "description": "Oauth 2.0 authentication",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://api-m.sandbox.paypal.com/v1/oauth2/token",
+            "scopes": {
+              "https://uri.paypal.com/services/invoicing/invoices/read": "For Reading the invoice details.",
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite": "For managing (Create, Update, Delete) invoice."
+            }
+          }
+        }
+      },
+      "production": {
         "type": "oauth2",
         "description": "Oauth 2.0 authentication",
         "flows": {
@@ -2171,8 +2289,7 @@
             "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/invoicing/invoices/read": "For Reading the invoice details.",
-              "https://uri.paypal.com/services/invoicing/invoices/readwrite": "For managing (Create, Update, Delete) invoice.",
-              "https://uri.paypal.com/services/invoicing/internal": "Manage invoice resource internal clients."
+              "https://uri.paypal.com/services/invoicing/invoices/readwrite": "For managing (Create, Update, Delete) invoice."
             }
           }
         }

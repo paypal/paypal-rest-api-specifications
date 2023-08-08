@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Orders",
     "description": "Partners can use the Orders API to create, show details for, authorize, and capture payment for orders.<blockquote><strong>Orders API integration note:</strong> The PayPal Commerce Platform is a limited-release solution aimed at partners, crowd funding, and multi-party commerce platforms. To use Orders API for Partners, see <a href=\"/docs/multiparty/\">Multiparty Payments</a>. v1 of the API will be deprecated soon. A new version is available at <a href=\"/docs/api/orders/v2/\">Orders API v2</a>.</blockquote>",
@@ -48,7 +48,15 @@
         },
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/payment",
+              "https://uri.paypal.com/services/payments/channelpartner",
+              "https://uri.paypal.com/services/payments/partnerfee",
+              "https://uri.paypal.com/services/payments/realtimepayment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/payment",
               "https://uri.paypal.com/services/payments/channelpartner",
               "https://uri.paypal.com/services/payments/partnerfee",
@@ -88,7 +96,15 @@
         ],
         "security": [
           {
-            "Oauth2": [
+            "sandbox": [
+              "https://uri.paypal.com/services/payments/payment",
+              "https://uri.paypal.com/services/payments/channelpartner",
+              "https://uri.paypal.com/services/payments/partnerfee",
+              "https://uri.paypal.com/services/payments/realtimepayment"
+            ]
+          },
+          {
+            "production": [
               "https://uri.paypal.com/services/payments/payment",
               "https://uri.paypal.com/services/payments/channelpartner",
               "https://uri.paypal.com/services/payments/partnerfee",
@@ -115,14 +131,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/order_id"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/payments/payment",
-              "https://uri.paypal.com/services/payments/realtimepayment"
-            ]
           }
         ],
         "tags": [
@@ -191,14 +199,6 @@
           },
           "required": true
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/payments/payment",
-              "https://uri.paypal.com/services/payments/realtimepayment"
-            ]
-          }
-        ],
         "tags": [
           "orders-payment-actions"
         ]
@@ -216,16 +216,52 @@
     }
   ],
   "externalDocs": {
-    "url": "/docs/api/orders/v1"
+    "url": "https://developer.paypal.com/docs/api/orders/v1/"
   },
   "servers": [
     {
-      "url": "https://api-m.paypal.com/v1/checkout"
+      "url": "https://api-m.sandbox.paypal.com/v1/checkout",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com/v1/checkout",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "security": [
+    {
+      "sandbox": [
+        "https://uri.paypal.com/services/payments/payment",
+        "https://uri.paypal.com/services/payments/realtimepayment"
+      ]
+    },
+    {
+      "production": [
+        "https://uri.paypal.com/services/payments/payment",
+        "https://uri.paypal.com/services/payments/realtimepayment"
+      ]
     }
   ],
   "components": {
     "securitySchemes": {
-      "Oauth2": {
+      "sandbox": {
+        "type": "oauth2",
+        "description": "Oauth 2.0 authentication",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://api-m.sandbox.paypal.com/v1/oauth2/token",
+            "scopes": {
+              "https://uri.paypal.com/services/payments/payment": "Manage payments and checkout workflow.",
+              "https://uri.paypal.com/services/payments/unilateralrefund": "This scope enables partners/facilitators to perform unilateralrefund and also refund.",
+              "https://uri.paypal.com/services/payments/funding-options": "Access payer's funding options available for the payment.",
+              "https://uri.paypal.com/services/payments/channelpartner": "Permission to explicitly specify the receiver of a payment on request payload.",
+              "https://uri.paypal.com/services/payments/partnerfee": "Permission to partners to withdraw partner fee as part of the payment.",
+              "https://uri.paypal.com/services/payments/realtimepayment": "Permission to do any real time payment, with support for sale/authorize/order intents"
+            }
+          }
+        }
+      },
+      "production": {
         "type": "oauth2",
         "description": "Oauth 2.0 authentication",
         "flows": {

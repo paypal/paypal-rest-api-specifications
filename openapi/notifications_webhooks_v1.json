@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Webhooks Management",
     "description": "The PayPal REST APIs use <a href=\"/docs/api/notifications/webhooks/\"/>webhooks</a> for event notification. Webhooks are HTTP callbacks that receive notification messages for events. After you configure a webhook listener for your app, you can <a href=\"#webhooks_create\">create a webhook</a>, which subscribes the webhook listener for your app to events. The <code>notifications</code> namespace contains resource collections for webhooks.",
@@ -40,13 +40,6 @@
             }
           }
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
-          }
-        ],
         "tags": [
           "webhooks"
         ]
@@ -73,13 +66,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/anchor_type"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
           }
         ],
         "tags": [
@@ -110,13 +96,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/webhook_id"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
           }
         ],
         "tags": [
@@ -150,13 +129,6 @@
         "requestBody": {
           "$ref": "#/components/requestBodies/patch_request"
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
-          }
-        ],
         "tags": [
           "webhooks"
         ]
@@ -176,13 +148,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/webhook_id"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
           }
         ],
         "tags": [
@@ -215,13 +180,6 @@
             "$ref": "#/components/parameters/webhook_id"
           }
         ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
-          }
-        ],
         "tags": [
           "webhooks"
         ]
@@ -247,13 +205,6 @@
             "$ref": "#/components/responses/default"
           }
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
-          }
-        ],
         "tags": [
           "webhooks-lookup"
         ]
@@ -277,13 +228,6 @@
             "$ref": "#/components/responses/default"
           }
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
-          }
-        ],
         "tags": [
           "webhooks-lookup"
         ]
@@ -314,13 +258,6 @@
             "$ref": "#/components/parameters/webhook_lookup_id"
           }
         ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
-          }
-        ],
         "tags": [
           "webhooks-lookup"
         ]
@@ -340,13 +277,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/webhook_lookup_id"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
           }
         ],
         "tags": [
@@ -388,13 +318,6 @@
             }
           }
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
-          }
-        ],
         "tags": [
           "verify-webhook-signature"
         ]
@@ -420,13 +343,6 @@
             "$ref": "#/components/responses/default"
           }
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
-          }
-        ],
         "tags": [
           "webhooks-event-types"
         ]
@@ -469,13 +385,6 @@
             "$ref": "#/components/parameters/event_type"
           }
         ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
-          }
-        ],
         "tags": [
           "webhooks-events"
         ]
@@ -504,13 +413,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/event_id"
-          }
-        ],
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
           }
         ],
         "tags": [
@@ -557,13 +459,6 @@
             }
           }
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
-          }
-        ],
         "tags": [
           "webhooks-events"
         ]
@@ -603,13 +498,6 @@
             }
           }
         },
-        "security": [
-          {
-            "Oauth2": [
-              "https://uri.paypal.com/services/applications/webhooks"
-            ]
-          }
-        ],
         "tags": [
           "simulate-event"
         ]
@@ -667,11 +555,28 @@
     }
   ],
   "externalDocs": {
-    "url": "/docs/api/notifications/webhooks/"
+    "url": "https://developer.paypal.com/docs/api/webhooks/v1/"
   },
   "servers": [
     {
-      "url": "https://api-m.paypal.com/v1/notifications"
+      "url": "https://api-m.sandbox.paypal.com/v1/notifications",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com/v1/notifications",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "security": [
+    {
+      "sandbox": [
+        "https://uri.paypal.com/services/applications/webhooks"
+      ]
+    },
+    {
+      "production": [
+        "https://uri.paypal.com/services/applications/webhooks"
+      ]
     }
   ],
   "components": {
@@ -692,7 +597,19 @@
       }
     },
     "securitySchemes": {
-      "Oauth2": {
+      "sandbox": {
+        "type": "oauth2",
+        "description": "Oauth 2.0 authentication",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://api-m.sandbox.paypal.com/v1/oauth2/token",
+            "scopes": {
+              "https://uri.paypal.com/services/applications/webhooks": "Access/update Webhooks."
+            }
+          }
+        }
+      },
+      "production": {
         "type": "oauth2",
         "description": "Oauth 2.0 authentication",
         "flows": {

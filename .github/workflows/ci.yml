@@ -26,9 +26,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm i
-    - run: find openapi -name '*.json' -exec npm run-script bundle-deref -- {} \;
-    - run: find openapi -name '*.json' -exec npm run-script lint-redocly -- {} \;
-    - run: find openapi -name '*.json' -exec npm run-script lint-spectral -- {} \;
-    - run: find openapi -name '*.json' -exec npm run-script lint-openapi -- {} \;
-    - run: find openapi -name '*.json' -exec npm run-script codegen-java -- {} \; -exec rm -rf generated/java \;
-    - run: find openapi -name '*.json' -exec npm run-script codegen-typescript-node -- {} \; -exec rm -rf generated/typescript-node \;
+    - run: find openapi -name '*.json' -exec npm run bundle-deref -- {} \;
+    - run: find openapi -name '*.json' -exec npm run lint-redocly -- {} \;
+    - run: find openapi -name '*.json' -exec npm run lint-spectral -- {} \;
+    - run: find openapi -name '*.json' -exec npm run lint-openapi -- {} \;
+    - run: find openapi -name '*.json' -exec npm run codegen-java -- {} \; -exec rm -rf generated/java \;
+    - run: find openapi -name '*.json' -exec npm run codegen-typescript-node -- {} \; -exec rm -rf generated/typescript-node \;
