@@ -1,12 +1,12 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Partner Referrals",
     "description": "The Partner Referrals API enables a marketplace to add PayPal seller accounts. It supports the Connected Path marketplace models.<blockquote><strong>Important:</strong> PayPal for Marketplaces is a limited-release solution at this time. It is available to select partners for approved use cases. For more information, reach out to your PayPal account manager.</blockquote>In the <a href=\"/docs/multiparty/seller-onboarding/before-payment/\">Connected Path</a>, you host a button on your website that takes sellers to PayPal to create and configure a PayPal account. The Onboarding API enables you to collect seller data and pass it to the account creation and setup forms, reducing the burden on sellers during the signup and setup process. Call the <a href=\"#partner-referrals_create\">create partner referral</a> and <a href=\"#partner-referrals_read\">show referral data</a> methods for the Connected Path.",
     "version": "2.4"
   },
   "paths": {
-    "/partner-referrals": {
+    "/v2/customer/partner-referrals": {
       "post": {
         "summary": "Create partner referral",
         "description": "Creates a partner referral that is shared by the API caller. The referrals contains the client's personal, business, financial and operations that the partner wants to onboard the client.",
@@ -126,7 +126,7 @@
         ]
       }
     },
-    "/partner-referrals/{partner_referral_id}": {
+    "/v2/customer/partner-referrals/{partner_referral_id}": {
       "get": {
         "summary": "Show referral data",
         "description": "Shows details for referral data, by ID, that was shared by the API caller.",
@@ -229,7 +229,12 @@
   },
   "servers": [
     {
-      "url": "https://api-m.paypal.com/v2/customer"
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
     }
   ],
   "components": {
@@ -239,7 +244,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/customer/partner": "Manage seller resources.",
               "https://uri.paypal.com/services/customer/partner-referrals/readwrite": "Manage external referral data with PayPal",
@@ -2134,7 +2139,6 @@
               "ROUTING_NUMBER_2",
               "ROUTING_NUMBER_3",
               "SWIFT_CODE",
-              "BRANCH_CODE",
               "INTERMEDIARY_SWIFT_CODE",
               "BBAN",
               "BBAN_ENCRYPTED",

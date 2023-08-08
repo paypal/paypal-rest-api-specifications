@@ -1,12 +1,12 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Invoices",
     "description": "Use the Invoicing API to create, send, and manage invoices. You can also use the API or webhooks to track invoice payments. When you send an invoice to a customer, the invoice moves from draft to payable state. PayPal then emails the customer a link to the invoice on the PayPal website. Customers with a PayPal account can log in and pay the invoice with PayPal. Alternatively, customers can pay as a guest with a debit card or credit card. For more information, see the <a href=\"/docs/invoicing/\">Invoicing Overview</a> and the <a href=\"/docs/invoicing/basic-integration/\">Invoicing Integration Guide</a>.",
     "version": "2.3"
   },
   "paths": {
-    "/invoices": {
+    "/v2/invoicing/invoices": {
       "post": {
         "summary": "Create draft invoice",
         "description": "Creates a draft invoice. To move the invoice from a draft to payable state, you must <a href=\"#invoices_send\">send the invoice</a>.<br/><br/>In the JSON request body, include invoice details including merchant information. The <code>invoice</code> object must include an <code>items</code> array.<blockquote><strong>Note:</strong> The merchant that you specify in an invoice must have a PayPal account in good standing.</blockquote>.",
@@ -230,7 +230,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/send": {
+    "/v2/invoicing/invoices/{invoice_id}/send": {
       "post": {
         "summary": "Send invoice",
         "description": "Sends or schedules an invoice, by ID, to be sent to a customer. The action depends on the invoice issue date:<ul><li>If the invoice issue date is current or in the past, sends the invoice immediately.</li><li>If the invoice issue date is in the future, schedules the invoice to be sent on that date.</li></ul>To suppress the merchant's email notification, set the `send_to_invoicer` body parameter to `false`. To send the invoice through a share link and not through PayPal, set the <code>send_to_recipient</code> parameter to <code>false</code> in the <code>notification</code> object. The <code>send_to_recipient</code> parameter does not apply to a future issue date because the invoice is scheduled to be sent through PayPal on that date.<blockquote><strong>Notes:</strong><ul><li>After you send an invoice, resending it has no effect.</li><li>To send a notification for updates, <a href=\"#invoices_update\">update the invoice</a> and set the <code>send_to_recipient</code> body parameter to <code>true</code>.</li></ul></blockquote>",
@@ -362,7 +362,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/remind": {
+    "/v2/invoicing/invoices/{invoice_id}/remind": {
       "post": {
         "summary": "Send invoice reminder",
         "description": "Sends a reminder to the payer about an invoice, by ID. In the JSON request body, include a `notification` object that defines the subject of the reminder and other details.",
@@ -509,7 +509,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/cancel": {
+    "/v2/invoicing/invoices/{invoice_id}/cancel": {
       "post": {
         "summary": "Cancel sent invoice",
         "description": "Cancels a sent invoice, by ID, and, optionally, sends a notification about the cancellation to the payer, merchant, and CC: emails.",
@@ -616,7 +616,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/payments": {
+    "/v2/invoicing/invoices/{invoice_id}/payments": {
       "post": {
         "summary": "Record payment for invoice",
         "description": "Records a payment for the invoice. If no payment is due, the invoice is marked as `PAID`. Otherwise, the invoice is marked as `PARTIALLY PAID`.",
@@ -776,7 +776,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/payments/{transaction_id}": {
+    "/v2/invoicing/invoices/{invoice_id}/payments/{transaction_id}": {
       "delete": {
         "summary": "Delete external payment",
         "description": "Deletes an external payment, by invoice ID and transaction ID.",
@@ -853,7 +853,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/refunds": {
+    "/v2/invoicing/invoices/{invoice_id}/refunds": {
       "post": {
         "summary": "Record refund for invoice",
         "description": "Records a refund for the invoice. If all payments are refunded, the invoice is marked as `REFUNDED`. Otherwise, the invoice is marked as `PARTIALLY REFUNDED`.",
@@ -1013,7 +1013,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/refunds/{transaction_id}": {
+    "/v2/invoicing/invoices/{invoice_id}/refunds/{transaction_id}": {
       "delete": {
         "summary": "Delete external refund",
         "description": "Deletes an external refund, by invoice ID and transaction ID.",
@@ -1090,7 +1090,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/generate-qr-code": {
+    "/v2/invoicing/invoices/{invoice_id}/generate-qr-code": {
       "post": {
         "summary": "Generate QR code",
         "description": "Generates a QR code for an invoice, by ID. The QR code is a PNG image in <a href=\"https://www.base64encode.org/\">Base64-encoded</a> format that corresponds to the invoice ID. You can generate a QR code for an invoice and add it to a paper or PDF invoice. When customers use their mobile devices to scan the QR code, they are redirected to the PayPal mobile payment flow where they can view the invoice and pay online with PayPal or a credit card. Before you get a QR code, you must <a href=\"#invoices_create\">create an invoice</a> and <a href=\"#invoices_send\">send an invoice</a> to move the invoice from a draft to payable state. Do not include an email address if you do not want the invoice emailed.",
@@ -1179,7 +1179,7 @@
         ]
       }
     },
-    "/generate-next-invoice-number": {
+    "/v2/invoicing/generate-next-invoice-number": {
       "post": {
         "summary": "Generate invoice number",
         "description": "Generates the next invoice number that is available to the merchant. The next invoice number uses the prefix and suffix from the last invoice number and increments the number by one. For example, the next invoice number after `INVOICE-1234` is `INVOICE-1235`.",
@@ -1221,7 +1221,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}": {
+    "/v2/invoicing/invoices/{invoice_id}": {
       "get": {
         "summary": "Show invoice details",
         "description": "Shows details for an invoice, by ID.",
@@ -1529,7 +1529,7 @@
         ]
       }
     },
-    "/search-invoices": {
+    "/v2/invoicing/search-invoices": {
       "post": {
         "summary": "Search for invoices",
         "description": "Searches for and lists invoices that match search criteria. If you pass multiple criteria, the response lists invoices that match all criteria.",
@@ -1636,7 +1636,7 @@
         ]
       }
     },
-    "/templates": {
+    "/v2/invoicing/templates": {
       "get": {
         "summary": "List templates",
         "description": "Lists merchant-created templates with associated details. The associated details include the emails, addresses, and phone numbers from the user's PayPal profile.<br/>The user can select which values to show in the business information section of their template.",
@@ -1831,7 +1831,7 @@
         ]
       }
     },
-    "/templates/{template_id}": {
+    "/v2/invoicing/templates/{template_id}": {
       "get": {
         "summary": "Show template details",
         "description": "Shows details for a template, by ID.",
@@ -2154,11 +2154,16 @@
     }
   ],
   "externalDocs": {
-    "url": "/docs/invoicing/v2/"
+    "url": "https://developer.paypal.com/docs/api/invoicing/v1/"
   },
   "servers": [
     {
-      "url": "https://api-m.paypal.com/v2/invoicing"
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
     }
   ],
   "components": {
@@ -2168,7 +2173,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/invoicing/invoices/read": "For Reading the invoice details.",
               "https://uri.paypal.com/services/invoicing/invoices/readwrite": "For managing (Create, Update, Delete) invoice.",

@@ -1,12 +1,12 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Partner Referrals",
     "description": "<blockquote><strong>Deprecation notice:</strong> This integration method is deprecated. PayPal continues to support existing merchants using this method, but be advised that new features and enhancements will not be applied to these integrations. For details, see <a href=\"/docs/multiparty/seller-onboarding/\">Onboard Sellers</a>.</blockquote> Partners can use the Partner Referrals API to add PayPal seller accounts using the <a href=\"/docs/platforms/seller-onboarding/before-payment/\">before payment</a> onboarding model. With this API, you collect seller data and pass it to the account creation and setup forms, reducing the burden on sellers during the signup and setup process.",
     "version": "1.4"
   },
   "paths": {
-    "/partner-referrals": {
+    "/v1/customer/partner-referrals": {
       "post": {
         "summary": "Create partner referral",
         "description": "Creates a partner referral that is shared by the API caller. The referrals contains the client's personal, business, and financial data.",
@@ -53,7 +53,7 @@
         ]
       }
     },
-    "/partner-referrals/{partner_referral_id}": {
+    "/v1/customer/partner-referrals/{partner_referral_id}": {
       "get": {
         "summary": "Show referral data",
         "description": "Shows details for referral data, by ID, that was shared by the API caller.",
@@ -95,7 +95,7 @@
         ]
       }
     },
-    "/partners/{partner_id}/merchant-integrations": {
+    "/v1/customer/partners/{partner_id}/merchant-integrations": {
       "get": {
         "summary": "List seller tracking information",
         "description": "Lists sellers that a partner onboarded, by partner ID.",
@@ -128,7 +128,7 @@
         ]
       }
     },
-    "/partners/{partner_id}/merchant-integrations/{merchant_id}": {
+    "/v1/customer/partners/{partner_id}/merchant-integrations/{merchant_id}": {
       "get": {
         "summary": "Show seller status",
         "description": "Shows status information for sellers that the partner on-boards, by partner ID.",
@@ -171,7 +171,7 @@
         ]
       }
     },
-    "/partners/{partner_id}/merchant-integrations/credentials": {
+    "/v1/customer/partners/{partner_id}/merchant-integrations/credentials": {
       "get": {
         "summary": "Fetch merchant credentials",
         "description": "Fetches merchant credentials for a merchant onboarded through downloadable cart flow.",
@@ -232,7 +232,12 @@
   },
   "servers": [
     {
-      "url": "https://api-m.paypal.com/v1/customer"
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
     }
   ],
   "components": {
@@ -242,7 +247,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/customer/partner": "Manage seller resources.",
               "https://uri.paypal.com/services/customer/partner-referrals/readwrite": "Manage external referral data with PayPal",

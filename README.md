@@ -1,18 +1,23 @@
 # PayPal REST API Specifications
 
-This repository contains the specification files for [PayPal's REST APIs](https://developer.paypal.com/api/rest/).
+This repository contains the specification files for [PayPal REST APIs](https://developer.paypal.com/api/rest/).
 
 You can try our REST APIs in Postman without a PayPal Developer account. Learn more in our [Postman guide](https://developer.paypal.com/api/rest/postman/).
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://god.gw.postman.com/run-collection/19024122-92a85d0e-51e7-47da-9f83-c45dcb1cdf24?action=collection%2Ffork&collection-url=entityId%3D19024122-92a85d0e-51e7-47da-9f83-c45dcb1cdf24%26entityType%3Dcollection%26workspaceId%3D345300e6-346e-42e0-aed1-53717919aef0)
 
-## Usage
+## Steps to generate code from the specification
 
-Available scripts can be executed against the required API by using the following command:
->`npm run-script <script_name> -- <path_to_required_api> [<additional_script_arguments>]`
+> _Note: Spec file used: openapi/checkout_orders_v2.json_
 
-Example:
-> `npm run-script codegen-java -- openapi/checkout_orders_v2.json`
+### Java
+ 1. `npm run codegen-java -- openapi/checkout_orders_v2.json --artifact-id orders`
+ 2. `cd generated/java`
+ 3. `mvn clean install`
+
+The above will install the `orders` artifact to the local maven repository
+
+## Available scripts
 
 ```
  npm run

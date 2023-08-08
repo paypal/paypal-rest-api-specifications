@@ -1,12 +1,12 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Orders",
     "description": "An order represents a payment between two or more parties. Use the Orders API to create, update, retrieve, authorize, and capture orders.",
     "version": "2.13"
   },
   "paths": {
-    "/orders": {
+    "/v2/checkout/orders": {
       "post": {
         "summary": "Create order",
         "description": "Creates an order. Merchants and partners can add Level 2 and 3 data to payments to reduce risk and payment processing costs. For more information about processing payments, see <a href=\"https://developer.paypal.com/docs/checkout/advanced/processing/\">checkout</a> or <a href=\"https://developer.paypal.com/docs/multiparty/checkout/advanced/processing/\">multiparty checkout</a>.<blockquote><strong>Note:</strong> For error handling and troubleshooting, see <a href=\"/api/rest/reference/orders/v2/errors/#create-order\">Orders v2 errors</a>.</blockquote>",
@@ -28,6 +28,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/order"
+                },
+                "examples": {
+                  "0": {
+                    "$ref": "#/components/examples/order_request_create"
+                  }
                 }
               }
             }
@@ -101,9 +106,6 @@
             "$ref": "#/components/parameters/prefer"
           },
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           }
         ],
@@ -135,7 +137,7 @@
         ]
       }
     },
-    "/orders/{id}": {
+    "/v2/checkout/orders/{id}": {
       "get": {
         "summary": "Show order details",
         "description": "Shows details for an order, by ID.<blockquote><strong>Note:</strong> For error handling and troubleshooting, see <a href=\"/api/rest/reference/orders/v2/errors/#get-order\">Orders v2 errors</a>.</blockquote>",
@@ -192,9 +194,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/authorization"
           },
           {
             "$ref": "#/components/parameters/content_type"
@@ -300,9 +299,6 @@
             "$ref": "#/components/parameters/id"
           },
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           }
         ],
@@ -322,7 +318,7 @@
         ]
       }
     },
-    "/orders/{id}/confirm-payment-source": {
+    "/v2/checkout/orders/{id}/confirm-payment-source": {
       "post": {
         "summary": "Confirm the Order",
         "description": "Payer confirms their intent to pay for the the Order with the given payment source.",
@@ -411,9 +407,6 @@
             "$ref": "#/components/parameters/id"
           },
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -447,7 +440,7 @@
         ]
       }
     },
-    "/orders/{id}/authorize": {
+    "/v2/checkout/orders/{id}/authorize": {
       "post": {
         "summary": "Authorize payment for order",
         "description": "Authorizes payment for an order. To successfully authorize payment for an order, the buyer must first approve the order or a valid payment_source must be provided in the request. A buyer can approve the order upon being redirected to the rel:approve URL that was returned in the HATEOAS links in the create order response.<blockquote><strong>Note:</strong> For error handling and troubleshooting, see <a href=\"/api/rest/reference/orders/v2/errors/#authorize-order\">Orders v2 errors</a>.</blockquote>",
@@ -586,9 +579,6 @@
             "$ref": "#/components/parameters/id"
           },
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/paypal_auth_assertion"
           },
           {
@@ -617,7 +607,7 @@
         ]
       }
     },
-    "/orders/{id}/capture": {
+    "/v2/checkout/orders/{id}/capture": {
       "post": {
         "summary": "Capture payment for order",
         "description": "Captures payment for an order. To successfully capture payment for an order, the buyer must first approve the order or a valid payment_source must be provided in the request. A buyer can approve the order upon being redirected to the rel:approve URL that was returned in the HATEOAS links in the create order response.<blockquote><strong>Note:</strong> For error handling and troubleshooting, see <a href=\"/api/rest/reference/orders/v2/errors/#capture-order\">Orders v2 errors</a>.</blockquote>",
@@ -756,9 +746,6 @@
             "$ref": "#/components/parameters/id"
           },
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/paypal_auth_assertion"
           },
           {
@@ -787,7 +774,7 @@
         ]
       }
     },
-    "/orders/{id}/track": {
+    "/v2/checkout/orders/{id}/track": {
       "post": {
         "summary": "Add tracking information for an Order.",
         "description": "Adds tracking information for an Order.",
@@ -900,9 +887,6 @@
             "$ref": "#/components/parameters/id"
           },
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/paypal_auth_assertion"
           },
           {
@@ -931,7 +915,7 @@
         ]
       }
     },
-    "/orders/{id}/trackers/{tracker_id}": {
+    "/v2/checkout/orders/{id}/trackers/{tracker_id}": {
       "patch": {
         "summary": "Update or cancel tracking information for a PayPal order",
         "description": "Updates or cancels the tracking information for a PayPal order, by ID. Updatable attributes or objects:<br/><br/><table><thead><th>Attribute</th><th>Op</th><th>Notes</th></thead><tbody></tr><tr><td><code>items</code></td><td>replace</td><td>Using replace op for <code>items</code> will replace the entire <code>items</code> object with the value sent in request.</td></tr><tr><td><code>notify_payer</code></td><td>replace, add</td><td></td></tr></tbody></table>",
@@ -1030,9 +1014,6 @@
             "$ref": "#/components/parameters/tracker_id"
           },
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           }
         ],
@@ -1063,11 +1044,16 @@
     }
   ],
   "externalDocs": {
-    "url": "../doc/USERGUIDE.md"
+    "url": "https://developer.paypal.com/docs/api/orders/v2/"
   },
   "servers": [
     {
-      "url": "https://api-m.paypal.com/v2/checkout"
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
     }
   ],
   "components": {
@@ -1093,7 +1079,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/payments/payment": "Manage payments and checkout workflow.",
               "https://uri.paypal.com/services/payments/payment/reference-transaction": "Permission to initiate reference transaction",
@@ -1149,15 +1135,6 @@
           "default": "return=minimal"
         }
       },
-      "authorization": {
-        "name": "Authorization",
-        "in": "header",
-        "description": "To make REST API calls, include the bearer token in this header with the `Bearer` authentication scheme. The value is `Bearer <Access-Token>` or `Basic <client_id:secret>`.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
       "content_type": {
         "name": "Content-Type",
         "in": "header",
@@ -1166,7 +1143,8 @@
         "schema": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 255
+          "maxLength": 255,
+          "default": "application/json"
         }
       },
       "id": {
@@ -14169,6 +14147,20 @@
           }
         }
       },
+      "order_request_create": {
+        "value": {
+          "intent": "CAPTURE",
+          "purchase_units": [
+            {
+              "reference_id": "d9f80740-38f0-11e8-b467-0ed5f89f718b",
+              "amount": {
+                "currency_code": "USD",
+                "value": "100.00"
+              }
+            }
+          ]
+        }
+      },
       "order_request": {
         "value": {
           "intent": "CAPTURE",
@@ -14189,7 +14181,6 @@
                 "brand_name": "EXAMPLE INC",
                 "locale": "en-US",
                 "landing_page": "LOGIN",
-                "shipping_preference": "SET_PROVIDED_ADDRESS",
                 "user_action": "PAY_NOW",
                 "return_url": "https://example.com/returnUrl",
                 "cancel_url": "https://example.com/cancelUrl"

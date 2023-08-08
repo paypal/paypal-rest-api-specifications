@@ -1,12 +1,12 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Subscriptions",
     "description": "You can use billing plans and subscriptions to create subscriptions that process recurring PayPal payments for physical or digital goods, or services. A plan includes pricing and billing cycle information that defines the amount and frequency of charge for a subscription. You can also define a fixed plan, such as a $5 basic plan or a volume- or graduated-based plan with pricing tiers based on the quantity purchased. For more information, see <a href=\"/docs/subscriptions/\">Subscriptions Overview</a>.",
     "version": "1.6"
   },
   "paths": {
-    "/plans": {
+    "/v1/billing/plans": {
       "post": {
         "summary": "Create plan",
         "description": "Creates a plan that defines pricing and billing cycle details for subscriptions.",
@@ -120,9 +120,6 @@
           }
         },
         "parameters": [
-          {
-            "$ref": "#/components/parameters/authorization"
-          },
           {
             "$ref": "#/components/parameters/content_type"
           },
@@ -250,9 +247,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -289,7 +283,7 @@
         ]
       }
     },
-    "/plans/{id}": {
+    "/v1/billing/plans/{id}": {
       "get": {
         "summary": "Show plan details",
         "description": "Shows details for a plan, by ID.",
@@ -371,9 +365,6 @@
           }
         },
         "parameters": [
-          {
-            "$ref": "#/components/parameters/authorization"
-          },
           {
             "$ref": "#/components/parameters/content_type"
           },
@@ -504,9 +495,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -528,7 +516,7 @@
         ]
       }
     },
-    "/plans/{id}/activate": {
+    "/v1/billing/plans/{id}/activate": {
       "post": {
         "summary": "Activate plan",
         "description": "Activates a plan, by ID.",
@@ -621,9 +609,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -642,7 +627,7 @@
         ]
       }
     },
-    "/plans/{id}/deactivate": {
+    "/v1/billing/plans/{id}/deactivate": {
       "post": {
         "summary": "Deactivate plan",
         "description": "Deactivates a plan, by ID.",
@@ -735,9 +720,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -756,7 +738,7 @@
         ]
       }
     },
-    "/plans/{id}/update-pricing-schemes": {
+    "/v1/billing/plans/{id}/update-pricing-schemes": {
       "post": {
         "summary": "Update pricing",
         "description": "Updates pricing for a plan. For example, you can update a regular billing cycle from $5 per month to $7 per month.",
@@ -866,9 +848,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -901,7 +880,7 @@
         ]
       }
     },
-    "/subscriptions": {
+    "/v1/billing/subscriptions": {
       "post": {
         "summary": "Create subscription",
         "description": "Creates a subscription.",
@@ -1021,9 +1000,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -1059,7 +1035,7 @@
         ]
       }
     },
-    "/subscriptions/{id}": {
+    "/v1/billing/subscriptions/{id}": {
       "get": {
         "summary": "Show subscription details",
         "description": "Shows details for a subscription, by ID.",
@@ -1141,9 +1117,6 @@
           }
         },
         "parameters": [
-          {
-            "$ref": "#/components/parameters/authorization"
-          },
           {
             "$ref": "#/components/parameters/content_type"
           },
@@ -1274,9 +1247,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -1298,7 +1268,7 @@
         ]
       }
     },
-    "/subscriptions/{id}/revise": {
+    "/v1/billing/subscriptions/{id}/revise": {
       "post": {
         "summary": "Revise plan or quantity of subscription",
         "description": "Updates the quantity of the product or service in a subscription. You can also use this method to switch the plan and update the `shipping_amount`, `shipping_address` values for the subscription. This type of update requires the buyer's consent.",
@@ -1420,9 +1390,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -1455,7 +1422,7 @@
         ]
       }
     },
-    "/subscriptions/{id}/suspend": {
+    "/v1/billing/subscriptions/{id}/suspend": {
       "post": {
         "summary": "Suspend subscription",
         "description": "Suspends the subscription.",
@@ -1565,9 +1532,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -1600,7 +1564,7 @@
         ]
       }
     },
-    "/subscriptions/{id}/cancel": {
+    "/v1/billing/subscriptions/{id}/cancel": {
       "post": {
         "summary": "Cancel subscription",
         "description": "Cancels the subscription.",
@@ -1710,9 +1674,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -1745,7 +1706,7 @@
         ]
       }
     },
-    "/subscriptions/{id}/activate": {
+    "/v1/billing/subscriptions/{id}/activate": {
       "post": {
         "summary": "Activate subscription",
         "description": "Activates the subscription.",
@@ -1855,9 +1816,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -1890,7 +1848,7 @@
         ]
       }
     },
-    "/subscriptions/{id}/capture": {
+    "/v1/billing/subscriptions/{id}/capture": {
       "post": {
         "summary": "Capture authorized payment on subscription",
         "description": "Captures an authorized payment from the subscriber on the subscription.",
@@ -2010,9 +1968,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -2048,7 +2003,7 @@
         ]
       }
     },
-    "/subscriptions/{id}/transactions": {
+    "/v1/billing/subscriptions/{id}/transactions": {
       "get": {
         "summary": "List transactions for subscription",
         "description": "Lists transactions for a subscription.",
@@ -2148,9 +2103,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -2187,11 +2139,16 @@
     }
   ],
   "externalDocs": {
-    "url": "../doc/USERGUIDE.md"
+    "url": "https://developer.paypal.com/docs/api/subscriptions/v1/"
   },
   "servers": [
     {
-      "url": "https://api-m.paypal.com/v1/billing"
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
     }
   ],
   "components": {
@@ -2217,7 +2174,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/subscriptions": "Manage plan & subscription"
             }
@@ -2226,22 +2183,14 @@
       }
     },
     "parameters": {
-      "authorization": {
-        "name": "Authorization",
-        "in": "header",
-        "description": "To make REST API calls, include the bearer token in the <code>Authorization</code> header with the <code>Bearer</code> authentication scheme. The value is <code>Bearer &lt;Access-Token&gt;</code> or <code>Basic &lt;client_id&gt;:&lt;secret&gt;</code>.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
       "content_type": {
         "name": "Content-Type",
         "in": "header",
         "description": "The media type. Required for operations with a request body. The value is `application/<format>`, where the `format` is `json`.",
         "required": true,
         "schema": {
-          "type": "string"
+          "type": "string",
+          "default": "application/json"
         }
       },
       "prefer": {

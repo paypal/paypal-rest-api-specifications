@@ -1,12 +1,12 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Payment Method Tokens",
     "description": "The Payment Method Tokens API saves payment methods so payers don't have to enter details for future transactions. Payers can check out faster or pay without being present after they agree to save a payment method.<br><br>The API associates a payment method with a temporary setup token. Pass the setup token to the API to exchange the setup token for a permanent token.<br><br>The permanent token represents a payment method that's saved to the vault. This token can be used repeatedly for checkout or recurring transactions such as subscriptions.<br><br>The Payment Method Tokens API is available in the US only.",
     "version": "3.0"
   },
   "paths": {
-    "/payment-tokens": {
+    "/v3/vault/payment-tokens": {
       "post": {
         "description": "Creates a Payment Token from the given payment source and adds it to the Vault of the associated customer.",
         "summary": "Create payment token for a given payment source",
@@ -96,9 +96,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/content_type"
-          },
-          {
-            "$ref": "#/components/parameters/authorization"
           },
           {
             "$ref": "#/components/parameters/paypal_request_id"
@@ -199,9 +196,6 @@
             "$ref": "#/components/parameters/payment_source"
           },
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           }
         ],
@@ -217,7 +211,7 @@
         ]
       }
     },
-    "/payment-tokens/{id}": {
+    "/v3/vault/payment-tokens/{id}": {
       "get": {
         "description": "Returns a readable representation of vaulted payment source associated with the payment token id.",
         "summary": "Retrieve a payment token",
@@ -279,9 +273,6 @@
             "$ref": "#/components/parameters/id"
           },
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           }
         ],
@@ -341,9 +332,6 @@
           },
           {
             "$ref": "#/components/parameters/content_type"
-          },
-          {
-            "$ref": "#/components/parameters/authorization"
           }
         ],
         "security": [
@@ -358,7 +346,7 @@
         ]
       }
     },
-    "/setup-tokens": {
+    "/v3/vault/setup-tokens": {
       "post": {
         "description": "Creates a Setup Token from the given payment source and adds it to the Vault of the associated customer.",
         "summary": "Create a setup token",
@@ -440,9 +428,6 @@
             "$ref": "#/components/parameters/content_type"
           },
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/paypal_request_id"
           }
         ],
@@ -474,7 +459,7 @@
         ]
       }
     },
-    "/setup-tokens/{id}": {
+    "/v3/vault/setup-tokens/{id}": {
       "get": {
         "description": "Returns a readable representation of temporarily vaulted payment source associated with the setup token id.",
         "summary": "Retrieve a setup token",
@@ -536,9 +521,6 @@
             "$ref": "#/components/parameters/id"
           },
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           }
         ],
@@ -574,7 +556,12 @@
   },
   "servers": [
     {
-      "url": "https://api.paypal.com/v3/vault"
+      "url": "https://api.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api.paypal.com",
+      "description": "PayPal Live Environment"
     }
   ],
   "components": {
@@ -584,7 +571,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/vault/payment-tokens/readwrite": "Manage payment instruments",
               "https://uri.paypal.com/services/vault/payment-tokens/read": "Permission to only read from vault"
@@ -603,16 +590,8 @@
           "type": "string",
           "minLength": 1,
           "maxLength": 255,
-          "pattern": "^[A-Za-z0-9/+-]+$"
-        }
-      },
-      "authorization": {
-        "name": "Authorization",
-        "description": "Contains the credentials to authenticate a user agent with a server.",
-        "in": "header",
-        "required": true,
-        "schema": {
-          "type": "string"
+          "pattern": "^[A-Za-z0-9/+-]+$",
+          "default": "application/json"
         }
       },
       "paypal_request_id": {
@@ -2518,7 +2497,7 @@
           "payment_source": {
             "token": {
               "id": "5C991763VB2781612",
-              "type": "SETUP_TOKEN"
+              "type": "BILLING_AGREEMENT"
             }
           }
         }

@@ -1,12 +1,12 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Catalog Products",
     "description": "Merchants can use the Catalog Products API to create products, which are goods and services.",
     "version": "1.0"
   },
   "paths": {
-    "/products": {
+    "/v1/catalogs/products": {
       "post": {
         "summary": "Create product",
         "description": "Creates a product.",
@@ -115,9 +115,6 @@
           }
         },
         "parameters": [
-          {
-            "$ref": "#/components/parameters/authorization"
-          },
           {
             "$ref": "#/components/parameters/content_type"
           },
@@ -235,9 +232,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -262,7 +256,7 @@
         ]
       }
     },
-    "/products/{product_id}": {
+    "/v1/catalogs/products/{product_id}": {
       "get": {
         "summary": "Show product details",
         "description": "Shows details for a product, by ID.",
@@ -344,9 +338,6 @@
           }
         },
         "parameters": [
-          {
-            "$ref": "#/components/parameters/authorization"
-          },
           {
             "$ref": "#/components/parameters/content_type"
           },
@@ -474,9 +465,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           },
           {
@@ -517,11 +505,16 @@
     }
   ],
   "externalDocs": {
-    "url": "/docs/api/overview/"
+    "url": "https://developer.paypal.com/docs/api/catalog-products/v1/"
   },
   "servers": [
     {
-      "url": "https://api-m.paypal.com/v1/catalogs"
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
     }
   ],
   "components": {
@@ -531,7 +524,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/subscriptions": "Create and manage products"
             }
@@ -540,22 +533,14 @@
       }
     },
     "parameters": {
-      "authorization": {
-        "name": "Authorization",
-        "in": "header",
-        "description": "To make REST API calls, include the bearer token in the <code>Authorization</code> header with the <code>Bearer</code> authentication scheme. The value is <code>Bearer &lt;Access-Token&gt;</code> or <code>Basic &lt;client_id&gt;:&lt;secret&gt;</code>.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
       "content_type": {
         "name": "Content-Type",
         "in": "header",
         "description": "The media type. Required for operations with a request body. The value is `application/<format>`, where `format` is `json`.",
         "required": true,
         "schema": {
-          "type": "string"
+          "type": "string",
+          "default": "application/json"
         }
       },
       "prefer": {

@@ -1,12 +1,12 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
     "title": "Payment Experience Web Profiles",
     "description": "Use the Payment Experience API to create seamless payment experience profiles. For information about how to create a PayPal payment with a web experience profile, see <a href=\"/docs/integration/direct/payment-experience/\">Web experience profiles</a>.",
     "version": "1.3"
   },
   "paths": {
-    "/web-profiles": {
+    "/v1/payment-experience/web-profiles": {
       "post": {
         "summary": "Create web experience profile",
         "description": "Creates a web experience profile. In the JSON request body, specify the profile name and details.",
@@ -49,9 +49,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/paypal_request_id"
-          },
-          {
-            "$ref": "#/components/parameters/authorization"
           },
           {
             "$ref": "#/components/parameters/content_type"
@@ -119,9 +116,6 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           }
         ],
@@ -130,7 +124,7 @@
         ]
       }
     },
-    "/web-profiles/{id}": {
+    "/v1/payment-experience/web-profiles/{id}": {
       "put": {
         "summary": "Update web experience profile",
         "description": "Updates a web experience profile, by ID. In the JSON request body, specify the profile details. If your request omits any profile parameters, any previously set values for those parameters are removed.",
@@ -159,9 +153,6 @@
           },
           {
             "$ref": "#/components/parameters/content_type"
-          },
-          {
-            "$ref": "#/components/parameters/authorization"
           }
         ],
         "requestBody": {
@@ -208,9 +199,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/authorization"
           },
           {
             "$ref": "#/components/parameters/content_type"
@@ -280,9 +268,6 @@
             "$ref": "#/components/parameters/id"
           },
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           }
         ],
@@ -329,9 +314,6 @@
             "$ref": "#/components/parameters/id"
           },
           {
-            "$ref": "#/components/parameters/authorization"
-          },
-          {
             "$ref": "#/components/parameters/content_type"
           }
         ],
@@ -360,11 +342,16 @@
     }
   ],
   "externalDocs": {
-    "url": "https://github.paypal.com/AppPlatform/payment-experience.WebExperienceProfilesSpecification/blob/master/v1/doc/USERGUIDE.md"
+    "url": "https://developer.paypal.com/docs/api/payment-experience/v1/"
   },
   "servers": [
     {
-      "url": "https://api-m.paypal.com/v1/payment-experience"
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
     }
   ],
   "components": {
@@ -390,7 +377,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/payments/payment": "New special privileged scope available for payment and manage payment experience profiles. Available to internal clients only.",
               "https://uri.paypal.com/services/payments/realtimepayment": "Permission to do any real-time payment and manage-payment experience profiles with support for sale, authorize, and order intents."
@@ -409,22 +396,14 @@
           "type": "string"
         }
       },
-      "authorization": {
-        "name": "Authorization",
-        "in": "header",
-        "description": "To make REST API calls, include the bearer token in the <code>Authorization</code> header with the <code>Bearer</code> authentication scheme. The value is <code>Bearer &lt;Access-Token&gt;</code> or <code>Basic &lt;client_id&gt;:&lt;secret&gt;</code>.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
       "content_type": {
         "name": "Content-Type",
         "in": "header",
         "description": "Required for operations with a request body. The value is application/<format>. Where the 'format' is 'json'.",
         "required": true,
         "schema": {
-          "type": "string"
+          "type": "string",
+          "default": "application/json"
         }
       },
       "id": {
