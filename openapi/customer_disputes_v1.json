@@ -6,7 +6,7 @@
     "version": "1.10"
   },
   "paths": {
-    "/disputes": {
+    "/v1/customer/disputes": {
       "get": {
         "summary": "List disputes",
         "description": "Lists disputes with a summary set of details, which shows the <code>dispute_id</code>, <code>reason</code>, <code>status</code>, <code>dispute_state</code>, <code>dispute_life_cycle_stage</code>, <code>dispute_channel</code>, <code>dispute_amount</code>, <code>create_time</code> and <code>update_time</code> fields.<br/><br/>To filter the disputes in the response, specify one or more optional query parameters. To limit the number of disputes in the response, specify the <code>page_size</code> query parameter.<br/><br/>To list multiple disputes, set these query parameters in the request:<ul><li><code>page_size=2</code></li><li><code>start_time</code> instead of <code>disputed_transaction_id</code></li></ul><br/>If the response contains more than two disputes, it lists two disputes and includes a HATEOAS link to the next page of results.",
@@ -128,7 +128,7 @@
         ]
       }
     },
-    "/disputes/{id}": {
+    "/v1/customer/disputes/{id}": {
       "get": {
         "summary": "Show dispute details",
         "description": "Shows details for a dispute, by ID.<blockquote><strong>Note:</strong> The fields that appear in the response depend on the access. For example, if the merchant requests shows dispute details, the customer's email ID does not appear.</blockquote>",
@@ -299,7 +299,7 @@
         ]
       }
     },
-    "/disputes/{id}/provide-evidence": {
+    "/v1/customer/disputes/{id}/provide-evidence": {
       "post": {
         "summary": "Provide evidence",
         "description": "Provides evidence for a dispute, by ID. A merchant can provide evidence for disputes with the <code>WAITING_FOR_SELLER_RESPONSE</code> status while customers can provide evidence for disputes with the <code>WAITING_FOR_BUYER_RESPONSE</code> status. Evidence can be a proof of delivery or proof of refund document or notes, which can include logs. A proof of delivery document includes a tracking number while a proof of refund document includes a refund ID. For other evidence type, notes and documents can be given. Evidences requested from you can be found by checking the type of evidence for the corresponding source under the evidence section of the <a href=\"/docs/api/customer-disputes/v1/#disputes_get\">show dispute details</a> response. The source will be <code>REQUESTED_FROM_SELLER</code> for evidences requested from the merchant while it will be <code>REQUESTED_FROM_BUYER</code> for evidences requested from the customer. For constraints and rules regarding documents, see <a href=\"/docs/integration/direct/customer-disputes/integration-guide/#documents\">documents</a>.<br/>To make this request, specify the evidence in the JSON request body and use the <code>provide-evidence</code> link in the <a href=\"/docs/api/reference/api-responses/#hateoas-links/\">HATEOAS links</a> of the <a href=\"/docs/api/customer-disputes/v1/#disputes_get\">show dispute details</a> response. In case the link is not present in the response, you can't provide evidence for the dispute. For information about dispute reasons, see <a href=\"/docs/integration/direct/customer-disputes/integration-guide/#dispute-reasons\">dispute reasons</a>.",
@@ -377,7 +377,7 @@
         ]
       }
     },
-    "/disputes/{id}/appeal": {
+    "/v1/customer/disputes/{id}/appeal": {
       "post": {
         "summary": "Appeal dispute",
         "description": "Appeals a dispute, by ID. To appeal a dispute, use the <code>appeal</code> link in the <a href=\"/docs/api/reference/api-responses/#hateoas-links/\">HATEOAS links</a> from the show dispute details response. If this link does not appear, you cannot appeal the dispute. Submit new evidence as a document or notes in the JSON request body. For constraints and rules regarding documents, see <a href=\"/docs/integration/direct/customer-disputes/integration-guide/#documents\">documents</a>.<br/>To make this request, specify the dispute ID in the URI and specify the evidence in the JSON request body. For information about dispute reasons, see <a href=\"/docs/integration/direct/customer-disputes/integration-guide/#dispute-reasons\">dispute reasons</a>.",
@@ -445,7 +445,7 @@
         ]
       }
     },
-    "/disputes/{id}/accept-claim": {
+    "/v1/customer/disputes/{id}/accept-claim": {
       "post": {
         "summary": "Accept claim",
         "description": "Accepts liability for a claim, by ID. When you accept liability for a claim, the dispute closes in the customer’s favor and PayPal automatically refunds money to the customer from the merchant's account. Allowed accept_claim_type values for the request is available in dispute details <a href=\"/docs/api/customer-disputes/v1/#definition-allowed_response_options\">allowed response options</a> object.",
@@ -516,7 +516,7 @@
         ]
       }
     },
-    "/disputes/{id}/adjudicate": {
+    "/v1/customer/disputes/{id}/adjudicate": {
       "post": {
         "summary": "Settle dispute",
         "description": "<blockquote><strong>Important:</strong> This method is for sandbox use only.</blockquote> Settles a dispute in either the customer's or merchant's favor. Merchants can make this call in the sandbox to complete end-to-end dispute resolution testing, which mimics the dispute resolution that PayPal agents normally complete. To make this call, the dispute <code>status</code> must be <code>UNDER_REVIEW</code> and <code>adjudicate</code> link  should be available in the <a href=\"/docs/api/customer-disputes/v1/#disputes_get!c=200&path=links&t=response/\">HATEOAS links</a> of the <a href=\"/docs/api/customer-disputes/v1/#disputes_get\">show dispute details</a> response.",
@@ -630,7 +630,7 @@
         ]
       }
     },
-    "/disputes/{id}/require-evidence": {
+    "/v1/customer/disputes/{id}/require-evidence": {
       "post": {
         "summary": "Update dispute status",
         "description": "<blockquote><strong>Important:</strong> This method is for sandbox use only.</blockquote> Updates the status of a dispute, by ID, from <code>UNDER_REVIEW</code> to either:<ul><li><code>WAITING_FOR_BUYER_RESPONSE</code></li><li><code>WAITING_FOR_SELLER_RESPONSE</code></li></ul>This status change enables either the customer or merchant to submit evidence for the dispute. To make this call, the dispute <code>status</code> must be <code>UNDER_REVIEW</code> and <code>require-evidence</code> link  should be available in the <a href=\"/docs/api/customer-disputes/v1/#disputes_get!c=200&path=links&t=response/\">HATEOAS links</a> of the <a href=\"/docs/api/customer-disputes/v1/#disputes_get\">show dispute details</a> response. Specify an <code>action</code> value in the JSON request body to indicate whether the status change enables the customer or merchant to submit evidence:<table><thead><tr align=\"left\"><th>If <code>action</code> is</th><th>The <code>status</code> updates to</th></tr></thead><tbody><tr><td><code>BUYER_EVIDENCE</code></td><td> <code>WAITING_FOR_BUYER_RESPONSE</code></td></tr><tr><td><code>SELLER_EVIDENCE</code></td><td> <code>WAITING_FOR_SELLER_RESPONSE</code></td></tr></tbody></table>.",
@@ -745,7 +745,7 @@
         ]
       }
     },
-    "/disputes/{id}/escalate": {
+    "/v1/customer/disputes/{id}/escalate": {
       "post": {
         "summary": "Escalate dispute to claim",
         "description": "Escalates the dispute, by ID, to a PayPal claim. To make this call, the stage in the dispute lifecycle must be `INQUIRY`.",
@@ -859,7 +859,7 @@
         ]
       }
     },
-    "/disputes/{id}/send-message": {
+    "/v1/customer/disputes/{id}/send-message": {
       "post": {
         "summary": "Send message about dispute to other party",
         "description": "Sends a message about a dispute, by ID, to the other party in the dispute. Merchants and customers can only send messages if the `dispute_life_cycle_stage` value is `INQUIRY`. For constraints and rules regarding documents that can be attached as part of the message, see <a href=\"/docs/integration/direct/customer-disputes/integration-guide/#documents\">documents</a>. To send a message, use the <code>send-message</code> link in the <a href=\"/docs/api/reference/api-responses/#hateoas-links/\">HATEOAS links</a> of the <a href=\"/docs/api/customer-disputes/v1/#disputes_get\">show dispute details</a> response and specify the message in the JSON request body. In case the link is not present in the response you can't send a message on the dispute.",
@@ -960,7 +960,7 @@
         ]
       }
     },
-    "/disputes/{id}/make-offer": {
+    "/v1/customer/disputes/{id}/make-offer": {
       "post": {
         "summary": "Make offer to resolve dispute",
         "description": "Makes an offer to the other party to resolve a dispute, by ID. To make this call, the stage in the dispute lifecycle must be `INQUIRY`. If the customer accepts the offer, PayPal automatically makes a refund. Allowed offer_type values for the request is available in dispute details <a href=\"/docs/api/customer-disputes/v1/#definition-allowed_response_options\">allowed response options</a> object.",
@@ -1074,7 +1074,7 @@
         ]
       }
     },
-    "/disputes/{id}/accept-offer": {
+    "/v1/customer/disputes/{id}/accept-offer": {
       "post": {
         "summary": "Accept offer to resolve dispute",
         "description": "The customer accepts the offer from merchant to resolve a dispute, by ID. PayPal automatically refunds the amount proposed by merchant to the customer.",
@@ -1188,7 +1188,7 @@
         ]
       }
     },
-    "/disputes/{id}/deny-offer": {
+    "/v1/customer/disputes/{id}/deny-offer": {
       "post": {
         "summary": "Deny offer to resolve dispute",
         "description": "Denies an offer that the merchant proposes for a dispute, by ID.",
@@ -1292,7 +1292,7 @@
         ]
       }
     },
-    "/disputes/{id}/acknowledge-return-item": {
+    "/v1/customer/disputes/{id}/acknowledge-return-item": {
       "post": {
         "summary": "Acknowledge returned item",
         "description": "Acknowledges that the customer returned an item for a dispute, by ID. A merchant can make this request for disputes with the `MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED` reason. Allowed acknowledgement_type values for the request is available in dispute details <a href=\"/docs/api/customer-disputes/v1/#definition-allowed_response_options\">allowed response options</a> object. For constraints and rules regarding documents, see <a href=\"/docs/integration/direct/customer-disputes/integration-guide/#documents\">documents</a>.",
@@ -1383,7 +1383,7 @@
         ]
       }
     },
-    "/disputes/{id}/provide-supporting-info": {
+    "/v1/customer/disputes/{id}/provide-supporting-info": {
       "post": {
         "summary": "Provide supporting information for dispute",
         "description": "Provides supporting information for a dispute, by ID. A merchant or buyer can make this request for disputes if they find the `provide-supporting-info` link in the HATEOAS links in the list disputes response. The party can provide the supporting information to PayPal to defend themselves only when the `dispute_life_cycle_stage` is `CHARGEBACK`, `PRE_ARBITRATION`, or `ARBITRATION`. They can provide a note that describes their part with details or upload any supporting documents to support their side. For constraints and rules regarding documents, see <a href=\"/docs/integration/direct/customer-disputes/integration-guide/#documents\">documents</a>.<br/>To make this request, specify the dispute ID in the URI and specify the notes in the JSON request body. This method differs from the provide evidence method which supports only multipart request, where PayPal asks the concerned party for evidence.",
@@ -1544,11 +1544,11 @@
   },
   "servers": [
     {
-      "url": "https://api-m.sandbox.paypal.com/v1/customer",
+      "url": "https://api-m.sandbox.paypal.com",
       "description": "PayPal Sandbox Environment"
     },
     {
-      "url": "https://api-m.paypal.com/v1/customer",
+      "url": "https://api-m.paypal.com",
       "description": "PayPal Live Environment"
     }
   ],
@@ -1628,7 +1628,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/disputes/read-seller": "This privilege allows client to read and search a disputes of a merchant but gets only a limited and allowed set of fields back .",
               "https://uri.paypal.com/services/disputes/read-buyer": "This privilege allows client to read and search disputes but returns a limited and allowed set of fields back.",

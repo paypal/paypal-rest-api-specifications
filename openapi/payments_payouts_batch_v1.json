@@ -6,7 +6,7 @@
     "version": "1.8"
   },
   "paths": {
-    "/payouts": {
+    "/v1/payments/payouts": {
       "post": {
         "summary": "Create batch payout",
         "description": "Creates a batch payout. In the JSON request body, pass a `sender_batch_header` and an `items` array. The `sender_batch_header` defines how to handle the payout. The `items` array defines the payout items.<br/>You can make payouts to one or more recipients.<blockquote><strong>Notes:</strong> <ul><li><p>PayPal does not process duplicate payouts. If you specify a <code>sender_batch_id</code> that was used in the last 30 days, the API rejects the request with an error message that shows the duplicate <code>sender_batch_id</code> and includes a HATEOAS link to the original payout with the same <code>sender_batch_id</code>.</p><p>If you receive an HTTP <code>5<i>nn</i></code> status code, you can safely retry the request with the same <code>sender_batch_id</code>.</p></li><li><p>The Payouts API does not support build notation (BN) codes. In a future Payouts release, you can optionally provide BN codes in the <code>PayPal-Partner-Attribution-Id</code> request header.</p><p>For information about the <code>PayPal-Partner-Attribution-Id</code> header, see <a href=\"https://developer.paypal.com/api/rest/requests/#http-request-headers\">HTTP request headers</a>. To learn about or request a BN code, contact your partner manager or see <a href=\"https://www.paypal.com/us/webapps/mpp/partner-program\">PayPal Partner Program</a>.</p></li></ul></blockquote>",
@@ -50,7 +50,7 @@
         ]
       }
     },
-    "/payouts/{payout_batch_id}": {
+    "/v1/payments/payouts/{payout_batch_id}": {
       "get": {
         "summary": "Show payout batch details",
         "description": "Shows the latest status of a batch payout. Includes the transaction status and other data for individual payout items.",
@@ -92,7 +92,7 @@
         ]
       }
     },
-    "/payouts-item/{payout_item_id}": {
+    "/v1/payments/payouts-item/{payout_item_id}": {
       "get": {
         "summary": "Show payout item details",
         "description": "Shows details for a payout item, by ID. A <code>payout_item_id</code> helps you identify denied payments. If a payment is denied, you can use the <code>payout_item_id</code> to identify the payment even if it lacks a <code>transaction_id</code>.",
@@ -122,7 +122,7 @@
         ]
       }
     },
-    "/payouts-item/{payout_item_id}/cancel": {
+    "/v1/payments/payouts-item/{payout_item_id}/cancel": {
       "post": {
         "summary": "Cancel unclaimed payout item",
         "description": "Cancels an unclaimed payout item, by ID. If no one claims the unclaimed item within 30 days, the API automatically returns the funds to the sender. Use this call to cancel the unclaimed item before the automatic 30-day refund. You can cancel payout items with a <code>transaction_status</code> of <code>UNCLAIMED</code>.",
@@ -176,24 +176,12 @@
   },
   "servers": [
     {
-      "url": "https://api-m.sandbox.paypal.com/v1/payments",
+      "url": "https://api-m.sandbox.paypal.com",
       "description": "PayPal Sandbox Environment"
     },
     {
-      "url": "https://api-m.paypal.com/v1/payments",
+      "url": "https://api-m.paypal.com",
       "description": "PayPal Live Environment"
-    }
-  ],
-  "security": [
-    {
-      "sandbox": [
-        "https://uri.paypal.com/payments/payouts"
-      ]
-    },
-    {
-      "production": [
-        "https://uri.paypal.com/payments/payouts"
-      ]
     }
   ],
   "components": {
@@ -215,7 +203,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/payments/payouts": "Payout to a list of recipients."
             }

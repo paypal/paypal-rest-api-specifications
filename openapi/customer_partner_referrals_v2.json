@@ -6,7 +6,7 @@
     "version": "2.4"
   },
   "paths": {
-    "/partner-referrals": {
+    "/v2/customer/partner-referrals": {
       "post": {
         "summary": "Create partner referral",
         "description": "Creates a partner referral that is shared by the API caller. The referrals contains the client's personal, business, financial and operations that the partner wants to onboard the client.",
@@ -131,7 +131,7 @@
         ]
       }
     },
-    "/partner-referrals/{partner_referral_id}": {
+    "/v2/customer/partner-referrals/{partner_referral_id}": {
       "get": {
         "summary": "Show referral data",
         "description": "Shows details for referral data, by ID, that was shared by the API caller.",
@@ -244,11 +244,11 @@
   },
   "servers": [
     {
-      "url": "https://api-m.sandbox.paypal.com/v2/customer",
+      "url": "https://api-m.sandbox.paypal.com",
       "description": "PayPal Sandbox Environment"
     },
     {
-      "url": "https://api-m.paypal.com/v2/customer",
+      "url": "https://api-m.paypal.com",
       "description": "PayPal Live Environment"
     }
   ],
@@ -273,7 +273,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/customer/partner": "Manage seller resources.",
               "https://uri.paypal.com/services/customer/partner-referrals/readwrite": "Manage external referral data with PayPal",

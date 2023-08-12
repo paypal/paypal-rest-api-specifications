@@ -6,7 +6,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/products": {
+    "/v1/catalogs/products": {
       "post": {
         "summary": "Create product",
         "description": "Creates a product.",
@@ -242,7 +242,7 @@
         ]
       }
     },
-    "/products/{product_id}": {
+    "/v1/catalogs/products/{product_id}": {
       "get": {
         "summary": "Show product details",
         "description": "Shows details for a product, by ID.",
@@ -481,24 +481,12 @@
   },
   "servers": [
     {
-      "url": "https://api-m.sandbox.paypal.com/v1/catalogs",
+      "url": "https://api-m.sandbox.paypal.com",
       "description": "PayPal Sandbox Environment"
     },
     {
-      "url": "https://api-m.paypal.com/v1/catalogs",
+      "url": "https://api-m.paypal.com",
       "description": "PayPal Live Environment"
-    }
-  ],
-  "security": [
-    {
-      "sandbox": [
-        "https://uri.paypal.com/services/subscriptions"
-      ]
-    },
-    {
-      "production": [
-        "https://uri.paypal.com/services/subscriptions"
-      ]
     }
   ],
   "components": {
@@ -520,7 +508,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/subscriptions": "Create and manage products"
             }

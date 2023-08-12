@@ -6,7 +6,7 @@
     "version": "2.13"
   },
   "paths": {
-    "/orders": {
+    "/v2/checkout/orders": {
       "post": {
         "summary": "Create order",
         "description": "Creates an order. Merchants and partners can add Level 2 and 3 data to payments to reduce risk and payment processing costs. For more information about processing payments, see <a href=\"https://developer.paypal.com/docs/checkout/advanced/processing/\">checkout</a> or <a href=\"https://developer.paypal.com/docs/multiparty/checkout/advanced/processing/\">multiparty checkout</a>.<blockquote><strong>Note:</strong> For error handling and troubleshooting, see <a href=\"/api/rest/reference/orders/v2/errors/#create-order\">Orders v2 errors</a>.</blockquote>",
@@ -129,7 +129,7 @@
         ]
       }
     },
-    "/orders/{id}": {
+    "/v2/checkout/orders/{id}": {
       "get": {
         "summary": "Show order details",
         "description": "Shows details for an order, by ID.<blockquote><strong>Note:</strong> For error handling and troubleshooting, see <a href=\"/api/rest/reference/orders/v2/errors/#get-order\">Orders v2 errors</a>.</blockquote>",
@@ -294,7 +294,7 @@
         ]
       }
     },
-    "/orders/{id}/confirm-payment-source": {
+    "/v2/checkout/orders/{id}/confirm-payment-source": {
       "post": {
         "summary": "Confirm the Order",
         "description": "Payer confirms their intent to pay for the the Order with the given payment source.",
@@ -408,7 +408,7 @@
         ]
       }
     },
-    "/orders/{id}/authorize": {
+    "/v2/checkout/orders/{id}/authorize": {
       "post": {
         "summary": "Authorize payment for order",
         "description": "Authorizes payment for an order. To successfully authorize payment for an order, the buyer must first approve the order or a valid payment_source must be provided in the request. A buyer can approve the order upon being redirected to the rel:approve URL that was returned in the HATEOAS links in the create order response.<blockquote><strong>Note:</strong> For error handling and troubleshooting, see <a href=\"/api/rest/reference/orders/v2/errors/#authorize-order\">Orders v2 errors</a>.</blockquote>",
@@ -567,7 +567,7 @@
         ]
       }
     },
-    "/orders/{id}/capture": {
+    "/v2/checkout/orders/{id}/capture": {
       "post": {
         "summary": "Capture payment for order",
         "description": "Captures payment for an order. To successfully capture payment for an order, the buyer must first approve the order or a valid payment_source must be provided in the request. A buyer can approve the order upon being redirected to the rel:approve URL that was returned in the HATEOAS links in the create order response.<blockquote><strong>Note:</strong> For error handling and troubleshooting, see <a href=\"/api/rest/reference/orders/v2/errors/#capture-order\">Orders v2 errors</a>.</blockquote>",
@@ -726,7 +726,7 @@
         ]
       }
     },
-    "/orders/{id}/track": {
+    "/v2/checkout/orders/{id}/track": {
       "post": {
         "summary": "Add tracking information for an Order.",
         "description": "Adds tracking information for an Order.",
@@ -860,7 +860,7 @@
         ]
       }
     },
-    "/orders/{id}/trackers/{tracker_id}": {
+    "/v2/checkout/orders/{id}/trackers/{tracker_id}": {
       "patch": {
         "summary": "Update or cancel tracking information for a PayPal order",
         "description": "Updates or cancels the tracking information for a PayPal order, by ID. Updatable attributes or objects:<br/><br/><table><thead><th>Attribute</th><th>Op</th><th>Notes</th></thead><tbody></tr><tr><td><code>items</code></td><td>replace</td><td>Using replace op for <code>items</code> will replace the entire <code>items</code> object with the value sent in request.</td></tr><tr><td><code>notify_payer</code></td><td>replace, add</td><td></td></tr></tbody></table>",
@@ -986,26 +986,12 @@
   },
   "servers": [
     {
-      "url": "https://api-m.sandbox.paypal.com/v2/checkout",
+      "url": "https://api-m.sandbox.paypal.com",
       "description": "PayPal Sandbox Environment"
     },
     {
-      "url": "https://api-m.paypal.com/v2/checkout",
+      "url": "https://api-m.paypal.com",
       "description": "PayPal Live Environment"
-    }
-  ],
-  "security": [
-    {
-      "sandbox": [
-        "https://uri.paypal.com/services/payments/payment",
-        "https://uri.paypal.com/services/payments/orders/client-side-integration"
-      ]
-    },
-    {
-      "production": [
-        "https://uri.paypal.com/services/payments/payment",
-        "https://uri.paypal.com/services/payments/orders/client-side-integration"
-      ]
     }
   ],
   "components": {
@@ -1046,7 +1032,7 @@
         "description": "Oauth 2.0 authentication (production environment)",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/payments/payment": "Manage payments and checkout workflow.",
               "https://uri.paypal.com/services/payments/payment/reference-transaction": "Permission to initiate reference transaction",

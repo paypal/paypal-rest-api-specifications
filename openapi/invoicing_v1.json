@@ -6,7 +6,7 @@
     "version": "1.11"
   },
   "paths": {
-    "/invoices": {
+    "/v1/invoicing/invoices": {
       "post": {
         "summary": "Create draft invoice",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Creates a draft invoice. To move the invoice from a draft to payable state, you must <a href=\"/docs/api/invoicing/v1/#invoices_send\">send the invoice</a>.<br/><br/>In the JSON request body, include invoice details including merchant information. The <code>invoice</code> object must include an <code>items</code> array.<blockquote><strong>Note:</strong> The merchant that you specify in an invoice must have a PayPal account in good standing.</blockquote>.",
@@ -68,7 +68,7 @@
         ]
       }
     },
-    "/search": {
+    "/v1/invoicing/search": {
       "post": {
         "summary": "Search for invoices",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Searches for invoices that match search criteria. If you pass multiple criteria, the response lists invoices that match all criteria.",
@@ -102,7 +102,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/send": {
+    "/v1/invoicing/invoices/{invoice_id}/send": {
       "post": {
         "summary": "Send invoice",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Sends an invoice, by ID, to a customer. To suppress the merchant's email notification, set the `notify_merchant` query parameter to `false`.<blockquote><strong>Note:</strong> After you send an invoice, you cannot resend it.</blockquote>",
@@ -128,7 +128,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/schedule": {
+    "/v1/invoicing/invoices/{invoice_id}/schedule": {
       "post": {
         "summary": "Schedule invoice",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Schedules an invoice, by ID, to send on a future date. At 07:00 on that date in the preferred time zone of the merchant's PayPal account profile, PayPal emails an invoice notification to the merchant and the customer, adds an online payment button to the customer’s view of the invoice, and updates the invoice status to <code>SENT</code>.<blockquote><strong>Note:</strong> To change the scheduled date, adjust the invoice date and <a href=\"/docs/api/invoicing/v1/#invoices_update\">update invoice</a>. To send the invoice immediately, update the invoice date to today or to a date in the past.</blockquote>",
@@ -151,7 +151,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/remind": {
+    "/v1/invoicing/invoices/{invoice_id}/remind": {
       "post": {
         "summary": "Send invoice reminder",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Sends a reminder to the payer about an invoice, by ID. In the JSON request body, include a `notification` object that defines the subject of the reminder and other details.",
@@ -183,7 +183,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/cancel": {
+    "/v1/invoicing/invoices/{invoice_id}/cancel": {
       "post": {
         "summary": "Cancel sent invoice",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Cancels a sent invoice, by ID, and, optionally, sends a notification about the cancellation to the payer, merchant, and CC: emails.",
@@ -215,7 +215,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/record-payment": {
+    "/v1/invoicing/invoices/{invoice_id}/record-payment": {
       "post": {
         "summary": "Mark invoice as paid",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Marks the status of an invoice, by ID, as paid.",
@@ -247,7 +247,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/record-refund": {
+    "/v1/invoicing/invoices/{invoice_id}/record-refund": {
       "post": {
         "summary": "Mark invoice as refunded",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Marks the status of an invoice, by ID, as refunded.",
@@ -279,7 +279,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}": {
+    "/v1/invoicing/invoices/{invoice_id}": {
       "get": {
         "summary": "Show invoice details",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Shows details for an invoice, by ID.",
@@ -364,7 +364,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/payment-records/{transaction_id}": {
+    "/v1/invoicing/invoices/{invoice_id}/payment-records/{transaction_id}": {
       "delete": {
         "summary": "Delete external payment",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Deletes an external payment, by invoice ID and transaction ID.",
@@ -390,7 +390,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/refund-records/{transaction_id}": {
+    "/v1/invoicing/invoices/{invoice_id}/refund-records/{transaction_id}": {
       "delete": {
         "summary": "Delete external refund",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Deletes an external refund, by invoice ID and transaction ID.",
@@ -416,7 +416,7 @@
         ]
       }
     },
-    "/invoices/{invoice_id}/qr-code": {
+    "/v1/invoicing/invoices/{invoice_id}/qr-code": {
       "get": {
         "summary": "Generate QR code",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Generates a QR code for an invoice, by ID. The QR code is a PNG image in <a href=\"https://www.base64encode.org/\">Base64-encoded</a> format that corresponds to the invoice ID. You can generate a QR code for an invoice and add it to a paper or PDF invoice. When customers use their mobile devices to scan the QR code, they are redirected to the PayPal mobile payment flow where they can view the invoice and pay online with PayPal or a credit card. Before you get a QR code, you must <a href=\"#invoices_create\">create an invoice</a> and <a href=\"#invoices_send\">send an invoice</a> to move the invoice from a draft to payable state. Do not include an email address if you do not want the invoice emailed.",
@@ -452,7 +452,7 @@
         ]
       }
     },
-    "/invoices/next-invoice-number": {
+    "/v1/invoicing/invoices/next-invoice-number": {
       "post": {
         "summary": "Generate invoice number",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Generates the next invoice number that is available to the merchant. The next invoice number uses the prefix and suffix from the last invoice number and increments the number by one. For example, the next invoice number after `INVOICE-1234` is `INVOICE-1235`.",
@@ -477,7 +477,7 @@
         ]
       }
     },
-    "/templates": {
+    "/v1/invoicing/templates": {
       "post": {
         "summary": "Create template",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Creates an invoice template. You can use details from this template to create an invoice. You can create up to 50 templates.<blockquote><strong>Note:</strong> Every merchant starts with three PayPal system templates that are optimized for the unit type billed. The template includes `Quantity`, `Hours`, and `Amount`.</blockquote>",
@@ -533,7 +533,7 @@
         ]
       }
     },
-    "/templates/{template_id}": {
+    "/v1/invoicing/templates/{template_id}": {
       "get": {
         "summary": "Show template details",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Shows details for a template, by ID.",
@@ -647,24 +647,12 @@
   },
   "servers": [
     {
-      "url": "https://api-m.sandbox.paypal.com/v1/invoicing",
+      "url": "https://api-m.sandbox.paypal.com",
       "description": "PayPal Sandbox Environment"
     },
     {
-      "url": "https://api-m.paypal.com/v1/invoicing",
+      "url": "https://api-m.paypal.com",
       "description": "PayPal Live Environment"
-    }
-  ],
-  "security": [
-    {
-      "sandbox": [
-        "https://uri.paypal.com/services/invoicing"
-      ]
-    },
-    {
-      "production": [
-        "https://uri.paypal.com/services/invoicing"
-      ]
     }
   ],
   "components": {
@@ -706,7 +694,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/invoicing": "Manage invoice resource."
             }

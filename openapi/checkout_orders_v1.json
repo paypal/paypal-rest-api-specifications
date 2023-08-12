@@ -6,7 +6,7 @@
     "version": "1.1"
   },
   "paths": {
-    "/orders": {
+    "/v1/checkout/orders": {
       "post": {
         "summary": "Create order",
         "description": "Creates an order.",
@@ -69,7 +69,7 @@
         ]
       }
     },
-    "/orders/{order_id}": {
+    "/v1/checkout/orders/{order_id}": {
       "get": {
         "summary": "Show order details",
         "description": "Shows details for an order, by ID.",
@@ -138,7 +138,7 @@
         ]
       }
     },
-    "/orders/{order_id}/pay": {
+    "/v1/checkout/orders/{order_id}/pay": {
       "post": {
         "summary": "Pay for order",
         "description": "Initiates a PayPal payment that a buyer has approved.<blockquote><strong>Note:</strong> For Partner use cases, use the <code>disbursement_mode</code> to indicate whether to disburse funds to the seller and partner accounts immediately or later. If you delay disbursement, you must call <a href=\"/docs/multiparty/checkout/delayed-disbursement/\">disburse funds</a> to disburse funds to the merchant and partner.</blockquote>",
@@ -220,26 +220,12 @@
   },
   "servers": [
     {
-      "url": "https://api-m.sandbox.paypal.com/v1/checkout",
+      "url": "https://api-m.sandbox.paypal.com",
       "description": "PayPal Sandbox Environment"
     },
     {
-      "url": "https://api-m.paypal.com/v1/checkout",
+      "url": "https://api-m.paypal.com",
       "description": "PayPal Live Environment"
-    }
-  ],
-  "security": [
-    {
-      "sandbox": [
-        "https://uri.paypal.com/services/payments/payment",
-        "https://uri.paypal.com/services/payments/realtimepayment"
-      ]
-    },
-    {
-      "production": [
-        "https://uri.paypal.com/services/payments/payment",
-        "https://uri.paypal.com/services/payments/realtimepayment"
-      ]
     }
   ],
   "components": {
@@ -266,7 +252,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/payments/payment": "Manage payments and checkout workflow.",
               "https://uri.paypal.com/services/payments/unilateralrefund": "This scope enables partners/facilitators to perform unilateralrefund and also refund.",

@@ -6,7 +6,7 @@
     "version": "1.9"
   },
   "paths": {
-    "/transactions": {
+    "/v1/reporting/transactions": {
       "get": {
         "summary": "List transactions",
         "description": "Lists transactions. Specify one or more query parameters to filter the transaction that appear in the response.<blockquote><strong>Notes:</strong> <ul><li>If you specify one or more optional query parameters, the <code>ending_balance</code> response field is empty.</li><li>It takes a maximum of three hours for executed transactions to appear in the list transactions call.</li><li>This call lists transaction for the previous three years.</li></ul></blockquote>",
@@ -87,7 +87,7 @@
         ]
       }
     },
-    "/balances": {
+    "/v1/reporting/balances": {
       "get": {
         "summary": "List all balances",
         "description": "List all balances. Specify date time to list balances for that time that appear in the response.<blockquote><strong>Notes:</strong> <ul><li>It takes a maximum of three hours for balances to appear in the list balances call.</li><li>This call lists balances upto the previous three years.</li></ul></blockquote>",
@@ -182,11 +182,11 @@
   },
   "servers": [
     {
-      "url": "https://api-m.sandbox.paypal.com/v1/reporting",
+      "url": "https://api-m.sandbox.paypal.com",
       "description": "PayPal Sandbox Environment"
     },
     {
-      "url": "https://api-m.paypal.com/v1/reporting",
+      "url": "https://api-m.paypal.com",
       "description": "PayPal Live Environment"
     }
   ],
@@ -210,7 +210,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/reporting/search/read": "Transactions Search",
               "https://uri.paypal.com/services/reporting/balances/read": "List Balances"

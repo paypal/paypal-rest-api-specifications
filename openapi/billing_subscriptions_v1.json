@@ -6,7 +6,7 @@
     "version": "1.6"
   },
   "paths": {
-    "/plans": {
+    "/v1/billing/plans": {
       "post": {
         "summary": "Create plan",
         "description": "Creates a plan that defines pricing and billing cycle details for subscriptions.",
@@ -269,7 +269,7 @@
         ]
       }
     },
-    "/plans/{id}": {
+    "/v1/billing/plans/{id}": {
       "get": {
         "summary": "Show plan details",
         "description": "Shows details for a plan, by ID.",
@@ -488,7 +488,7 @@
         ]
       }
     },
-    "/plans/{id}/activate": {
+    "/v1/billing/plans/{id}/activate": {
       "post": {
         "summary": "Activate plan",
         "description": "Activates a plan, by ID.",
@@ -592,7 +592,7 @@
         ]
       }
     },
-    "/plans/{id}/deactivate": {
+    "/v1/billing/plans/{id}/deactivate": {
       "post": {
         "summary": "Deactivate plan",
         "description": "Deactivates a plan, by ID.",
@@ -696,7 +696,7 @@
         ]
       }
     },
-    "/plans/{id}/update-pricing-schemes": {
+    "/v1/billing/plans/{id}/update-pricing-schemes": {
       "post": {
         "summary": "Update pricing",
         "description": "Updates pricing for a plan. For example, you can update a regular billing cycle from $5 per month to $7 per month.",
@@ -831,7 +831,7 @@
         ]
       }
     },
-    "/subscriptions": {
+    "/v1/billing/subscriptions": {
       "post": {
         "summary": "Create subscription",
         "description": "Creates a subscription.",
@@ -979,7 +979,7 @@
         ]
       }
     },
-    "/subscriptions/{id}": {
+    "/v1/billing/subscriptions/{id}": {
       "get": {
         "summary": "Show subscription details",
         "description": "Shows details for a subscription, by ID.",
@@ -1198,7 +1198,7 @@
         ]
       }
     },
-    "/subscriptions/{id}/revise": {
+    "/v1/billing/subscriptions/{id}/revise": {
       "post": {
         "summary": "Revise plan or quantity of subscription",
         "description": "Updates the quantity of the product or service in a subscription. You can also use this method to switch the plan and update the `shipping_amount`, `shipping_address` values for the subscription. This type of update requires the buyer's consent.",
@@ -1345,7 +1345,7 @@
         ]
       }
     },
-    "/subscriptions/{id}/suspend": {
+    "/v1/billing/subscriptions/{id}/suspend": {
       "post": {
         "summary": "Suspend subscription",
         "description": "Suspends the subscription.",
@@ -1480,7 +1480,7 @@
         ]
       }
     },
-    "/subscriptions/{id}/cancel": {
+    "/v1/billing/subscriptions/{id}/cancel": {
       "post": {
         "summary": "Cancel subscription",
         "description": "Cancels the subscription.",
@@ -1615,7 +1615,7 @@
         ]
       }
     },
-    "/subscriptions/{id}/activate": {
+    "/v1/billing/subscriptions/{id}/activate": {
       "post": {
         "summary": "Activate subscription",
         "description": "Activates the subscription.",
@@ -1750,7 +1750,7 @@
         ]
       }
     },
-    "/subscriptions/{id}/capture": {
+    "/v1/billing/subscriptions/{id}/capture": {
       "post": {
         "summary": "Capture authorized payment on subscription",
         "description": "Captures an authorized payment from the subscriber on the subscription.",
@@ -1898,7 +1898,7 @@
         ]
       }
     },
-    "/subscriptions/{id}/transactions": {
+    "/v1/billing/subscriptions/{id}/transactions": {
       "get": {
         "summary": "List transactions for subscription",
         "description": "Lists transactions for a subscription.",
@@ -2031,24 +2031,12 @@
   },
   "servers": [
     {
-      "url": "https://api-m.sandbox.paypal.com/v1/billing",
+      "url": "https://api-m.sandbox.paypal.com",
       "description": "PayPal Sandbox Environment"
     },
     {
-      "url": "https://api-m.paypal.com/v1/billing",
+      "url": "https://api-m.paypal.com",
       "description": "PayPal Live Environment"
-    }
-  ],
-  "security": [
-    {
-      "sandbox": [
-        "https://uri.paypal.com/services/subscriptions"
-      ]
-    },
-    {
-      "production": [
-        "https://uri.paypal.com/services/subscriptions"
-      ]
     }
   ],
   "components": {
@@ -2086,7 +2074,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/subscriptions": "Manage plan & subscription"
             }

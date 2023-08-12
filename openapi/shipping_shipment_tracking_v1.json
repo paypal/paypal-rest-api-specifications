@@ -6,7 +6,7 @@
     "version": "1.1"
   },
   "paths": {
-    "/trackers-batch": {
+    "/v1/shipping/trackers-batch": {
       "post": {
         "summary": "Add tracking information for multiple PayPal transactions",
         "description": "Adds tracking information, with or without tracking numbers, for multiple PayPal transactions. Accepts up to 20 tracking IDs. For more information, see <a href=\"/docs/tracking/integrate/#add-tracking-information-with-tracking-numbers\">Add tracking information with tracking numbers</a> and <a href=\"/docs/tracking/integrate/#add-tracking-information-without-tracking-numbers\">Add tracking information without tracking numbers</a>.",
@@ -58,7 +58,7 @@
         ]
       }
     },
-    "/trackers": {
+    "/v1/shipping/trackers": {
       "post": {
         "summary": "Add tracking information for PayPal transaction",
         "description": "Adds tracking information for a PayPal transaction.",
@@ -141,7 +141,7 @@
         ]
       }
     },
-    "/trackers/{id}": {
+    "/v1/shipping/trackers/{id}": {
       "put": {
         "summary": "Update or cancel tracking information for PayPal transaction",
         "description": "Updates or cancels the tracking information for a PayPal transaction, by ID. To cancel tracking information, call this method and set the status to CANCELLED. For more information, see <a href=\"/docs/tracking/integrate/#update-or-cancel-tracking-information\">Update or cancel tracking information</a>.",
@@ -258,11 +258,11 @@
   },
   "servers": [
     {
-      "url": "https://api-m.sandbox.paypal.com/v1/shipping",
+      "url": "https://api-m.sandbox.paypal.com",
       "description": "PayPal Sandbox Environment"
     },
     {
-      "url": "https://api-m.paypal.com/v1/shipping",
+      "url": "https://api-m.paypal.com",
       "description": "PayPal Production Environment"
     }
   ],
@@ -289,7 +289,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.sandbox.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/shipping/trackers/readwrite": "Create or update tracking information",
               "https://uri.paypal.com/services/shipping/trackers/read": "Retrieve tracking information"

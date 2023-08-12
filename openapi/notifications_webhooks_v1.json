@@ -6,7 +6,7 @@
     "version": "1.11"
   },
   "paths": {
-    "/webhooks": {
+    "/v1/notifications/webhooks": {
       "post": {
         "summary": "Create webhook",
         "description": "Subscribes your webhook listener to events.",
@@ -73,7 +73,7 @@
         ]
       }
     },
-    "/webhooks/{webhook_id}": {
+    "/v1/notifications/webhooks/{webhook_id}": {
       "get": {
         "summary": "Show webhook details",
         "description": "Shows details for a webhook, by ID.",
@@ -155,7 +155,7 @@
         ]
       }
     },
-    "/webhooks/{webhook_id}/event-types": {
+    "/v1/notifications/webhooks/{webhook_id}/event-types": {
       "get": {
         "summary": "List event subscriptions for webhook",
         "description": "Lists event subscriptions for a webhook, by ID.",
@@ -185,7 +185,7 @@
         ]
       }
     },
-    "/webhooks-lookup": {
+    "/v1/notifications/webhooks-lookup": {
       "post": {
         "summary": "Create webhook lookup",
         "description": "Creates a webhook lookup.",
@@ -233,7 +233,7 @@
         ]
       }
     },
-    "/webhooks-lookup/{webhook_lookup_id}": {
+    "/v1/notifications/webhooks-lookup/{webhook_lookup_id}": {
       "get": {
         "summary": "Show webhook lookup details",
         "description": "Shows details for a webhook lookup, by ID.",
@@ -284,7 +284,7 @@
         ]
       }
     },
-    "/verify-webhook-signature": {
+    "/v1/notifications/verify-webhook-signature": {
       "post": {
         "summary": "Verify webhook signature",
         "description": "Verifies a webhook signature.",
@@ -323,7 +323,7 @@
         ]
       }
     },
-    "/webhooks-event-types": {
+    "/v1/notifications/webhooks-event-types": {
       "get": {
         "summary": "List available events",
         "description": "Lists available events to which any webhook can subscribe. For a list of supported events, see [Webhook event names](/docs/api/notifications/webhooks/event-names/).",
@@ -348,7 +348,7 @@
         ]
       }
     },
-    "/webhooks-events": {
+    "/v1/notifications/webhooks-events": {
       "get": {
         "summary": "List event notifications",
         "description": "Lists webhooks event notifications. Use query parameters to filter the response.",
@@ -390,7 +390,7 @@
         ]
       }
     },
-    "/webhooks-events/{event_id}": {
+    "/v1/notifications/webhooks-events/{event_id}": {
       "get": {
         "summary": "Show event notification details",
         "description": "Shows details for a webhooks event notification, by ID.",
@@ -420,7 +420,7 @@
         ]
       }
     },
-    "/webhooks-events/{event_id}/resend": {
+    "/v1/notifications/webhooks-events/{event_id}/resend": {
       "post": {
         "summary": "Resend event notification",
         "description": "Resends a webhook event notification, by ID. Any pending notifications are not resent.",
@@ -464,7 +464,7 @@
         ]
       }
     },
-    "/simulate-event": {
+    "/v1/notifications/simulate-event": {
       "post": {
         "summary": "Simulate webhook event",
         "description": "Simulates a webhook event. In the JSON request body, specify a sample payload.<br>You need to subscribe to the following webhook events for Pay upon Invoice:<br><table><thead><tr><th>Event</th><th>Trigger</th></tr></thead><tbody><tr><td><code>PAYMENT.CAPTURE.COMPLETED</code></td><td>A payment capture completes.</td></tr><tr><td><code>PAYMENT.CAPTURE.DENIED</code></td><td>A payment capture is denied.</td></tr><tr><td><code>CHECKOUT.PAYMENT-APPROVAL.REVERSED</code></td><td>PayPal reverses a payment capture.</td></tr></tbody></table>",
@@ -559,24 +559,12 @@
   },
   "servers": [
     {
-      "url": "https://api-m.sandbox.paypal.com/v1/notifications",
+      "url": "https://api-m.sandbox.paypal.com",
       "description": "PayPal Sandbox Environment"
     },
     {
-      "url": "https://api-m.paypal.com/v1/notifications",
+      "url": "https://api-m.paypal.com",
       "description": "PayPal Live Environment"
-    }
-  ],
-  "security": [
-    {
-      "sandbox": [
-        "https://uri.paypal.com/services/applications/webhooks"
-      ]
-    },
-    {
-      "production": [
-        "https://uri.paypal.com/services/applications/webhooks"
-      ]
     }
   ],
   "components": {
@@ -614,7 +602,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/applications/webhooks": "Access/update Webhooks."
             }

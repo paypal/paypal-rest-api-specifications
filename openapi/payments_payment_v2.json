@@ -6,7 +6,7 @@
     "version": "2.4"
   },
   "paths": {
-    "/authorizations/{authorization_id}": {
+    "/v2/payments/authorizations/{authorization_id}": {
       "get": {
         "summary": "Show details for authorized payment",
         "description": "Shows details for an authorized payment, by ID.",
@@ -98,7 +98,7 @@
         ]
       }
     },
-    "/authorizations/{authorization_id}/capture": {
+    "/v2/payments/authorizations/{authorization_id}/capture": {
       "post": {
         "summary": "Capture authorized payment",
         "description": "Captures an authorized payment, by ID.",
@@ -244,7 +244,7 @@
         ]
       }
     },
-    "/authorizations/{authorization_id}/reauthorize": {
+    "/v2/payments/authorizations/{authorization_id}/reauthorize": {
       "post": {
         "summary": "Reauthorize authorized payment",
         "description": "Reauthorizes an authorized PayPal account payment, by ID. To ensure that funds are still available, reauthorize a payment after its initial three-day honor period expires. Within the 29-day authorization period, you can issue multiple re-authorizations after the honor period expires.<br/><br/>If 30 days have transpired since the date of the original authorization, you must create an authorized payment instead of reauthorizing the original authorized payment.<br/><br/>A reauthorized payment itself has a new honor period of three days.<br/><br/>You can reauthorize an authorized payment once for up to 115% of the original authorized amount, not to exceed an increase of $75 USD.<br/><br/>Supports only the `amount` request parameter.<blockquote><strong>Note:</strong> This request is currently not supported for Partner use cases.</blockquote>",
@@ -390,7 +390,7 @@
         ]
       }
     },
-    "/authorizations/{authorization_id}/void": {
+    "/v2/payments/authorizations/{authorization_id}/void": {
       "post": {
         "summary": "Void authorized payment",
         "description": "Voids, or cancels, an authorized payment, by ID. You cannot void an authorized payment that has been fully captured.",
@@ -542,7 +542,7 @@
         ]
       }
     },
-    "/captures/{capture_id}": {
+    "/v2/payments/captures/{capture_id}": {
       "get": {
         "summary": "Show captured payment details",
         "description": "Shows details for a captured payment, by ID.",
@@ -634,7 +634,7 @@
         ]
       }
     },
-    "/captures/{capture_id}/refund": {
+    "/v2/payments/captures/{capture_id}/refund": {
       "post": {
         "summary": "Refund captured payment",
         "description": "Refunds a captured payment, by ID. For a full refund, include an empty payload in the JSON request body. For a partial refund, include an <code>amount</code> object in the JSON request body.",
@@ -807,7 +807,7 @@
         ]
       }
     },
-    "/refunds/{refund_id}": {
+    "/v2/payments/refunds/{refund_id}": {
       "get": {
         "summary": "Show refund details",
         "description": "Shows details for a refund, by ID.",
@@ -942,11 +942,11 @@
   },
   "servers": [
     {
-      "url": "https://api-m.sandbox.paypal.com/v2/payments",
+      "url": "https://api-m.sandbox.paypal.com",
       "description": "PayPal Sandbox Environment"
     },
     {
-      "url": "https://api-m.paypal.com/v2/payments",
+      "url": "https://api-m.paypal.com",
       "description": "PayPal Live Environment"
     }
   ],
@@ -973,7 +973,7 @@
         "description": "OAuth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/payments/payment/authcapture": "Permission to do non-real time payments like capture on authorization",
               "https://uri.paypal.com/services/payments/refund": "Permission to initiate a refund on a capture transaction",

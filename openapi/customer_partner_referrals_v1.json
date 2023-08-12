@@ -6,7 +6,7 @@
     "version": "1.4"
   },
   "paths": {
-    "/partner-referrals": {
+    "/v1/customer/partner-referrals": {
       "post": {
         "summary": "Create partner referral",
         "description": "Creates a partner referral that is shared by the API caller. The referrals contains the client's personal, business, and financial data.",
@@ -58,7 +58,7 @@
         ]
       }
     },
-    "/partner-referrals/{partner_referral_id}": {
+    "/v1/customer/partner-referrals/{partner_referral_id}": {
       "get": {
         "summary": "Show referral data",
         "description": "Shows details for referral data, by ID, that was shared by the API caller.",
@@ -110,7 +110,7 @@
         ]
       }
     },
-    "/partners/{partner_id}/merchant-integrations": {
+    "/v1/customer/partners/{partner_id}/merchant-integrations": {
       "get": {
         "summary": "List seller tracking information",
         "description": "Lists sellers that a partner onboarded, by partner ID.",
@@ -136,7 +136,7 @@
         ]
       }
     },
-    "/partners/{partner_id}/merchant-integrations/{merchant_id}": {
+    "/v1/customer/partners/{partner_id}/merchant-integrations/{merchant_id}": {
       "get": {
         "summary": "Show seller status",
         "description": "Shows status information for sellers that the partner on-boards, by partner ID.",
@@ -172,7 +172,7 @@
         ]
       }
     },
-    "/partners/{partner_id}/merchant-integrations/credentials": {
+    "/v1/customer/partners/{partner_id}/merchant-integrations/credentials": {
       "get": {
         "summary": "Fetch merchant credentials",
         "description": "Fetches merchant credentials for a merchant onboarded through downloadable cart flow.",
@@ -226,24 +226,12 @@
   },
   "servers": [
     {
-      "url": "https://api-m.sandbox.paypal.com/v1/customer",
+      "url": "https://api-m.sandbox.paypal.com",
       "description": "PayPal Sandbox Environment"
     },
     {
-      "url": "https://api-m.paypal.com/v1/customer",
+      "url": "https://api-m.paypal.com",
       "description": "PayPal Live Environment"
-    }
-  ],
-  "security": [
-    {
-      "sandbox": [
-        "https://uri.paypal.com/services/customer/partner"
-      ]
-    },
-    {
-      "production": [
-        "https://uri.paypal.com/services/customer/partner"
-      ]
     }
   ],
   "components": {
@@ -267,7 +255,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/customer/partner": "Manage seller resources.",
               "https://uri.paypal.com/services/customer/partner-referrals/readwrite": "Manage external referral data with PayPal",

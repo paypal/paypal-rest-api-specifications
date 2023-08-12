@@ -6,7 +6,7 @@
     "version": "1.12"
   },
   "paths": {
-    "/payment": {
+    "/v1/payments/payment": {
       "post": {
         "summary": "Create payment",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Creates a sale, an authorized payment to be captured later, or an order. To create a sale, authorization, or order, include the payment details in the JSON request body. Set the <code>intent</code> to <code>sale</code>, <code>authorize</code>, or <code>order</code>. <blockquote><strong>Note: </strong>TPP Clients (Third Party Providers in the context of PSD2 regulation) are restricted from using <code>authorize</code> and <code>order</code> intents.</blockquote> Include payer, transaction details, and, for PayPal payments only, redirect URLs. The combination of the <code>payment_method</code> and <code>funding_instrument</code> determines the type of payment that is created. For more information, see <a href=\"/docs/integration/direct/payments/\">Payments REST API</a>.",
@@ -203,7 +203,7 @@
         ]
       }
     },
-    "/payment/{payment_id}": {
+    "/v1/payments/payment/{payment_id}": {
       "get": {
         "summary": "Show payment details",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Shows details for a payment, by ID, that has yet to complete. For example, shows details for a payment that was created, approved, or failed.",
@@ -359,7 +359,7 @@
         ]
       }
     },
-    "/payment/{payment_id}/execute": {
+    "/v1/payments/payment/{payment_id}/execute": {
       "post": {
         "summary": "Execute approved PayPal payment",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Executes a PayPal payment that the customer has approved. You can optionally update one or more transactions when you execute the payment.<blockquote><strong>Important:</strong> This call works only after a customer has approved the payment. For more information, learn about <a href=\"/docs/integration/direct/payments/paypal-payments/\">PayPal payments</a>.</blockquote>",
@@ -441,7 +441,7 @@
         ]
       }
     },
-    "/sale/{sale_id}": {
+    "/v1/payments/sale/{sale_id}": {
       "get": {
         "summary": "Show sale details",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Shows details for a sale, by ID. Returns only sales that were created through the REST API.",
@@ -513,7 +513,7 @@
         ]
       }
     },
-    "/sale/{sale_id}/refund": {
+    "/v1/payments/sale/{sale_id}/refund": {
       "post": {
         "summary": "Refund sale",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Refunds a sale, by ID. For a full refund, do not include the <code>amount</code> object in the JSON request body. For a partial refund, include an <code>amount</code> object in the JSON request body.",
@@ -611,7 +611,7 @@
         ]
       }
     },
-    "/authorization/{authorization_id}": {
+    "/v1/payments/authorization/{authorization_id}": {
       "get": {
         "summary": "Show authorization details",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Shows details for an authorization, by ID.",
@@ -688,7 +688,7 @@
         ]
       }
     },
-    "/authorization/{authorization_id}/capture": {
+    "/v1/payments/authorization/{authorization_id}/capture": {
       "post": {
         "summary": "Capture authorization",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Captures and processes an authorization, by ID. The original payment call must specify an intent of <code>authorize</code>.",
@@ -753,7 +753,7 @@
         ]
       }
     },
-    "/authorization/{authorization_id}/void": {
+    "/v1/payments/authorization/{authorization_id}/void": {
       "post": {
         "summary": "Void authorization",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Voids, or cancels, an authorization, by ID. You cannot void a fully captured authorization.",
@@ -828,7 +828,7 @@
         ]
       }
     },
-    "/authorization/{authorization_id}/reauthorize": {
+    "/v1/payments/authorization/{authorization_id}/reauthorize": {
       "post": {
         "summary": "Re-authorize payment",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Re-authorizes a PayPal account payment, by authorization ID. To ensure that funds are still available, re-authorize a payment after the initial three-day honor period. Supports only the <code>amount</code> request parameter. You can re-authorize a payment only once from four to 29 days after three-day honor period for the original authorization expires. If 30 days have passed from the original authorization, you must create a new authorization instead. A re-authorized payment itself has a new three-day honor period. You can re-authorize a transaction once for up to 115% of the originally authorized amount, not to exceed an increase of $75 USD.",
@@ -899,7 +899,7 @@
         ]
       }
     },
-    "/orders/{order_id}": {
+    "/v1/payments/orders/{order_id}": {
       "get": {
         "summary": "Show order details",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Shows details for an order, by ID.",
@@ -976,7 +976,7 @@
         ]
       }
     },
-    "/orders/{order_id}/capture": {
+    "/v1/payments/orders/{order_id}/capture": {
       "post": {
         "summary": "Capture order",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Captures a payment for an order, by ID. To use this call, the original payment call must specify an <code>order</code> intent. In the JSON request body, include the payment amount and indicate whether this capture is the final capture for the authorization.",
@@ -1041,7 +1041,7 @@
         ]
       }
     },
-    "/orders/{order_id}/do-void": {
+    "/v1/payments/orders/{order_id}/do-void": {
       "post": {
         "summary": "Void order",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Voids, or cancels, an order, by ID. You can only void orders that are either in the <code>PENDING</code> or <code>AUTHORIZED</code> states or those in the <code>CAPTURED</code> state that are not fully captured.",
@@ -1106,7 +1106,7 @@
         ]
       }
     },
-    "/orders/{order_id}/authorize": {
+    "/v1/payments/orders/{order_id}/authorize": {
       "post": {
         "summary": "Authorize order",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Authorizes an order, by ID. In the JSON request body, include an <code>amount</code> object.",
@@ -1177,7 +1177,7 @@
         ]
       }
     },
-    "/capture/{capture_id}": {
+    "/v1/payments/capture/{capture_id}": {
       "get": {
         "summary": "Show captured payment details",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Shows details for a captured payment, by ID.",
@@ -1249,7 +1249,7 @@
         ]
       }
     },
-    "/capture/{capture_id}/refund": {
+    "/v1/payments/capture/{capture_id}/refund": {
       "post": {
         "summary": "Refund captured payment",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Refunds a captured payment, by ID. In the JSON request body, include an <code>amount</code> object.",
@@ -1347,7 +1347,7 @@
         ]
       }
     },
-    "/refund/{refund_id}": {
+    "/v1/payments/refund/{refund_id}": {
       "get": {
         "summary": "Show refund details",
         "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Shows details for a refund, by ID.",
@@ -1449,11 +1449,11 @@
   },
   "servers": [
     {
-      "url": "https://api-m.sandbox.paypal.com/v1/payments",
+      "url": "https://api-m.sandbox.paypal.com",
       "description": "PayPal Sandbox Environment"
     },
     {
-      "url": "https://api-m.paypal.com/v1/payments",
+      "url": "https://api-m.paypal.com",
       "description": "PayPal Live Environment"
     }
   ],
@@ -1515,7 +1515,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api-m.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://api.paypal.com/v1/payments/.*": "Deprecated. Legacy payment scope. It will be replaced with new scopes",
               "https://uri.paypal.com/services/payments/payment": "New special privileged scope available to do payment. This will be available to internal clients only",

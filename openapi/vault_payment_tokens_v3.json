@@ -6,7 +6,7 @@
     "version": "3.0"
   },
   "paths": {
-    "/payment-tokens": {
+    "/v3/vault/payment-tokens": {
       "post": {
         "description": "Creates a Payment Token from the given payment source and adds it to the Vault of the associated customer.",
         "summary": "Create payment token for a given payment source",
@@ -221,7 +221,7 @@
         ]
       }
     },
-    "/payment-tokens/{id}": {
+    "/v3/vault/payment-tokens/{id}": {
       "get": {
         "description": "Returns a readable representation of vaulted payment source associated with the payment token id.",
         "summary": "Retrieve a payment token",
@@ -366,7 +366,7 @@
         ]
       }
     },
-    "/setup-tokens": {
+    "/v3/vault/setup-tokens": {
       "post": {
         "description": "Creates a Setup Token from the given payment source and adds it to the Vault of the associated customer.",
         "summary": "Create a setup token",
@@ -484,7 +484,7 @@
         ]
       }
     },
-    "/setup-tokens/{id}": {
+    "/v3/vault/setup-tokens/{id}": {
       "get": {
         "description": "Returns a readable representation of temporarily vaulted payment source associated with the setup token id.",
         "summary": "Retrieve a setup token",
@@ -586,11 +586,11 @@
   },
   "servers": [
     {
-      "url": "https://api.sandbox.paypal.com/v3/vault",
+      "url": "https://api.sandbox.paypal.com",
       "description": "PayPal Sandbox Environment"
     },
     {
-      "url": "https://api.paypal.com/v3/vault",
+      "url": "https://api.paypal.com",
       "description": "PayPal Live Environment"
     }
   ],
@@ -614,7 +614,7 @@
         "description": "Oauth 2.0 authentication",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://api.paypal.com/v1/oauth2/token",
+            "tokenUrl": "/v1/oauth2/token",
             "scopes": {
               "https://uri.paypal.com/services/vault/payment-tokens/readwrite": "Manage payment instruments",
               "https://uri.paypal.com/services/vault/payment-tokens/read": "Permission to only read from vault"

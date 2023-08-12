@@ -20,7 +20,7 @@
     "lint-redocly": "redocly --format summary lint",
     "lint-spectral": "spectral --format pretty lint",
     "lint-openapi": "openapi-generator-cli validate -i",
-    "codegen-java": "openapi-generator-cli generate --skip-validate-spec -g java -o generated/java -i",
+    "codegen-java": "openapi-generator-cli generate --skip-validate-spec -g java --library apache-httpclient -o generated/java -i",
     "codegen-typescript-node": "openapi-generator-cli generate --skip-validate-spec -g typescript-node -o generated/typescript-node -i"
   }
 }
