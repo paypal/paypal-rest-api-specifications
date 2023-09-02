@@ -1,0 +1,8 @@
+{
+  "scope": "https://uri.paypal.com/services/invoicing https://uri.paypal.com/services/disputes/read-buyer https://uri.paypal.com/services/payments/realtimepayment https://uri.paypal.com/services/disputes/update-seller https://uri.paypal.com/services/payments/payment/authcapture openid https://uri.paypal.com/services/disputes/read-seller https://uri.paypal.com/services/payments/refund https://api-m.paypal.com/v1/vault/credit-card https://api-m.paypal.com/v1/payments/.* https://uri.paypal.com/payments/payouts https://api-m.paypal.com/v1/vault/credit-card/.* https://uri.paypal.com/services/subscriptions https://uri.paypal.com/services/applications/webhooks",
+  "access_token": "Afr2CO8a1VUWMz6NP2muZffTu5xYjPQrfulk3RI39VrUQPTj-k4wU943lZr7sS9ipntsYg3UEh4rcPsw",
+  "token_type": "Bearer",
+  "app_id": "MyApp_Intuit",
+  "expires_in": 31668,
+  "nonce": "Afr2CO8a1VUWMz6NP2muZffTu5xYjPQrfulk3RI39VrUQPTj-k4wU943lZr7sS9ipntsYg3UEh4rcPsw"
+}
