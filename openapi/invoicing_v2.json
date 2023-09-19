@@ -2254,7 +2254,7 @@
     }
   ],
   "externalDocs": {
-    "url": "https://developer.paypal.com/docs/api/invoicing/v1/"
+    "url": "https://developer.paypal.com/docs/api/invoicing/v2/"
   },
   "servers": [
     {
