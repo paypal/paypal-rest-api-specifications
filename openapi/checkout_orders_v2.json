@@ -918,7 +918,7 @@
     "/v2/checkout/orders/{id}/trackers/{tracker_id}": {
       "patch": {
         "summary": "Update or cancel tracking information for a PayPal order",
-        "description": "Updates or cancels the tracking information for a PayPal order, by ID. Updatable attributes or objects:<br/><br/><table><thead><th>Attribute</th><th>Op</th><th>Notes</th></thead><tbody></tr><tr><td><code>items</code></td><td>replace</td><td>Using replace op for <code>items</code> will replace the entire <code>items</code> object with the value sent in request.</td></tr><tr><td><code>notify_payer</code></td><td>replace, add</td><td></td></tr></tbody></table>",
+        "description": "Updates or cancels the tracking information for a PayPal order, by ID. Updatable attributes or objects:<br/><br/><table><thead><th>Attribute</th><th>Op</th><th>Notes</th></thead><tbody></tr><tr><td><code>items</code></td><td>replace</td><td>Using replace op for <code>items</code> will replace the entire <code>items</code> object with the value sent in request.</td></tr><tr><td><code>notify_payer</code></td><td>replace, add</td><td></td></tr><tr><td><code>status</code></td><td>replace</td><td>Only patching status to CANCELLED is currently supported.</td></tr></tbody></table>",
         "operationId": "orders.trackers.patch",
         "responses": {
           "204": {
@@ -3157,6 +3157,40 @@
                       ]
                     }
                   }
+                },
+                {
+                  "title": "ALIAS_DECLINED_BY_PROCESSOR",
+                  "properties": {
+                    "issue": {
+                      "type": "string",
+                      "enum": [
+                        "ALIAS_DECLINED_BY_PROCESSOR"
+                      ]
+                    },
+                    "description": {
+                      "type": "string",
+                      "enum": [
+                        "The provided alias was declined by the processor. Please create a new order with a different alias_key and/or alias_label and try again."
+                      ]
+                    }
+                  }
+                },
+                {
+                  "title": "BLIK_ONE_CLICK_MISSING_REQUIRED_PARAMETER",
+                  "properties": {
+                    "issue": {
+                      "type": "string",
+                      "enum": [
+                        "BLIK_ONE_CLICK_MISSING_REQUIRED_PARAMETER"
+                      ]
+                    },
+                    "description": {
+                      "type": "string",
+                      "enum": [
+                        "Blik's one_click flow requires one_click.auth_code and one_click.alias_label parameters for the buyer's first transaction. For all subsequent transactions,only the one_click.alias_key parameter is required."
+                      ]
+                    }
+                  }
                 }
               ]
             }
@@ -4075,6 +4109,49 @@
           "quantity"
         ]
       },
+      "shipping_type": {
+        "type": "string",
+        "title": "Shipping Type",
+        "description": "The method by which the payer wants to get their items.",
+        "enum": [
+          "SHIPPING",
+          "PICKUP"
+        ]
+      },
+      "shipping_option": {
+        "type": "object",
+        "title": "Shipping Option",
+        "description": "The options that the payee or merchant offers to the payer to ship or pick up their items.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A unique ID that identifies a payer-selected shipping option.",
+            "maxLength": 127
+          },
+          "label": {
+            "type": "string",
+            "description": "A description that the payer sees, which helps them choose an appropriate shipping option. For example, `Free Shipping`, `USPS Priority Shipping`, `Expédition prioritaire USPS`, or `USPS yōuxiān fā huò`. Localize this description to the payer's locale.",
+            "maxLength": 127
+          },
+          "type": {
+            "description": "The method by which the payer wants to get their items.",
+            "$ref": "#/components/schemas/shipping_type"
+          },
+          "amount": {
+            "description": "The shipping cost for the selected option.",
+            "$ref": "#/components/schemas/money"
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "If the API request sets `selected = true`, it represents the shipping option that the payee or merchant expects to be pre-selected for the payer when they first view the `shipping.options` in the PayPal Checkout experience. As part of the response if a `shipping.option` contains `selected=true`, it represents the shipping option that the payer selected during the course of checkout with PayPal. Only one `shipping.option` can be set to `selected=true`."
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "selected"
+        ]
+      },
       "shipping_detail": {
         "type": "object",
         "description": "The shipping details.",
@@ -4094,6 +4171,16 @@
               "SHIPPING",
               "PICKUP_IN_PERSON"
             ]
+          },
+          "options": {
+            "type": "array",
+            "description": "An array of shipping options that the payee or merchant offers to the payer to ship or pick up their items.",
+            "minItems": 0,
+            "maxItems": 10,
+            "items": {
+              "description": "The option that the payee or merchant offers to the payer to ship or pick up their items.",
+              "$ref": "#/components/schemas/shipping_option"
+            }
           },
           "address": {
             "description": "The address of the person to whom to ship the items. Supports only the `address_line_1`, `address_line_2`, `admin_area_1`, `admin_area_2`, `postal_code`, and `country_code` properties.",
@@ -4518,7 +4605,7 @@
             "type": "string",
             "minLength": 9,
             "maxLength": 36,
-            "pattern": "^[a-zA-Z0-9-]+$",
+            "pattern": "^[a-zA-Z0-9-_@.:&+=*^'~#!$%()]+$",
             "description": "Transaction reference id returned by the scheme. For Visa and Amex, this is the \"Tran id\" field in response. For MasterCard, this is the \"BankNet reference id\" field in response. For Discover, this is the \"NRID\" field in response. The pattern we expect for this field from Visa/Amex/CB/Discover is numeric, Mastercard/BNPP is alphanumeric and Paysecure is alphanumeric with special character -."
           },
           "date": {
@@ -4567,6 +4654,82 @@
           "payment_type"
         ]
       },
+      "eci_flag": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[0-9A-Z_]+$",
+        "description": "Electronic Commerce Indicator (ECI). The ECI value is part of the 2 data elements that indicate the transaction was processed electronically. This should be passed on the authorization transaction to the Gateway/Processor.",
+        "enum": [
+          "MASTERCARD_NON_3D_SECURE_TRANSACTION",
+          "MASTERCARD_ATTEMPTED_AUTHENTICATION_TRANSACTION",
+          "MASTERCARD_FULLY_AUTHENTICATED_TRANSACTION",
+          "FULLY_AUTHENTICATED_TRANSACTION",
+          "ATTEMPTED_AUTHENTICATION_TRANSACTION",
+          "NON_3D_SECURE_TRANSACTION"
+        ]
+      },
+      "network_token_request": {
+        "type": "object",
+        "title": "Network Token",
+        "description": "The Third Party Network token used to fund a payment.",
+        "properties": {
+          "number": {
+            "type": "string",
+            "description": "Third party network token number.",
+            "pattern": "^[0-9]{13,19}$",
+            "minLength": 13,
+            "maxLength": 19
+          },
+          "expiry": {
+            "description": "The card expiration year and month, in [Internet date format](https://tools.ietf.org/html/rfc3339#section-5.6).",
+            "$ref": "#/components/schemas/date_year_month"
+          },
+          "cryptogram": {
+            "type": "string",
+            "description": "An Encrypted one-time use value that's sent along with Network Token. This field is not required to be present for recurring transactions.",
+            "pattern": "^.*$",
+            "minLength": 28,
+            "maxLength": 32
+          },
+          "eci_flag": {
+            "$ref": "#/components/schemas/eci_flag"
+          },
+          "token_requestor_id": {
+            "type": "string",
+            "description": "A TRID, or a Token Requestor ID, is an identifier used by merchants to request network tokens from card networks. A TRID is a precursor to obtaining a network token for a credit card primary account number (PAN), and will aid in enabling secure card on file (COF) payments and reducing fraud.",
+            "pattern": "^[0-9A-Z_]+$",
+            "minLength": 1,
+            "maxLength": 11
+          }
+        },
+        "required": [
+          "number",
+          "expiry"
+        ]
+      },
+      "url": {
+        "type": "string",
+        "description": "Describes the URL.",
+        "format": "uri"
+      },
+      "card_experience_context": {
+        "type": "object",
+        "title": "Card Experience Context",
+        "description": "Customizes the payer experience during the 3DS Approval for payment.",
+        "properties": {
+          "return_url": {
+            "description": "The URL where the customer will be redirected upon successfully completing the 3DS challenge.",
+            "format": "uri",
+            "$ref": "#/components/schemas/url"
+          },
+          "cancel_url": {
+            "description": "The URL where the customer will be redirected upon cancelling the 3DS challenge.",
+            "format": "uri",
+            "$ref": "#/components/schemas/url"
+          }
+        }
+      },
       "card_request": {
         "type": "object",
         "title": "Card Request",
@@ -4583,6 +4746,13 @@
               },
               "stored_credential": {
                 "$ref": "#/components/schemas/card_stored_credential"
+              },
+              "network_token": {
+                "description": "A 3rd party network token refers to a network token that the merchant provisions from and vaults with an external TSP (Token Service Provider) other than PayPal.",
+                "$ref": "#/components/schemas/network_token_request"
+              },
+              "experience_context": {
+                "$ref": "#/components/schemas/card_experience_context"
               }
             }
           }
@@ -4842,11 +5012,6 @@
         "minLength": 2,
         "pattern": "^[a-z]{2}(?:-[A-Z][a-z]{3})?(?:-(?:[A-Z]{2}|[0-9]{3}))?$"
       },
-      "url": {
-        "type": "string",
-        "description": "Describes the URL.",
-        "format": "uri"
-      },
       "paypal_wallet_experience_context": {
         "type": "object",
         "title": "PayPal Wallet Experience Context",
@@ -4877,12 +5042,12 @@
             ]
           },
           "return_url": {
-            "description": "The URL where the customer is redirected after the customer approves the payment.",
+            "description": "The URL where the customer will be redirected upon approving a payment.",
             "format": "uri",
             "$ref": "#/components/schemas/url"
           },
           "cancel_url": {
-            "description": "The URL where the customer is redirected after the customer cancels the payment.",
+            "description": "The URL where the customer will be redirected upon cancelling the payment approval.",
             "format": "uri",
             "$ref": "#/components/schemas/url"
           },
@@ -5024,6 +5189,7 @@
           }
         }
       },
+      "altpay_recurring_attributes_request": {},
       "bancontact_request": {
         "type": "object",
         "title": "Bancontact payment object",
@@ -5040,6 +5206,10 @@
           "experience_context": {
             "description": "Customizes the payer experience during the approval process for the payment.",
             "$ref": "#/components/schemas/experience_context_base"
+          },
+          "attributes": {
+            "description": "Attributes for altpay recurring.",
+            "$ref": "#/components/schemas/altpay_recurring_attributes_request"
           }
         },
         "required": [
@@ -5054,6 +5224,95 @@
         "minLength": 3,
         "maxLength": 254,
         "pattern": "^.+@[^\"\\-].+$"
+      },
+      "ip_address": {
+        "type": "string",
+        "title": "IP Address",
+        "description": "An Internet Protocol address (IP address). This address assigns a numerical label to each device that is connected to a computer network through the Internet Protocol. Supports IPv4 and IPv6 addresses.",
+        "format": "ppaas_ip_address_v1",
+        "minLength": 7,
+        "maxLength": 39,
+        "pattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\\-]*[A-Za-z0-9])$|^\\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:)))(%.+)?\\s*$"
+      },
+      "blik_experience_context": {
+        "type": "object",
+        "title": "BLIK Experience Context",
+        "description": "Customizes the payer experience during the approval process for the BLIK payment.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/experience_context_base"
+          },
+          {
+            "properties": {
+              "consumer_ip": {
+                "description": "The IP address of the consumer. It could be either IPv4 or IPv6.",
+                "$ref": "#/components/schemas/ip_address"
+              },
+              "consumer_user_agent": {
+                "type": "string",
+                "description": "The payer's User Agent. For example, Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0).",
+                "minLength": 1,
+                "maxLength": 256,
+                "pattern": "^.*$"
+              }
+            }
+          }
+        ]
+      },
+      "blik_seamless": {
+        "type": "object",
+        "title": "BLIK level_0 payment object",
+        "description": "Information used to pay using BLIK level_0 flow.",
+        "properties": {
+          "auth_code": {
+            "type": "string",
+            "description": "6-digit code used to authenticate a consumer within BLIK.",
+            "minLength": 6,
+            "maxLength": 6,
+            "pattern": "^[0-9]{6}$"
+          }
+        },
+        "required": [
+          "auth_code"
+        ]
+      },
+      "blik_one_click": {
+        "type": "object",
+        "title": "BLIK one-click payment object",
+        "description": "Information used to pay using BLIK one-click flow.",
+        "properties": {
+          "auth_code": {
+            "type": "string",
+            "description": "6-digit code used to authenticate a consumer within BLIK.",
+            "minLength": 6,
+            "maxLength": 6,
+            "pattern": "^[0-9]{6}$"
+          },
+          "consumer_reference": {
+            "type": "string",
+            "description": "The merchant generated, unique reference serving as a primary identifier for accounts connected between Blik and a merchant.",
+            "minLength": 3,
+            "maxLength": 64,
+            "pattern": "^[ -~]{3,64}$"
+          },
+          "alias_label": {
+            "type": "string",
+            "description": "A bank defined identifier used as a display name to allow the payer to differentiate between multiple registered bank accounts.",
+            "minLength": 8,
+            "maxLength": 35,
+            "pattern": "^[ -~]{8,35}$"
+          },
+          "alias_key": {
+            "type": "string",
+            "description": "A Blik-defined identifier for a specific Blik-enabled bank account that is associated with a given merchant. Used only in conjunction with a Consumer Reference.",
+            "minLength": 1,
+            "maxLength": 19,
+            "pattern": "^[0-9]+$"
+          }
+        },
+        "required": [
+          "consumer_reference"
+        ]
       },
       "blik_request": {
         "type": "object",
@@ -5074,7 +5333,15 @@
           },
           "experience_context": {
             "description": "Customizes the payer experience during the approval process for the payment.",
-            "$ref": "#/components/schemas/experience_context_base"
+            "$ref": "#/components/schemas/blik_experience_context"
+          },
+          "level_0": {
+            "description": "The level_0 integration flow object.",
+            "$ref": "#/components/schemas/blik_seamless"
+          },
+          "one_click": {
+            "description": "The one-click integration flow object.",
+            "$ref": "#/components/schemas/blik_one_click"
           }
         },
         "required": [
@@ -5156,6 +5423,10 @@
           "experience_context": {
             "description": "Customizes the payer experience during the approval process for the payment.",
             "$ref": "#/components/schemas/experience_context_base"
+          },
+          "attributes": {
+            "description": "Attributes for altpay recurring.",
+            "$ref": "#/components/schemas/altpay_recurring_attributes_request"
           }
         },
         "required": [
@@ -5320,7 +5591,8 @@
             "maxLength": 2000,
             "pattern": "^.*$"
           }
-        }
+        },
+        "required": []
       },
       "apple_pay_decrypted_token_data": {
         "type": "object",
@@ -5865,6 +6137,7 @@
         }
       },
       "authentication_flow": {},
+      "exemption_details": {},
       "authentication_response": {
         "type": "object",
         "title": "Authentication Response",
@@ -5878,6 +6151,10 @@
           },
           "authentication_flow": {
             "$ref": "#/components/schemas/authentication_flow"
+          },
+          "exemption_details": {
+            "description": "Exemption details of 3D Secure Authentication.",
+            "$ref": "#/components/schemas/exemption_details"
           }
         }
       },
@@ -6214,6 +6491,7 @@
         "maxLength": 34,
         "pattern": "[a-zA-Z0-9]{4}"
       },
+      "altpay_recurring_attributes": {},
       "bancontact": {
         "type": "object",
         "title": "Bancontact payment object",
@@ -6240,6 +6518,24 @@
             "maxLength": 4,
             "pattern": "[0-9]{4}",
             "description": "The last digits of the card used to fund the Bancontact payment."
+          },
+          "attributes": {
+            "description": "Attributes for SEPA direct debit object.",
+            "$ref": "#/components/schemas/altpay_recurring_attributes"
+          }
+        }
+      },
+      "blik_one_click_response": {
+        "type": "object",
+        "title": "BLIK one-click payment object",
+        "description": "Information used to pay using BLIK one-click flow.",
+        "properties": {
+          "consumer_reference": {
+            "type": "string",
+            "description": "The merchant generated, unique reference serving as a primary identifier for accounts connected between Blik and a merchant.",
+            "minLength": 3,
+            "maxLength": 64,
+            "pattern": "^[ -~]{3,64}$"
           }
         }
       },
@@ -6259,6 +6555,10 @@
           "email": {
             "description": "The email address of the account holder associated with this payment method.",
             "$ref": "#/components/schemas/email_address"
+          },
+          "one_click": {
+            "description": "The one-click integration flow object.",
+            "$ref": "#/components/schemas/blik_one_click_response"
           }
         }
       },
@@ -6319,6 +6619,10 @@
           },
           "iban_last_chars": {
             "$ref": "#/components/schemas/iban_last_chars"
+          },
+          "attributes": {
+            "description": "Attributes for SEPA direct debit object.",
+            "$ref": "#/components/schemas/altpay_recurring_attributes"
           }
         }
       },
@@ -6529,6 +6833,7 @@
           "NO_INSTRUCTION"
         ]
       },
+      "tracker_status": {},
       "universal_product_code": {},
       "tracker_item": {
         "type": "object",
@@ -6579,6 +6884,9 @@
                 "type": "string",
                 "description": "The tracker id.",
                 "readOnly": true
+              },
+              "status": {
+                "$ref": "#/components/schemas/tracker_status"
               },
               "items": {
                 "type": "array",
@@ -9524,6 +9832,40 @@
                       "type": "string",
                       "enum": [
                         "EMV Data is required if authentication method is EMV."
+                      ]
+                    }
+                  }
+                },
+                {
+                  "title": "ALIAS_DECLINED_BY_PROCESSOR",
+                  "properties": {
+                    "issue": {
+                      "type": "string",
+                      "enum": [
+                        "ALIAS_DECLINED_BY_PROCESSOR"
+                      ]
+                    },
+                    "description": {
+                      "type": "string",
+                      "enum": [
+                        "The provided alias was declined by the processor. Please create a new order with a different alias_key and/or alias_label and try again."
+                      ]
+                    }
+                  }
+                },
+                {
+                  "title": "BLIK_ONE_CLICK_MISSING_REQUIRED_PARAMETER",
+                  "properties": {
+                    "issue": {
+                      "type": "string",
+                      "enum": [
+                        "BLIK_ONE_CLICK_MISSING_REQUIRED_PARAMETER"
+                      ]
+                    },
+                    "description": {
+                      "type": "string",
+                      "enum": [
+                        "Blik's one_click flow requires one_click.auth_code and one_click.alias_label parameters for the buyer's first transaction. For all subsequent transactions,only the one_click.alias_key parameter is required."
                       ]
                     }
                   }
