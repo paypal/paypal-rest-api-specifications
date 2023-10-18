@@ -2,14 +2,14 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Partner Referrals",
-    "description": "The Partner Referrals API enables a marketplace to add PayPal seller accounts. It supports the Connected Path marketplace models.<blockquote><strong>Important:</strong> PayPal for Marketplaces is a limited-release solution at this time. It is available to select partners for approved use cases. For more information, reach out to your PayPal account manager.</blockquote>In the <a href=\"/docs/multiparty/seller-onboarding/before-payment/\">Connected Path</a>, you host a button on your website that takes sellers to PayPal to create and configure a PayPal account. The Onboarding API enables you to collect seller data and pass it to the account creation and setup forms, reducing the burden on sellers during the signup and setup process. Call the <a href=\"#partner-referrals_create\">create partner referral</a> and <a href=\"#partner-referrals_read\">show referral data</a> methods for the Connected Path.",
+    "description": "Use the Partner Referrals API to add PayPal seller accounts to PayPal Commerce Platform for Marketplaces and Platforms. <blockquote><strong>Important:</strong> This endpoint is available to approved partners only. <a href=\"/docs/multiparty/#link-tellusaboutyourplatform\">Fill out this form</a> to get approved and a PayPal representative will reach out to you shortly.</blockquote> For more information about partner integrations and onboarding sellers, see <a href=\"/docs/multiparty\">PayPal Commerce Platform for Marketplaces and Platforms.",
     "version": "2.4"
   },
   "paths": {
     "/v2/customer/partner-referrals": {
       "post": {
         "summary": "Create partner referral",
-        "description": "Creates a partner referral that is shared by the API caller. The referrals contains the client's personal, business, financial and operations that the partner wants to onboard the client.",
+        "description": "Creates a partner referral that is shared by the partner or API caller. The partner referral is used to onboard the seller, and contains the seller's personal, business, financial and operations.",
         "operationId": "partner-referrals.create",
         "responses": {
           "201": {
@@ -57,7 +57,7 @@
             }
           },
           "403": {
-            "description": "Authorization failed due to insufficient permissions or missing scopes on the caller Account.",
+            "description": "Authorization failed due to insufficient permissions or missing scopes on the caller account.",
             "content": {
               "application/json": {
                 "schema": {
@@ -129,7 +129,7 @@
     "/v2/customer/partner-referrals/{partner_referral_id}": {
       "get": {
         "summary": "Show referral data",
-        "description": "Shows details for referral data, by ID, that was shared by the API caller.",
+        "description": "Shows details by ID for referral data that was shared by the partner or API caller.",
         "operationId": "partner-referrals.read",
         "responses": {
           "200": {
@@ -1084,6 +1084,18 @@
           "national_number"
         ]
       },
+      "phone_type": {
+        "type": "string",
+        "title": "Phone Type",
+        "description": "The phone type.",
+        "enum": [
+          "FAX",
+          "HOME",
+          "MOBILE",
+          "OTHER",
+          "PAGER"
+        ]
+      },
       "phone_number_tag": {
         "description": "Tag associated with the phone number.",
         "title": "Phone number tag",
@@ -1124,6 +1136,10 @@
               "primary_mobile": {
                 "type": "boolean",
                 "description": "Whether this is the primary mobile phone number of the user."
+              },
+              "type": {
+                "$ref": "#/components/schemas/phone_type",
+                "description": "The type of phone number provided. For example, home, work, or mobile."
               },
               "tags": {
                 "type": "array",
@@ -2571,7 +2587,8 @@
           "WEBSITE_PAYMENT_PRO",
           "PAYMENT_METHODS",
           "PPCP",
-          "ADVANCED_VAULTING"
+          "ADVANCED_VAULTING",
+          "IZETTLE"
         ]
       },
       "capabilities": {

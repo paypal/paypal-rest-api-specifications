@@ -1491,6 +1491,82 @@
           "redirect_urls"
         ]
       },
+      "error_details-2": {
+        "title": "Error Details",
+        "type": "object",
+        "description": "The error details. Required for client-side `4XX` errors.",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The field that caused the error. If the field is in the body, set this value to the JSON pointer to that field. Required for client-side errors."
+          },
+          "value": {
+            "type": "string",
+            "description": "The value of the field that caused the error."
+          },
+          "location": {
+            "type": "string",
+            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+            "default": "body"
+          },
+          "issue": {
+            "type": "string",
+            "description": "The unique and fine-grained application-level error code."
+          },
+          "description": {
+            "type": "string",
+            "description": "The human-readable description for an issue. The description MAY change over the lifetime of an API, so clients **MUST NOT** depend on this value."
+          }
+        },
+        "required": [
+          "issue"
+        ]
+      },
+      "error": {
+        "type": "object",
+        "title": "Error",
+        "description": "The error details.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The human-readable, unique name of the error."
+          },
+          "message": {
+            "type": "string",
+            "description": "The message that describes the error."
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID that is used for correlation purposes."
+          },
+          "information_link": {
+            "type": "string",
+            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
+            "readOnly": true
+          },
+          "details": {
+            "type": "array",
+            "description": "An array of additional details about the error.",
+            "items": {
+              "$ref": "#/components/schemas/error_details-2"
+            }
+          },
+          "links": {
+            "type": "array",
+            "description": "An array of request-related [HATEOAS links](/docs/api/overview/#hateoas-links).",
+            "readOnly": true,
+            "items": {
+              "$ref": "#/components/schemas/link_description",
+              "readOnly": true
+            }
+          }
+        },
+        "required": [
+          "name",
+          "message",
+          "debug_id"
+        ]
+      },
       "credit_card": {
         "type": "object",
         "title": "Credit Card",

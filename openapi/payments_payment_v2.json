@@ -3,7 +3,7 @@
   "info": {
     "title": "Payments",
     "description": "Call the Payments API to authorize payments, capture authorized payments, refund payments that have already been captured, and show payment information. Use the Payments API in conjunction with the <a href=\"/docs/api/orders/v2/\">Orders API</a>. For more information, see the <a href=\"/docs/checkout/\">PayPal Checkout Overview</a>.",
-    "version": "2.4"
+    "version": "2.5"
   },
   "paths": {
     "/v2/payments/authorizations/{authorization_id}": {
