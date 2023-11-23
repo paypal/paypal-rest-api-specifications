@@ -1,0 +1,302 @@
+
+HomeMarkdownConfigurationDevelopers
+Configuration
+The gitiles.config file supporting the site contains several configuration options.
+
+Contents
+Core configuration
+Site Title
+URLs
+Repositories export
+Custom templating
+Custom styling
+Fixed time zone
+Cross-Origin Resource Sharing (CORS)
+Gitweb redirector
+Markdown
+Disabling markdown
+Markdown size
+Image size
+Extensions
+IFrames
+Google Analytics
+Core configuration
+Site Title
+The title of the site. Default: Gitiles.
+
+[gitiles]
+  siteTitle = Acme Inc. Git Browser
+URLs
+canonicalHostName. Default: null, determine the hostname from the local host.
+
+baseGitUrl the base URL for git repositories.
+
+gerritUrl, URL prefix to linkify Gerrit Change-Id headers in commit messages. If you are using the Gerrit Gitiles plugin, this is set based on Gerrit's configuration. Default: null, do not link Change-Id.
+
+[gitiles]
+  canonicalHostName = gitiles.example.org
+  gerritUrl = https://gerrit.example.org/r/
+  baseGitUrl = git://git.example.org/
+Repositories export
+Set exportAll to instruct jGit to export all repositories, ignoring the check for existence of git-daemon-export-ok file at the root of the repository.
+
+Default: false, repositories need to be explicitly marked for export.
+
+[gitiles]
+exportAll = true
+Custom templating
+The web views are defined via Soy templates, you inject your own version which will be passed to the renderer. See .soy files in the source code for available templates
+
+[gitiles]
+customTemplates = path/to/somefile.soy
+customTemplates = path/to/another.soy
+Custom styling
+It's possible to inject custom styles within the template. To do this add the following to gitiles.config:
+
+[gitiles]
+    customTemplates = path/to/afile.soy
+[template]
+    customVariant=aVariant
+Where customVariant is the variable defined in the default templates themselves. Then you can define afile.soy as follows:
+
+{namespace gitiles}
+{deltemplate gitiles.customHeadTagPart variant="'aVariant'"}
+
+<link rel="stylesheet" type="text/css" href="/static/file.css" />
+
+{/deltemplate}
+It is also possible to define a <style> tag there if desired.
+
+Fixed time zone
+By default dates are formatted including the local user time zone as that matches git tools. Some users/administrators may prefer normalizing to a particular timezone so times are directly comparable without doing timezone arithmetic.
+
+Setting fixedTimeZone to a valid Java TimeZone ID causes all dates in the UI to be implicitly converted to this timezone, and the now-redundant timezone offset to be dropped from the output.
+
+[gitiles]
+  fixedTimeZone = UTC
+Cross-Origin Resource Sharing (CORS)
+Gitiles sets the Access-Control-Allow-Origin header to the HTTP origin of the client if the client's domain matches a regular expression defined in allowOriginRegex.
+
+[gitiles]
+  allowOriginRegex = http://localhost
+By default allowOriginRegex is unset, denying all cross-origin requests.
+
+Gitweb redirector
+Redirect requests to old gitweb URLs after having migrated to Gitiles. Matching URLs will be redirected permanently to their Gitiles equivalent. Default: true.
+
+[gitiles]
+redirectGitweb = false
+Markdown
+Disabling markdown
+Markdown can be completely disabled by setting render to false.
+
+[markdown]
+  render = false
+Markdown size
+Markdown files are limited by default to 5 MiB of input text per file. This limit is configurable, but should not be raised beyond available memory.
+
+[markdown]
+  inputLimit = 5M
+Image size
+Referenced images are inlined as base64 encoded URIs. The image limit places an upper bound on the byte size of input.
+
+[markdown]
+  imageLimit = 256K
+Extensions
+The following extensions can be enabled/disabled in the markdown section:
+
+githubFlavor: enable extensions that mirror GitHub Flavor Markdown behavior. Default is true.
+
+autolink: automatically convert plain URLs and email addresses into links. Default follows githubFlavor.
+
+blocknote: Gitiles style note/promo/aside blocks to raise awareness to important content. Default false.
+
+ghthematicbreak: accept -- for <hr>, like GitHub Flavor Markdown. Default follows githubFlavor.
+
+multicolumn: Gitiles extension to layout content in a 12 cell grid, delinated by section headers. Default false.
+
+namedanchor: Gitiles extension to extract named anchors using #{id} syntax. Default false.
+
+safehtml: Gitiles extension to accept very limited HTML; for security reasons all other HTML is dropped regardless of this setting. Default follows githubFlavor.
+
+smartquote: Gitiles extension to convert single and double quote ASCII characters to Unicode smart quotes when in prose. Default false.
+
+strikethrough: strikethrough text with GitHub Flavor Markdown style ~~. Default follows githubFlavor.
+
+tables: format tables with GitHub Flavor Markdown. Default follows githubFlavor.
+
+toc: Gitiles extension to replace [TOC] in a paragraph by itself with a server-side generated table of contents extracted from section headers. Default true.
+
+IFrames
+IFrame support requires markdown.safehtml to be true.
+
+IFrame source URLs can be whitelisted by providing a list of allowed URLs. URLs ending with a / are treated as prefixes, allowing any source URL beginning with that prefix.
+
+[markdown]
+  allowiframe = https://google.com/
+URLs not ending with a / are treated as exact matches, and only those source URLs will be allowed.
+
+[markdown]
+  allowiframe = https://example.com
+  allowiframe = https://example.org
+If the list has a single entry with the value true, all source URLs will be allowed.
+
+[markdown]
+  allowiframe = true
+Google Analytics
+Google Analytics can be enabled on every rendered markdown page by adding the Property ID to the configuration file:
+
+[google]
+  analyticsId = UA-XXXX-Y
+Powered by Gitiles| Privacy| Term
+homemarkdownconfigurationdevelopers
+configuration
+the gitiles.config file supporting the site contains several configuration options.
+
+contents
+core configuration
+site title
+urls
+repositories export
+custom templating
+custom styling
+fixed time zone
+cross-origin resource sharing (cors)
+gitweb redirector
+markdown
+disabling markdown
+markdown size
+image size
+extensions
+iframes
+google analytics
+core configuration
+site title
+the title of the site. default: gitiles.
+
+[gitiles]
+  sitetitle = acme inc. git browser
+urls
+canonicalhostname. default: null, determine the hostname from the local host.
+
+basegiturl the base url for git repositories.
+
+gerriturl, url prefix to linkify gerrit change-id headers in commit messages. if you are using the gerrit gitiles plugin, this is set based on gerrit's configuration. default: null, do not link change-id.
+
+[gitiles]
+  canonicalhostname = gitiles.example.org
+  gerriturl = https://gerrit.example.org/r/
+  basegiturl = git://git.example.org/
+repositories export
+set exportall to instruct jgit to export all repositories, ignoring the check for existence of git-daemon-export-ok file at the root of the repository.
+
+default: false, repositories need to be explicitly marked for export.
+
+[gitiles]
+exportall = true
+custom templating
+the web views are defined via soy templates, you inject your own version which will be passed to the renderer. see .soy files in the source code for available templates
+
+[gitiles]
+customtemplates = path/to/somefile.soy
+customtemplates = path/to/another.soy
+custom styling
+it's possible to inject custom styles within the template. to do this add the following to gitiles.config:
+
+[gitiles]
+    customtemplates = path/to/afile.soy
+[template]
+    customvariant=avariant
+where customvariant is the variable defined in the default templates themselves. then you can define afile.soy as follows:
+
+{namespace gitiles}
+{deltemplate gitiles.customheadtagpart variant="'avariant'"}
+
+<link rel="stylesheet" type="text/css" href="/static/file.css" />
+
+{/deltemplate}
+it is also possible to define a <style> tag there if desired.
+
+fixed time zone
+by default dates are formatted including the local user time zone as that matches git tools. some users/administrators may prefer normalizing to a particular timezone so times are directly comparable without doing timezone arithmetic.
+
+setting fixedtimezone to a valid java timezone id causes all dates in the ui to be implicitly converted to this timezone, and the now-redundant timezone offset to be dropped from the output.
+
+[gitiles]
+  fixedtimezone = utc
+cross-origin resource sharing (cors)
+gitiles sets the access-control-allow-origin header to the http origin of the client if the client's domain matches a regular expression defined in alloworiginregex.
+
+[gitiles]
+  alloworiginregex = http://localhost
+by default alloworiginregex is unset, denying all cross-origin requests.
+
+gitweb redirector
+redirect requests to old gitweb urls after having migrated to gitiles. matching urls will be redirected permanently to their gitiles equivalent. default: true.
+
+[gitiles]
+redirectgitweb = false
+markdown
+disabling markdown
+markdown can be completely disabled by setting render to false.
+
+[markdown]
+  render = false
+markdown size
+markdown files are limited by default to 5 mib of input text per file. this limit is configurable, but should not be raised beyond available memory.
+
+[markdown]
+  inputlimit = 5m
+image size
+referenced images are inlined as base64 encoded uris. the image limit places an upper bound on the byte size of input.
+
+[markdown]
+  imagelimit = 256k
+extensions
+the following extensions can be enabled/disabled in the markdown section:
+
+githubflavor: enable extensions that mirror github flavor markdown behavior. default is true.
+
+autolink: automatically convert plain urls and email addresses into links. default follows githubflavor.
+
+blocknote: gitiles style note/promo/aside blocks to raise awareness to important content. default false.
+
+ghthematicbreak: accept -- for <hr>, like github flavor markdown. default follows githubflavor.
+
+multicolumn: gitiles extension to layout content in a 12 cell grid, delinated by section headers. default false.
+
+namedanchor: gitiles extension to extract named anchors using #{id} syntax. default false.
+
+safehtml: gitiles extension to accept very limited html; for security reasons all other html is dropped regardless of this setting. default follows githubflavor.
+
+smartquote: gitiles extension to convert single and double quote ascii characters to unicode smart quotes when in prose. default false.
+
+strikethrough: strikethrough text with github flavor markdown style ~~. default follows githubflavor.
+
+tables: format tables with github flavor markdown. default follows githubflavor.
+
+toc: gitiles extension to replace [toc] in a paragraph by itself with a server-side generated table of contents extracted from section headers. default true.
+
+iframes
+iframe support requires markdown.safehtml to be true.
+
+iframe source urls can be whitelisted by providing a list of allowed urls. urls ending with a / are treated as prefixes, allowing any source url beginning with that prefix.
+
+[markdown]
+  allowiframe = https://google.com/
+urls not ending with a / are treated as exact matches, and only those source urls will be allowed.
+
+[markdown]
+  allowiframe = https://example.com
+  allowiframe = https://example.org
+if the list has a single entry with the value true, all source urls will be allowed.
+
+[markdown]
+  allowiframe = true
+google analytics
+google analytics can be enabled on every rendered markdown page by adding the property id to the configuration file:
+
+[google]
+  analyticsid = ua-xxxx-y
+powered by gitiles| privacy| terms￼enter
+rizqshops@googlegroups.com
