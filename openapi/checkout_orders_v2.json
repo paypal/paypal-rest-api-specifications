@@ -5591,8 +5591,7 @@
             "maxLength": 2000,
             "pattern": "^.*$"
           }
-        },
-        "required": []
+        }
       },
       "apple_pay_decrypted_token_data": {
         "type": "object",
