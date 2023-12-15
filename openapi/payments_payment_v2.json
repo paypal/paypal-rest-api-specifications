@@ -237,7 +237,7 @@
     "/v2/payments/authorizations/{authorization_id}/reauthorize": {
       "post": {
         "summary": "Reauthorize authorized payment",
-        "description": "Reauthorizes an authorized PayPal account payment, by ID. To ensure that funds are still available, reauthorize a payment after its initial three-day honor period expires. Within the 29-day authorization period, you can issue multiple re-authorizations after the honor period expires.<br/><br/>If 30 days have transpired since the date of the original authorization, you must create an authorized payment instead of reauthorizing the original authorized payment.<br/><br/>A reauthorized payment itself has a new honor period of three days.<br/><br/>You can reauthorize an authorized payment once for up to 115% of the original authorized amount, not to exceed an increase of $75 USD.<br/><br/>Supports only the `amount` request parameter.<blockquote><strong>Note:</strong> This request is currently not supported for Partner use cases.</blockquote>",
+        "description": "Reauthorizes an authorized PayPal account payment, by ID. To ensure that funds are still available, reauthorize a payment after its initial three-day honor period expires. Within the 29-day authorization period, you can issue multiple re-authorizations after the honor period expires.<br/><br/>If 30 days have transpired since the date of the original authorization, you must create an authorized payment instead of reauthorizing the original authorized payment.<br/><br/>A reauthorized payment itself has a new honor period of three days.<br/><br/>You can reauthorize an authorized payment from 4 to 29 days after the 3-day honor period. The allowed amount depends on context and geography, for example in US it is up to 115% of the original authorized amount, not to exceed an increase of $75 USD.<br/><br/>Supports only the `amount` request parameter.<blockquote><strong>Note:</strong> This request is currently not supported for Partner use cases.</blockquote>",
         "operationId": "authorizations.reauthorize",
         "parameters": [
           {
@@ -935,11 +935,29 @@
       }
     },
     "parameters": {
+      "authorization_id": {
+        "name": "authorization_id",
+        "in": "path",
+        "description": "The PayPal-generated ID for the authorized payment to void.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "content_type": {
+        "name": "Content-Type",
+        "in": "header",
+        "description": "Required for operations with a request body. The value is application/<format>. Where the 'format' is 'json'.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
       "paypal_request_id": {
         "name": "PayPal-Request-Id",
         "in": "header",
         "description": "The server stores keys for 45 days.",
-        "required": true,
+        "required": false,
         "schema": {
           "type": "string"
         }
@@ -951,32 +969,7 @@
         "required": false,
         "schema": {
           "type": "string",
-          "minLength": 1,
-          "maxLength": 20,
-          "pattern": "^[a-z=]*$",
           "default": "return=minimal"
-        }
-      },
-      "content_type": {
-        "name": "Content-Type",
-        "in": "header",
-        "description": "The media type. Required for operations with a request body. The value is `application/<format>`, where `format` is `json`.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 255,
-          "pattern": "^[A-Za-z0-9/+-]+$",
-          "default": "application/json"
-        }
-      },
-      "authorization_id": {
-        "name": "authorization_id",
-        "in": "path",
-        "description": "The PayPal-generated ID for the authorized payment to void.",
-        "required": true,
-        "schema": {
-          "type": "string"
         }
       },
       "paypal_auth_assertion": {
@@ -1022,7 +1015,7 @@
     "schemas": {
       "400": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -1118,7 +1111,7 @@
       },
       "401": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -1146,7 +1139,7 @@
       },
       "403": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -1174,7 +1167,7 @@
       },
       "404": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -1202,7 +1195,7 @@
       },
       "409": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -1230,7 +1223,7 @@
       },
       "422": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -1608,10 +1601,52 @@
           }
         ]
       },
+      "error_link_description": {
+        "title": "Link Description",
+        "description": "The request-related [HATEOAS link](/api/rest/responses/#hateoas-links) information.",
+        "type": "object",
+        "required": [
+          "href",
+          "rel"
+        ],
+        "properties": {
+          "href": {
+            "description": "The complete target URL. To make the related call, combine the method with this [URI Template-formatted](https://tools.ietf.org/html/rfc6570) link. For pre-processing, include the `$`, `(`, and `)` characters. The `href` is the key HATEOAS component that links a completed call with a subsequent call.",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20000,
+            "pattern": "^.*$"
+          },
+          "rel": {
+            "description": "The [link relation type](https://tools.ietf.org/html/rfc5988#section-4), which serves as an ID for a link that unambiguously describes the semantics of the link. See [Link Relations](https://www.iana.org/assignments/link-relations/link-relations.xhtml).",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 100,
+            "pattern": "^.*$"
+          },
+          "method": {
+            "description": "The HTTP method required to make the related call.",
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 7,
+            "pattern": "^[A-Z]*$",
+            "enum": [
+              "CONNECT",
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "PATCH",
+              "POST",
+              "PUT"
+            ]
+          }
+        }
+      },
       "error_400": {
         "type": "object",
-        "title": "400 Error",
-        "description": "Error response for 400",
+        "title": "Bad Request Error",
+        "description": "Request is not well-formed, syntactically incorrect, or violates schema.",
         "properties": {
           "name": {
             "type": "string",
@@ -1625,7 +1660,7 @@
               "Request is not well-formed, syntactically incorrect, or violates schema."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -1635,17 +1670,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_401": {
         "type": "object",
-        "title": "401 Error",
-        "description": "Error response for 401",
+        "title": "Unauthorized Error",
+        "description": "Authentication failed due to missing Authorization header, or invalid authentication credentials.",
         "properties": {
           "name": {
             "type": "string",
@@ -1659,7 +1698,7 @@
               "Authentication failed due to missing authorization header, or invalid authentication credentials."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -1669,17 +1708,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_403": {
         "type": "object",
-        "title": "403 Error",
-        "description": "Error response for 403",
+        "title": "Not Authorized Error",
+        "description": "The client is not authorized to access this resource, although it may have valid credentials. ",
         "properties": {
           "name": {
             "type": "string",
@@ -1693,7 +1736,7 @@
               "Authorization failed due to insufficient permissions."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -1703,17 +1746,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_404": {
         "type": "object",
-        "title": "404 Error",
-        "description": "Error response for 404",
+        "title": "Not found Error",
+        "description": "The server has not found anything matching the request URI. This either means that the URI is incorrect or the resource is not available.",
         "properties": {
           "name": {
             "type": "string",
@@ -1727,7 +1774,7 @@
               "The specified resource does not exist."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -1737,17 +1784,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_409": {
         "type": "object",
-        "title": "409 Error",
-        "description": "Error response for 409",
+        "title": "Resource Conflict Error",
+        "description": "The server has detected a conflict while processing this request.",
         "properties": {
           "name": {
             "type": "string",
@@ -1761,7 +1812,7 @@
               "The server has detected a conflict while processing this request."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -1771,17 +1822,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_415": {
         "type": "object",
-        "title": "409 Error",
-        "description": "Error response for 415",
+        "title": "Unsupported Media Type Error",
+        "description": "The server does not support the request payload's media type.",
         "properties": {
           "name": {
             "type": "string",
@@ -1795,7 +1850,7 @@
               "The server does not support the request payload's media type."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -1805,17 +1860,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_422": {
         "type": "object",
-        "title": "422 Error",
-        "description": "Error response for 422",
+        "title": "Unprocessable Entity Error",
+        "description": "The requested action cannot be performed and may require interaction with APIs or processes outside of the current request. This is distinct from a 500 response in that there are no systemic problems limiting the API from performing the request.",
         "properties": {
           "name": {
             "type": "string",
@@ -1829,7 +1888,7 @@
               "The requested action could not be performed, semantically incorrect, or failed business validation."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -1839,17 +1898,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_500": {
         "type": "object",
-        "title": "500 Error",
-        "description": "Error response for 500",
+        "title": "Internal Server Error",
+        "description": "This is either a system or application error, and generally indicates that although the client appeared to provide a correct request, something unexpected has gone wrong on the server.",
         "properties": {
           "name": {
             "type": "string",
@@ -1867,26 +1930,32 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "enum": [
-              "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR"
-            ],
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         },
         "example": {
           "name": "INTERNAL_SERVER_ERROR",
           "message": "An internal server error occurred.",
           "debug_id": "90957fca61718",
-          "information_link": "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR"
+          "links": [
+            {
+              "href": "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR",
+              "rel": "information_link"
+            }
+          ]
         }
       },
       "error_503": {
         "type": "object",
-        "title": "503 Error",
-        "description": "Error response for 503",
+        "title": "Service Unavailable Error",
+        "description": "The server is temporarily unable to handle the request, for example, because of planned maintenance or downtime.",
         "properties": {
           "name": {
             "type": "string",
@@ -1904,10 +1973,14 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         },
         "example": {
@@ -2396,7 +2469,7 @@
               "final_capture": {
                 "description": "Indicates whether you can make additional captures against the authorized payment. Set to `true` if you do not intend to capture additional payments against the authorization. Set to `false` if you intend to capture additional payments against the authorization.",
                 "type": "boolean",
-                "default": "false"
+                "default": false
               },
               "payment_instruction": {
                 "$ref": "#/components/schemas/payment_instruction"
@@ -2857,7 +2930,7 @@
       "reauthorize_request": {
         "title": "Reauthorize Request",
         "type": "object",
-        "description": "Reauthorizes an authorized PayPal account payment, by ID. To ensure that funds are still available, reauthorize a payment after its initial three-day honor period expires. You can reauthorize a payment only once from days four to 29.<br/><br/>If 30 days have transpired since the date of the original authorization, you must create an authorized payment instead of reauthorizing the original authorized payment.<br/><br/>A reauthorized payment itself has a new honor period of three days.<br/><br/>You can reauthorize an authorized payment once for up to 115% of the original authorized amount, not to exceed an increase of $75 USD.<br/><br/>Supports only the `amount` request parameter.<blockquote><strong>Note:</strong> This request is currently not supported for Partner use cases.</blockquote>",
+        "description": "Reauthorizes an authorized PayPal account payment, by ID. To ensure that funds are still available, reauthorize a payment after its initial three-day honor period expires. You can reauthorize a payment only once from days four to 29.<br/><br/>If 30 days have transpired since the date of the original authorization, you must create an authorized payment instead of reauthorizing the original authorized payment.<br/><br/>A reauthorized payment itself has a new honor period of three days.<br/><br/>You can reauthorize an authorized payment once. The allowed amount depends on context and geography, for example in US it is up to 115% of the original authorized amount, not to exceed an increase of $75 USD.<br/><br/>Supports only the `amount` request parameter.<blockquote><strong>Note:</strong> This request is currently not supported for Partner use cases.</blockquote>",
         "properties": {
           "amount": {
             "description": "The amount to reauthorize for an authorized payment.",
@@ -2867,7 +2940,7 @@
       },
       "authorizations.reauthorize-400": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -2946,7 +3019,7 @@
       },
       "authorizations.reauthorize-422": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -3178,7 +3251,7 @@
       },
       "authorizations.void-422": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -3469,7 +3542,7 @@
       },
       "captures.refund-400": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -3522,7 +3595,7 @@
       },
       "captures.refund-422": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
