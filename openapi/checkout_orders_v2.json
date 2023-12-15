@@ -1095,7 +1095,7 @@
         "name": "PayPal-Request-Id",
         "in": "header",
         "description": "The server stores keys for 6 hours. The API callers can request the times to up to 72 hours by speaking to their Account Manager.",
-        "required": true,
+        "required": false,
         "schema": {
           "type": "string",
           "minLength": 1,
@@ -1144,13 +1144,13 @@
           "type": "string",
           "minLength": 1,
           "maxLength": 255,
-          "default": "application/json"
+          "pattern": "^[A-Za-z0-9/+-]+$"
         }
       },
       "id": {
         "name": "id",
         "in": "path",
-        "description": "The ID of the order for which to update payment details.",
+        "description": "The ID of the order that the tracking information is associated with.",
         "required": true,
         "schema": {
           "type": "string",
@@ -3228,6 +3228,48 @@
           "issue"
         ]
       },
+      "error_link_description": {
+        "title": "Link Description",
+        "description": "The request-related [HATEOAS link](/api/rest/responses/#hateoas-links) information.",
+        "type": "object",
+        "required": [
+          "href",
+          "rel"
+        ],
+        "properties": {
+          "href": {
+            "description": "The complete target URL. To make the related call, combine the method with this [URI Template-formatted](https://tools.ietf.org/html/rfc6570) link. For pre-processing, include the `$`, `(`, and `)` characters. The `href` is the key HATEOAS component that links a completed call with a subsequent call.",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20000,
+            "pattern": "^.*$"
+          },
+          "rel": {
+            "description": "The [link relation type](https://tools.ietf.org/html/rfc5988#section-4), which serves as an ID for a link that unambiguously describes the semantics of the link. See [Link Relations](https://www.iana.org/assignments/link-relations/link-relations.xhtml).",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 100,
+            "pattern": "^.*$"
+          },
+          "method": {
+            "description": "The HTTP method required to make the related call.",
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 7,
+            "pattern": "^[A-Z]*$",
+            "enum": [
+              "CONNECT",
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "PATCH",
+              "POST",
+              "PUT"
+            ]
+          }
+        }
+      },
       "error_default": {
         "description": "The default error response.",
         "oneOf": [
@@ -3262,8 +3304,8 @@
       },
       "error_400": {
         "type": "object",
-        "title": "400 Error",
-        "description": "Error response for 400",
+        "title": "Bad Request Error",
+        "description": "Request is not well-formed, syntactically incorrect, or violates schema.",
         "properties": {
           "name": {
             "type": "string",
@@ -3277,7 +3319,7 @@
               "Request is not well-formed, syntactically incorrect, or violates schema."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -3287,17 +3329,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_401": {
         "type": "object",
-        "title": "401 Error",
-        "description": "Error response for 401",
+        "title": "Unauthorized Error",
+        "description": "Authentication failed due to missing Authorization header, or invalid authentication credentials.",
         "properties": {
           "name": {
             "type": "string",
@@ -3311,7 +3357,7 @@
               "Authentication failed due to missing authorization header, or invalid authentication credentials."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -3321,17 +3367,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_403": {
         "type": "object",
-        "title": "403 Error",
-        "description": "Error response for 403",
+        "title": "Not Authorized Error",
+        "description": "The client is not authorized to access this resource, although it may have valid credentials. ",
         "properties": {
           "name": {
             "type": "string",
@@ -3345,7 +3395,7 @@
               "Authorization failed due to insufficient permissions."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -3355,17 +3405,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_404": {
         "type": "object",
-        "title": "404 Error",
-        "description": "Error response for 404",
+        "title": "Not found Error",
+        "description": "The server has not found anything matching the request URI. This either means that the URI is incorrect or the resource is not available.",
         "properties": {
           "name": {
             "type": "string",
@@ -3379,7 +3433,7 @@
               "The specified resource does not exist."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -3389,17 +3443,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_409": {
         "type": "object",
-        "title": "409 Error",
-        "description": "Error response for 409",
+        "title": "Resource Conflict Error",
+        "description": "The server has detected a conflict while processing this request.",
         "properties": {
           "name": {
             "type": "string",
@@ -3413,7 +3471,7 @@
               "The server has detected a conflict while processing this request."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -3423,17 +3481,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_415": {
         "type": "object",
-        "title": "409 Error",
-        "description": "Error response for 415",
+        "title": "Unsupported Media Type Error",
+        "description": "The server does not support the request payload's media type.",
         "properties": {
           "name": {
             "type": "string",
@@ -3447,7 +3509,7 @@
               "The server does not support the request payload's media type."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -3457,17 +3519,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_422": {
         "type": "object",
-        "title": "422 Error",
-        "description": "Error response for 422",
+        "title": "Unprocessable Entity Error",
+        "description": "The requested action cannot be performed and may require interaction with APIs or processes outside of the current request. This is distinct from a 500 response in that there are no systemic problems limiting the API from performing the request.",
         "properties": {
           "name": {
             "type": "string",
@@ -3481,7 +3547,7 @@
               "The requested action could not be performed, semantically incorrect, or failed business validation."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -3491,17 +3557,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_500": {
         "type": "object",
-        "title": "500 Error",
-        "description": "Error response for 500",
+        "title": "Internal Server Error",
+        "description": "This is either a system or application error, and generally indicates that although the client appeared to provide a correct request, something unexpected has gone wrong on the server.",
         "properties": {
           "name": {
             "type": "string",
@@ -3519,26 +3589,32 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "enum": [
-              "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR"
-            ],
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         },
         "example": {
           "name": "INTERNAL_SERVER_ERROR",
           "message": "An internal server error occurred.",
           "debug_id": "90957fca61718",
-          "information_link": "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR"
+          "links": [
+            {
+              "href": "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR",
+              "rel": "information_link"
+            }
+          ]
         }
       },
       "error_503": {
         "type": "object",
-        "title": "503 Error",
-        "description": "Error response for 503",
+        "title": "Service Unavailable Error",
+        "description": "The server is temporarily unable to handle the request, for example, because of planned maintenance or downtime.",
         "properties": {
           "name": {
             "type": "string",
@@ -3556,10 +3632,14 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         },
         "example": {
@@ -4112,10 +4192,12 @@
       "shipping_type": {
         "type": "string",
         "title": "Shipping Type",
-        "description": "The method by which the payer wants to get their items.",
+        "description": "A classification for the method of purchase fulfillment.",
         "enum": [
           "SHIPPING",
-          "PICKUP"
+          "PICKUP",
+          "PICKUP_IN_STORE",
+          "PICKUP_FROM_PERSON"
         ]
       },
       "shipping_option": {
@@ -4134,7 +4216,7 @@
             "maxLength": 127
           },
           "type": {
-            "description": "The method by which the payer wants to get their items.",
+            "description": "A classification for the method of purchase fulfillment.",
             "$ref": "#/components/schemas/shipping_type"
           },
           "amount": {
@@ -4162,14 +4244,16 @@
             "$ref": "#/components/schemas/name"
           },
           "type": {
-            "description": "The method by which the payer wants to get their items from the payee e.g shipping, in-person pickup. Either type or options but not both may be present.",
+            "description": "A classification for the method of purchase fulfillment (e.g shipping, in-store pickup, etc). Either `type` or `options` may be present, but not both.",
             "type": "string",
             "minLength": 1,
             "maxLength": 255,
             "pattern": "^[0-9A-Z_]+$",
             "enum": [
               "SHIPPING",
-              "PICKUP_IN_PERSON"
+              "PICKUP_IN_PERSON",
+              "PICKUP_IN_STORE",
+              "PICKUP_FROM_PERSON"
             ]
           },
           "options": {
@@ -4720,11 +4804,17 @@
         "properties": {
           "return_url": {
             "description": "The URL where the customer will be redirected upon successfully completing the 3DS challenge.",
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 4000,
             "format": "uri",
             "$ref": "#/components/schemas/url"
           },
           "cancel_url": {
             "description": "The URL where the customer will be redirected upon cancelling the 3DS challenge.",
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 4000,
             "format": "uri",
             "$ref": "#/components/schemas/url"
           }
@@ -4921,6 +5011,20 @@
           "country_code"
         ]
       },
+      "paypal_wallet_customer": {
+        "type": "object",
+        "title": "Customer information based on PayPal's system of record",
+        "description": "The details about a customer in PayPal's system of record.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/customer"
+          },
+          {
+            "properties": {}
+          }
+        ]
+      },
+      "vault_owner_id": {},
       "vault_paypal_wallet_base": {
         "type": "object",
         "title": "Vaulted PayPal Wallet Common Attributes",
@@ -4966,6 +5070,9 @@
                   "PLATFORM"
                 ]
               },
+              "owner_id": {
+                "$ref": "#/components/schemas/vault_owner_id"
+              },
               "customer_type": {
                 "type": "string",
                 "description": "The customer type associated with the PayPal payment token. This is to indicate whether the customer acting on the merchant / platform is either a business or a consumer.",
@@ -4996,7 +5103,7 @@
         "description": "Additional attributes associated with the use of this PayPal Wallet.",
         "properties": {
           "customer": {
-            "$ref": "#/components/schemas/customer"
+            "$ref": "#/components/schemas/paypal_wallet_customer"
           },
           "vault": {
             "description": "Attributes used to provide the instructions during vaulting of the PayPal Wallet.",
@@ -5223,7 +5330,7 @@
         "format": "ppaas_common_email_address_v2",
         "minLength": 3,
         "maxLength": 254,
-        "pattern": "^.+@[^\"\\-].+$"
+        "pattern": "^(?:[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[A-Za-z0-9-]*[A-Za-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])$"
       },
       "ip_address": {
         "type": "string",
@@ -5266,7 +5373,7 @@
         "properties": {
           "auth_code": {
             "type": "string",
-            "description": "6-digit code used to authenticate a consumer within BLIK.",
+            "description": "The 6-digit code used to authenticate a consumer within BLIK.",
             "minLength": 6,
             "maxLength": 6,
             "pattern": "^[0-9]{6}$"
@@ -5283,7 +5390,7 @@
         "properties": {
           "auth_code": {
             "type": "string",
-            "description": "6-digit code used to authenticate a consumer within BLIK.",
+            "description": "The 6-digit code used to authenticate a consumer within BLIK.",
             "minLength": 6,
             "maxLength": 6,
             "pattern": "^[0-9]{6}$"
@@ -6395,6 +6502,26 @@
           "national_number"
         ]
       },
+      "paypal_wallet_vault_response": {
+        "type": "object",
+        "title": "Saved PayPal Wallet Payment Source Response",
+        "description": "The details about a saved PayPal Wallet payment source.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/vault_response"
+          },
+          {
+            "properties": {
+              "customer": {
+                "$ref": "#/components/schemas/paypal_wallet_customer"
+              },
+              "owner_id": {
+                "$ref": "#/components/schemas/vault_owner_id"
+              }
+            }
+          }
+        ]
+      },
       "cobranded_card": {
         "type": "object",
         "title": "cobranded card object",
@@ -6428,7 +6555,7 @@
         "description": "Additional attributes associated with the use of a PayPal Wallet.",
         "properties": {
           "vault": {
-            "$ref": "#/components/schemas/vault_response"
+            "$ref": "#/components/schemas/paypal_wallet_vault_response"
           },
           "cobranded_cards": {
             "type": "array",
@@ -6454,6 +6581,18 @@
             "description": "The PayPal-assigned ID for the PayPal account holder.",
             "readOnly": true,
             "$ref": "#/components/schemas/account_id-2"
+          },
+          "account_status": {
+            "type": "string",
+            "description": "The account status indicates whether the buyer has verified the financial details associated with their PayPal account.",
+            "readOnly": true,
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^[A-Z_]+$",
+            "enum": [
+              "VERIFIED",
+              "UNVERIFIED"
+            ]
           },
           "name": {
             "description": "The name of the PayPal account holder. Supports only the `given_name` and `surname` properties.",
@@ -9865,6 +10004,23 @@
                       "type": "string",
                       "enum": [
                         "Blik's one_click flow requires one_click.auth_code and one_click.alias_label parameters for the buyer's first transaction. For all subsequent transactions,only the one_click.alias_key parameter is required."
+                      ]
+                    }
+                  }
+                },
+                {
+                  "title": "TRANSACTION_LIMIT_EXCEEDED",
+                  "properties": {
+                    "issue": {
+                      "type": "string",
+                      "enum": [
+                        "TRANSACTION_LIMIT_EXCEEDED"
+                      ]
+                    },
+                    "description": {
+                      "type": "string",
+                      "enum": [
+                        "Total payment amount exceeded transaction limit."
                       ]
                     }
                   }
