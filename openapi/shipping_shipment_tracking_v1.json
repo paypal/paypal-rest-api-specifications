@@ -3,7 +3,51 @@
   "info": {
     "title": "Shipment Tracking",
     "description": "Merchants can use the PayPal Add Tracking API to manage tracking information. Merchants can add tracking numbers and associated information to PayPal. After adding these details to PayPal, merchants can:<ul><li>Update tracking details.</li><li>Show tracking details.</li><li>Cancel tracking numbers.</li></ul>For more information, see the <a href=\"/docs/tracking/\">Add Tracking API Overview</a> and <a href=\"/docs/tracking/integrate/\">Add Tracking API Integration Guide</a>.",
-    "version": "1.4"
+    "version": "1.6",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "trackers",
+      "description": "Use the `/trackers` resource to create and manage tracking information for PayPal transactions."
+    },
+    {
+      "name": "trackers-batch",
+      "description": "Use the `/trackers-batch` resource to add tracking information for multiple PayPal transactions."
+    },
+    {
+      "name": "carriers-recommend",
+      "description": "Use the `/carriers-recommendations` to detect the possible carriers corresponding the tracking info from tracking aggregator."
+    },
+    {
+      "name": "carriers",
+      "description": "Use the `/carriers` resource to list/detect all the carriers available for tracking in PayPal and its subsidiary."
+    },
+    {
+      "name": "shipments",
+      "description": "Use the `/shipments` resource to fetch all the shipments associated with a given Paypal Account Id."
+    },
+    {
+      "name": "shipment-tracker",
+      "description": "Use the `/shipment-tracker` resource to track the shipment."
+    },
+    {
+      "name": "unsubscribe-shipment-tracking",
+      "description": "Use the `/unsubscribe-shipment-tracking` resource to unsubscribe from multiple shipments."
+    }
+  ],
+  "externalDocs": {
+    "url": "https://developer.paypal.com/docs/api/tracking/v1/"
   },
   "paths": {
     "/v1/shipping/trackers-batch": {
@@ -46,13 +90,7 @@
           }
         },
         "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/tracker_collection"
-              }
-            }
-          }
+          "$ref": "#/components/requestBodies/tracker_collection"
         },
         "security": [
           {
@@ -63,6 +101,96 @@
         ],
         "tags": [
           "trackers-batch"
+        ]
+      }
+    },
+    "/v1/shipping/trackers": {
+      "post": {
+        "summary": "Add tracking information for PayPal transaction",
+        "description": "Adds tracking information for a PayPal transaction.",
+        "operationId": "trackers.post",
+        "responses": {
+          "200": {
+            "description": "A successful request returns the HTTP 200 OK status code and a JSON response body that shows tracking information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tracker_identifier_collection"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/tracker_collection"
+        },
+        "security": [
+          {
+            "Oauth2": [
+              "https://uri.paypal.com/services/shipping/trackers/readwrite"
+            ]
+          }
+        ],
+        "tags": [
+          "trackers"
+        ]
+      },
+      "get": {
+        "summary": "List tracking information",
+        "description": "Lists tracking information that meet search criteria. The tracking ID is required but the tracking number is optional.",
+        "operationId": "trackers-batch.get",
+        "responses": {
+          "200": {
+            "description": "A successful request returns the HTTP 200 OK status code and a JSON response body that lists tracking information that meets search criteria.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tracker"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/transaction_id"
+          },
+          {
+            "$ref": "#/components/parameters/tracking_number"
+          },
+          {
+            "$ref": "#/components/parameters/account_id"
+          }
+        ],
+        "security": [
+          {
+            "Oauth2": [
+              "https://uri.paypal.com/services/shipping/trackers/read"
+            ]
+          }
+        ],
+        "tags": [
+          "trackers"
         ]
       }
     },
@@ -122,11 +250,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/tracker"
-                },
-                "examples": {
-                  "0": {
-                    "$ref": "#/components/examples/tracker"
-                  }
                 }
               }
             }
@@ -163,46 +286,18 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "trackers",
-      "description": "Use the `/trackers` resource to create and manage tracking information for PayPal transactions."
-    },
-    {
-      "name": "trackers-batch",
-      "description": "Use the `/trackers-batch` resource to add tracking information for multiple PayPal transactions."
-    },
-    {
-      "name": "carriers-recommend",
-      "description": "Use the `/carriers-recommendations` to detect the possible carriers corresponding the tracking info from tracking aggregator."
-    },
-    {
-      "name": "carriers",
-      "description": "Use the `/carriers` resource to list/detect all the carriers available for tracking in PayPal and its subsidiary."
-    },
-    {
-      "name": "shipments",
-      "description": "Use the `/shipments` resource to fetch all the shipments associated with a given Paypal Account Id."
-    },
-    {
-      "name": "shipment-tracker",
-      "description": "Use the `/shipment-tracker` resource to track the shipment."
-    }
-  ],
-  "externalDocs": {
-    "url": "https://developer.paypal.com/docs/api/tracking/v1/"
-  },
-  "servers": [
-    {
-      "url": "https://api-m.sandbox.paypal.com",
-      "description": "PayPal Sandbox Environment"
-    },
-    {
-      "url": "https://api-m.paypal.com",
-      "description": "PayPal Production Environment"
-    }
-  ],
   "components": {
+    "requestBodies": {
+      "tracker_collection": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/tracker_collection"
+            }
+          }
+        }
+      }
+    },
     "securitySchemes": {
       "Oauth2": {
         "type": "oauth2",
@@ -215,32 +310,6 @@
               "https://uri.paypal.com/services/shipping/trackers/read": "Retrieve tracking information"
             }
           }
-        }
-      }
-    },
-    "parameters": {
-      "id": {
-        "name": "id",
-        "in": "path",
-        "description": "The ID of the tracker in the <code><var>transaction_id</var>-<var>tracking_number</var></code> format.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 100,
-          "pattern": "^[a-zA-Z0-9-_]*$"
-        }
-      },
-      "account_id": {
-        "name": "account_id",
-        "in": "query",
-        "description": "Encrypted PayPal Account ID of the buyer or seller.",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "minLength": 13,
-          "maxLength": 13,
-          "pattern": "^[2-9A-HJ-NP-Z]{13}$"
         }
       }
     },
@@ -259,9 +328,7 @@
             "description": "The value of the field that caused the error."
           },
           "location": {
-            "type": "string",
-            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
-            "default": "body"
+            "$ref": "#/components/schemas/error_location"
           },
           "issue": {
             "type": "string",
@@ -276,37 +343,15 @@
           "issue"
         ]
       },
-      "error_default": {
-        "description": "The default error response.",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/error_400"
-          },
-          {
-            "$ref": "#/components/schemas/error_401"
-          },
-          {
-            "$ref": "#/components/schemas/error_403"
-          },
-          {
-            "$ref": "#/components/schemas/error_404"
-          },
-          {
-            "$ref": "#/components/schemas/error_409"
-          },
-          {
-            "$ref": "#/components/schemas/error_415"
-          },
-          {
-            "$ref": "#/components/schemas/error_422"
-          },
-          {
-            "$ref": "#/components/schemas/error_500"
-          },
-          {
-            "$ref": "#/components/schemas/error_503"
-          }
-        ]
+      "error_location": {
+        "type": "string",
+        "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+        "enum": [
+          "body",
+          "path",
+          "query"
+        ],
+        "default": "body"
       },
       "error_link_description": {
         "title": "Link Description",
@@ -335,17 +380,14 @@
             "description": "The HTTP method required to make the related call.",
             "type": "string",
             "minLength": 3,
-            "maxLength": 7,
+            "maxLength": 6,
             "pattern": "^[A-Z]*$",
             "enum": [
-              "CONNECT",
-              "DELETE",
               "GET",
-              "HEAD",
-              "OPTIONS",
-              "PATCH",
               "POST",
-              "PUT"
+              "PUT",
+              "DELETE",
+              "PATCH"
             ]
           }
         }
@@ -1758,6 +1800,37 @@
           }
         }
       },
+      "error_details-2": {
+        "title": "Error Details",
+        "type": "object",
+        "description": "The error details. Required for client-side `4XX` errors.",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The field that caused the error. If this field is in the body, set this value to the field's JSON pointer value. Required for client-side errors."
+          },
+          "value": {
+            "type": "string",
+            "description": "The value of the field that caused the error."
+          },
+          "location": {
+            "type": "string",
+            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+            "default": "body"
+          },
+          "issue": {
+            "type": "string",
+            "description": "The unique, fine-grained application-level error code."
+          },
+          "description": {
+            "type": "string",
+            "description": "The human-readable description for an issue. The description can change over the lifetime of an API, so clients must not depend on this value."
+          }
+        },
+        "required": [
+          "issue"
+        ]
+      },
       "link_description-2": {
         "type": "object",
         "title": "Link Description",
@@ -1817,7 +1890,7 @@
             "type": "array",
             "description": "An array of additional details about the error.",
             "items": {
-              "$ref": "#/components/schemas/error_details"
+              "$ref": "#/components/schemas/error_details-2"
             }
           },
           "links": {
@@ -1901,35 +1974,74 @@
             }
           }
         }
+      },
+      "tracker_identifier_collection": {
+        "type": "object",
+        "title": "Tracker Identifier Collection",
+        "description": "The add tracking information for a PayPal transaction response details.",
+        "properties": {
+          "tracker_identifiers": {
+            "type": "array",
+            "description": "An array of tracking IDs.",
+            "items": {
+              "$ref": "#/components/schemas/tracker_identifier"
+            },
+            "minItems": 1,
+            "maxItems": 100
+          },
+          "links": {
+            "type": "array",
+            "description": "An array of request-related [HATEOAS links](/docs/api/reference/api-responses/#hateoas-links).",
+            "readOnly": true,
+            "items": {
+              "$ref": "#/components/schemas/link_description",
+              "readOnly": true
+            }
+          }
+        }
       }
     },
-    "examples": {
-      "tracker": {
-        "value": {
-          "transaction_id": "8MC585209K746392H",
-          "tracking_number": "443844607820",
-          "status": "SHIPPED",
-          "carrier": "FEDEX",
-          "shipment_direction": "FORWARD"
+    "parameters": {
+      "transaction_id": {
+        "name": "transaction_id",
+        "in": "query",
+        "description": "Filters the tracking information that appears in the response by a PayPal transaction ID.",
+        "required": true,
+        "schema": {
+          "type": "string"
         }
       },
-      "tracker_collection": {
-        "value": {
-          "trackers": [
-            {
-              "transaction_id": "8MC585209K746392H",
-              "tracking_number": "443844607820",
-              "status": "SHIPPED",
-              "carrier": "FEDEX",
-              "shipment_direction": "FORWARD"
-            },
-            {
-              "transaction_id": "53Y56775AE587553X",
-              "tracking_number": "443844607821",
-              "status": "SHIPPED",
-              "carrier": "FEDEX"
-            }
-          ]
+      "tracking_number": {
+        "name": "tracking_number",
+        "in": "query",
+        "description": "Filters the tracking information that appears in the response by a tracking number.",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "account_id": {
+        "name": "account_id",
+        "in": "query",
+        "description": "Encrypted PayPal Account ID of the buyer or seller.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minLength": 13,
+          "maxLength": 13,
+          "pattern": "^[2-9A-HJ-NP-Z]{13}$"
+        }
+      },
+      "id": {
+        "name": "id",
+        "in": "path",
+        "description": "The ID of the tracker in the <code><var>transaction_id</var>-<var>tracking_number</var></code> format.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "^[a-zA-Z0-9-_]*$"
         }
       }
     }

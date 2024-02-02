@@ -3,9 +3,52 @@
   "info": {
     "title": "Payments",
     "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the Payments REST API to easily and securely accept online and mobile payments. The payments name space contains resource collections for payments, sales, refunds, authorizations, captures, and orders.<blockquote><strong>Important:</strong> The use of the PayPal REST <code>/payments</code> APIs to accept credit card payments is restricted. Instead, you can accept credit card payments with <a href=\"https://www.braintreepayments.com/products/braintree-direct\">Braintree Direct</a>.</blockquote>You can enable customers to make PayPal and credit card payments with only a few clicks, depending on the country. You can accept an immediate payment or authorize a payment and capture it later. You can show details for completed payments, refunds, and authorizations. You can make full or partial refunds. You also can void or re-authorize authorizations. For more information, see the <a href=\"/docs/integration/direct/payments/\">Payments overview</a>.",
-    "version": "1.12"
+    "version": "1.12",
+    "contact": {}
   },
-  "deprecated": true,
+  "servers": [
+    {
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "payment",
+      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/payment</code> resource to create a <em>sale</em>, an <em>authorized payment</em>, or an <em>order</em>. A sale is a direct credit card payment, stored credit card payment, or PayPal payment. An authorized payment places funds on hold to be captured later. An order is a purchase that a customer has approved but for which the funds are not placed on hold. You can also use this resource to execute approved PayPal payments and show details for, update, and list payments. For more information, see also <a href=\"/docs/integration/direct/payments/\"Payments</a>."
+    },
+    {
+      "name": "sale",
+      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>A <em>sale</em> is a completed payment. Use the <code>/sale</code> resource to show sale details and refund a sale. For more information, see also <a href=\"/docs/integration/direct/payments/refund-payments/\">Refund payments</a>."
+    },
+    {
+      "name": "authorization",
+      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/authorization</code> resource and related sub-resources to show details for, capture, void, and reauthorize an authorization."
+    },
+    {
+      "name": "orders",
+      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/orders</code> resource to authorize, capture, void, and show details for an order.<blockquote><strong>Note:</strong> You cannot refund an order directly. Instead, you must refund a completed payment for an order. For integration information, see <a href=\"/docs/integration/direct/payments/orders/\">Orders</a> and <a href=\"/docs/integration/direct/payments/refund-payments/\">refund payment</a>.</blockquote>For more information, see also <a href=\"/docs/integration/direct/payments/orders/\">Orders</a>."
+    },
+    {
+      "name": "capture",
+      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/capture</code> resource and sub-resources to show details for and refund captured payments."
+    },
+    {
+      "name": "refund",
+      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/refund</code> resource to show details for a refund on direct and captured payments."
+    },
+    {
+      "name": "receipt",
+      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/receipt</code> resource to show details for a payment receipt."
+    }
+  ],
+  "externalDocs": {
+    "url": "https://developer.paypal.com/docs/api/payments/v1/"
+  },
   "paths": {
     "/v1/payments/payment": {
       "post": {
@@ -46,8 +89,73 @@
                 "$ref": "#/components/schemas/payment"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/payment"
+                "payment": {
+                  "value": {
+                    "intent": "sale",
+                    "payer": {
+                      "payment_method": "paypal"
+                    },
+                    "transactions": [
+                      {
+                        "amount": {
+                          "total": "30.11",
+                          "currency": "USD",
+                          "details": {
+                            "subtotal": "30.00",
+                            "tax": "0.07",
+                            "shipping": "0.03",
+                            "handling_fee": "1.00",
+                            "shipping_discount": "-1.00",
+                            "insurance": "0.01"
+                          }
+                        },
+                        "description": "The payment transaction description.",
+                        "custom": "EBAY_EMS_90048630024435",
+                        "invoice_number": "48787589673",
+                        "payment_options": {
+                          "allowed_payment_method": "INSTANT_FUNDING_SOURCE"
+                        },
+                        "soft_descriptor": "ECHI5786786",
+                        "item_list": {
+                          "items": [
+                            {
+                              "name": "hat",
+                              "description": "Brown hat.",
+                              "quantity": "5",
+                              "price": "3",
+                              "tax": "0.01",
+                              "sku": "1",
+                              "currency": "USD"
+                            },
+                            {
+                              "name": "handbag",
+                              "description": "Black handbag.",
+                              "quantity": "1",
+                              "price": "15",
+                              "tax": "0.02",
+                              "sku": "product34",
+                              "currency": "USD"
+                            }
+                          ],
+                          "shipping_address": {
+                            "recipient_name": "Brian Robinson",
+                            "line1": "4th Floor",
+                            "line2": "Unit #34",
+                            "city": "San Jose",
+                            "country_code": "US",
+                            "postal_code": "95131",
+                            "phone": "011862212345678",
+                            "state": "CA"
+                          }
+                        }
+                      }
+                    ],
+                    "note_to_payer": "Contact us for any questions on your order.",
+                    "redirect_urls": {
+                      "return_url": "https://example.com/return",
+                      "cancel_url": "https://example.com/cancel"
+                    }
+                  }
                 }
               }
             }
@@ -264,8 +372,32 @@
                 "$ref": "#/components/schemas/patch_request"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/patch_request"
+                "patch_request": {
+                  "value": [
+                    {
+                      "op": "replace",
+                      "path": "/transactions/0/amount",
+                      "value": {
+                        "total": "18.37",
+                        "currency": "EUR",
+                        "details": {
+                          "subtotal": "13.37",
+                          "shipping": "5.00"
+                        }
+                      }
+                    },
+                    {
+                      "op": "add",
+                      "path": "/transactions/0/item_list/shipping_address",
+                      "value": {
+                        "recipient_name": "Anna Gruneberg",
+                        "line1": "Kathwarinenhof 1",
+                        "city": "Flensburg",
+                        "postal_code": "24939",
+                        "country_code": "DE"
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -343,8 +475,10 @@
                 "$ref": "#/components/schemas/payment_execution"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/payment_execution"
+                "payment_execution": {
+                  "value": {
+                    "payer_id": "CR87QHB7JTRSC"
+                  }
                 }
               }
             }
@@ -487,7 +621,24 @@
           }
         ],
         "requestBody": {
-          "$ref": "#/components/requestBodies/refund_request"
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/refund_request"
+              },
+              "examples": {
+                "refund_request": {
+                  "value": {
+                    "amount": {
+                      "total": "100.00",
+                      "currency": "USD"
+                    },
+                    "invoice_number": "INV-7654321"
+                  }
+                }
+              }
+            }
+          }
         },
         "security": [
           {
@@ -528,11 +679,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/authorization"
-                },
-                "examples": {
-                  "0": {
-                    "$ref": "#/components/examples/authorization"
-                  }
                 }
               }
             }
@@ -613,7 +759,24 @@
           }
         ],
         "requestBody": {
-          "$ref": "#/components/requestBodies/capture"
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/capture"
+              },
+              "examples": {
+                "capture": {
+                  "value": {
+                    "amount": {
+                      "currency": "USD",
+                      "total": "4.54"
+                    },
+                    "is_final_capture": true
+                  }
+                }
+              }
+            }
+          }
         },
         "security": [
           {
@@ -779,11 +942,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/order"
-                },
-                "examples": {
-                  "0": {
-                    "$ref": "#/components/examples/order"
-                  }
                 }
               }
             }
@@ -1207,49 +1365,6 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "payment",
-      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/payment</code> resource to create a <em>sale</em>, an <em>authorized payment</em>, or an <em>order</em>. A sale is a direct credit card payment, stored credit card payment, or PayPal payment. An authorized payment places funds on hold to be captured later. An order is a purchase that a customer has approved but for which the funds are not placed on hold. You can also use this resource to execute approved PayPal payments and show details for, update, and list payments. For more information, see also <a href=\"/docs/integration/direct/payments/\"Payments</a>."
-    },
-    {
-      "name": "sale",
-      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>A <em>sale</em> is a completed payment. Use the <code>/sale</code> resource to show sale details and refund a sale. For more information, see also <a href=\"/docs/integration/direct/payments/refund-payments/\">Refund payments</a>."
-    },
-    {
-      "name": "authorization",
-      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/authorization</code> resource and related sub-resources to show details for, capture, void, and reauthorize an authorization."
-    },
-    {
-      "name": "orders",
-      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/orders</code> resource to authorize, capture, void, and show details for an order.<blockquote><strong>Note:</strong> You cannot refund an order directly. Instead, you must refund a completed payment for an order. For integration information, see <a href=\"/docs/integration/direct/payments/orders/\">Orders</a> and <a href=\"/docs/integration/direct/payments/refund-payments/\">refund payment</a>.</blockquote>For more information, see also <a href=\"/docs/integration/direct/payments/orders/\">Orders</a>."
-    },
-    {
-      "name": "capture",
-      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/capture</code> resource and sub-resources to show details for and refund captured payments."
-    },
-    {
-      "name": "refund",
-      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/refund</code> resource to show details for a refund on direct and captured payments."
-    },
-    {
-      "name": "receipt",
-      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/receipt</code> resource to show details for a payment receipt."
-    }
-  ],
-  "externalDocs": {
-    "url": "https://developer.paypal.com/docs/api/payments/v1/"
-  },
-  "servers": [
-    {
-      "url": "https://api-m.sandbox.paypal.com",
-      "description": "PayPal Sandbox Environment"
-    },
-    {
-      "url": "https://api-m.paypal.com",
-      "description": "PayPal Live Environment"
-    }
-  ],
   "components": {
     "requestBodies": {
       "capture": {
@@ -1257,11 +1372,6 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/capture"
-            },
-            "examples": {
-              "0": {
-                "$ref": "#/components/examples/capture"
-              }
             }
           }
         }
@@ -1271,11 +1381,6 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/refund_request"
-            },
-            "examples": {
-              "0": {
-                "$ref": "#/components/examples/refund_request"
-              }
             }
           }
         }
@@ -1304,161 +1409,6 @@
         }
       }
     },
-    "parameters": {
-      "paypal_partner_attribution_id": {
-        "name": "PayPal-Partner-Attribution-Id",
-        "in": "header",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "maxLength": 32
-        }
-      },
-      "count": {
-        "name": "count",
-        "in": "query",
-        "description": "The number of items to list in the response.",
-        "required": false,
-        "schema": {
-          "type": "integer",
-          "maximum": 20,
-          "default": 10
-        }
-      },
-      "start_id": {
-        "name": "start_id",
-        "in": "query",
-        "description": "The ID of the starting resource in the response. When results are paged, you can use the `next_id` value as the `start_id` to continue with the next set of results.",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "start_index": {
-        "name": "start_index",
-        "in": "query",
-        "description": "The start index of the payments to list. Typically, you use the `start_index` to jump to a specific position in the resource history based on its cart. For example, to start at the second item in a list of results, specify `?start_index=2`.",
-        "required": false,
-        "schema": {
-          "type": "integer"
-        }
-      },
-      "start_time": {
-        "name": "start_time",
-        "in": "query",
-        "description": "The start date and time for the range to show in the response, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, `start_time=2016-03-06T11:00:00Z`.",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "end_time": {
-        "name": "end_time",
-        "in": "query",
-        "description": "The end date and time for the range to show in the response, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, `end_time=2016-03-06T11:00:00Z`.",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "payee_id": {
-        "name": "payee_id",
-        "in": "query",
-        "description": "Filters the payments in the response by a PayPal-assigned merchant ID that identifies the payee.",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "sort_by": {
-        "name": "sort_by",
-        "in": "query",
-        "description": "Sorts the payments in the response by a create time.",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "enum": [
-            "create_time"
-          ]
-        }
-      },
-      "sort_order": {
-        "name": "sort_order",
-        "in": "query",
-        "description": "Sorts the payments in the response in descending order.",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "enum": [
-            "desc"
-          ]
-        }
-      },
-      "payment_id": {
-        "name": "payment_id",
-        "in": "path",
-        "description": "The ID of the payment to execute.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "paypal_request_id": {
-        "name": "PayPal-Request-Id",
-        "description": "The server stores keys for 30 days.",
-        "in": "header",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "maxLength": 78
-        }
-      },
-      "sale_id": {
-        "name": "sale_id",
-        "in": "path",
-        "description": "The ID of the sale transaction to refund.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "authorization_id": {
-        "name": "authorization_id",
-        "in": "path",
-        "description": "The ID of the authorization to re-authorize.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "order_id": {
-        "name": "order_id",
-        "in": "path",
-        "description": "The ID of the order to authorize.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "capture_id": {
-        "name": "capture_id",
-        "in": "path",
-        "description": "The ID of the captured payment to refund.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "refund_id": {
-        "name": "refund_id",
-        "in": "path",
-        "description": "The ID of the refund for which to show details.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      }
-    },
     "schemas": {
       "error_details": {
         "title": "Error Details",
@@ -1474,9 +1424,7 @@
             "description": "The value of the field that caused the error."
           },
           "location": {
-            "type": "string",
-            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
-            "default": "body"
+            "$ref": "#/components/schemas/error_location"
           },
           "issue": {
             "type": "string",
@@ -1491,37 +1439,15 @@
           "issue"
         ]
       },
-      "error_default": {
-        "description": "The default error response.",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/error_400"
-          },
-          {
-            "$ref": "#/components/schemas/error_401"
-          },
-          {
-            "$ref": "#/components/schemas/error_403"
-          },
-          {
-            "$ref": "#/components/schemas/error_404"
-          },
-          {
-            "$ref": "#/components/schemas/error_409"
-          },
-          {
-            "$ref": "#/components/schemas/error_415"
-          },
-          {
-            "$ref": "#/components/schemas/error_422"
-          },
-          {
-            "$ref": "#/components/schemas/error_500"
-          },
-          {
-            "$ref": "#/components/schemas/error_503"
-          }
-        ]
+      "error_location": {
+        "type": "string",
+        "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+        "enum": [
+          "body",
+          "path",
+          "query"
+        ],
+        "default": "body"
       },
       "error_link_description": {
         "title": "Link Description",
@@ -1550,17 +1476,14 @@
             "description": "The HTTP method required to make the related call.",
             "type": "string",
             "minLength": 3,
-            "maxLength": 7,
+            "maxLength": 6,
             "pattern": "^[A-Z]*$",
             "enum": [
-              "CONNECT",
-              "DELETE",
               "GET",
-              "HEAD",
-              "OPTIONS",
-              "PATCH",
               "POST",
-              "PUT"
+              "PUT",
+              "DELETE",
+              "PATCH"
             ]
           }
         }
@@ -1912,6 +1835,37 @@
           "information_link": "https://developer.paypal.com/docs/api/orders/v2/#error-SERVICE_UNAVAILABLE"
         }
       },
+      "error_details-2": {
+        "title": "Error Details",
+        "type": "object",
+        "description": "The error details. Required for client-side `4XX` errors.",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The field that caused the error. If this field is in the body, set this value to the field's JSON pointer value. Required for client-side errors."
+          },
+          "value": {
+            "type": "string",
+            "description": "The value of the field that caused the error."
+          },
+          "location": {
+            "type": "string",
+            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+            "default": "body"
+          },
+          "issue": {
+            "type": "string",
+            "description": "The unique, fine-grained application-level error code."
+          },
+          "description": {
+            "type": "string",
+            "description": "The human-readable description for an issue. The description can change over the lifetime of an API, so clients must not depend on this value."
+          }
+        },
+        "required": [
+          "issue"
+        ]
+      },
       "link_description": {
         "type": "object",
         "title": "Link Description",
@@ -1971,7 +1925,7 @@
             "type": "array",
             "description": "An array of additional details about the error.",
             "items": {
-              "$ref": "#/components/schemas/error_details"
+              "$ref": "#/components/schemas/error_details-2"
             }
           },
           "links": {
@@ -3760,141 +3714,161 @@
         ]
       }
     },
-    "examples": {
-      "patch_request": {
-        "value": [
-          {
-            "op": "replace",
-            "path": "/transactions/0/amount",
-            "value": {
-              "total": "18.37",
-              "currency": "EUR",
-              "details": {
-                "subtotal": "13.37",
-                "shipping": "5.00"
-              }
-            }
-          },
-          {
-            "op": "add",
-            "path": "/transactions/0/item_list/shipping_address",
-            "value": {
-              "recipient_name": "Anna Gruneberg",
-              "line1": "Kathwarinenhof 1",
-              "city": "Flensburg",
-              "postal_code": "24939",
-              "country_code": "DE"
-            }
-          }
-        ]
-      },
-      "payment_execution": {
-        "value": {
-          "payer_id": "CR87QHB7JTRSC"
+    "parameters": {
+      "paypal_partner_attribution_id": {
+        "name": "PayPal-Partner-Attribution-Id",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "maxLength": 32
         }
       },
-      "capture": {
-        "value": {
-          "amount": {
-            "currency": "USD",
-            "total": "4.54"
-          },
-          "is_final_capture": true
+      "count": {
+        "name": "count",
+        "in": "query",
+        "description": "The number of items to list in the response.",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "maximum": 20,
+          "default": 10
         }
       },
-      "authorization": {
-        "value": {
-          "amount": {
-            "total": "7.00",
-            "currency": "USD"
-          }
+      "start_id": {
+        "name": "start_id",
+        "in": "query",
+        "description": "The ID of the starting resource in the response. When results are paged, you can use the `next_id` value as the `start_id` to continue with the next set of results.",
+        "required": false,
+        "schema": {
+          "type": "string"
         }
       },
-      "refund_request": {
-        "value": {
-          "amount": {
-            "total": "100.00",
-            "currency": "USD"
-          },
-          "invoice_number": "INV-7654321"
+      "start_index": {
+        "name": "start_index",
+        "in": "query",
+        "description": "The start index of the payments to list. Typically, you use the `start_index` to jump to a specific position in the resource history based on its cart. For example, to start at the second item in a list of results, specify `?start_index=2`.",
+        "required": false,
+        "schema": {
+          "type": "integer"
         }
       },
-      "order": {
-        "value": {
-          "amount": {
-            "currency": "USD",
-            "total": "4.54"
-          }
+      "start_time": {
+        "name": "start_time",
+        "in": "query",
+        "description": "The start date and time for the range to show in the response, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, `start_time=2016-03-06T11:00:00Z`.",
+        "required": false,
+        "schema": {
+          "type": "string"
         }
       },
-      "payment": {
-        "value": {
-          "intent": "sale",
-          "payer": {
-            "payment_method": "paypal"
-          },
-          "transactions": [
-            {
-              "amount": {
-                "total": "30.11",
-                "currency": "USD",
-                "details": {
-                  "subtotal": "30.00",
-                  "tax": "0.07",
-                  "shipping": "0.03",
-                  "handling_fee": "1.00",
-                  "shipping_discount": "-1.00",
-                  "insurance": "0.01"
-                }
-              },
-              "description": "The payment transaction description.",
-              "custom": "EBAY_EMS_90048630024435",
-              "invoice_number": "48787589673",
-              "payment_options": {
-                "allowed_payment_method": "INSTANT_FUNDING_SOURCE"
-              },
-              "soft_descriptor": "ECHI5786786",
-              "item_list": {
-                "items": [
-                  {
-                    "name": "hat",
-                    "description": "Brown hat.",
-                    "quantity": "5",
-                    "price": "3",
-                    "tax": "0.01",
-                    "sku": "1",
-                    "currency": "USD"
-                  },
-                  {
-                    "name": "handbag",
-                    "description": "Black handbag.",
-                    "quantity": "1",
-                    "price": "15",
-                    "tax": "0.02",
-                    "sku": "product34",
-                    "currency": "USD"
-                  }
-                ],
-                "shipping_address": {
-                  "recipient_name": "Brian Robinson",
-                  "line1": "4th Floor",
-                  "line2": "Unit #34",
-                  "city": "San Jose",
-                  "country_code": "US",
-                  "postal_code": "95131",
-                  "phone": "011862212345678",
-                  "state": "CA"
-                }
-              }
-            }
-          ],
-          "note_to_payer": "Contact us for any questions on your order.",
-          "redirect_urls": {
-            "return_url": "https://example.com/return",
-            "cancel_url": "https://example.com/cancel"
-          }
+      "end_time": {
+        "name": "end_time",
+        "in": "query",
+        "description": "The end date and time for the range to show in the response, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, `end_time=2016-03-06T11:00:00Z`.",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "payee_id": {
+        "name": "payee_id",
+        "in": "query",
+        "description": "Filters the payments in the response by a PayPal-assigned merchant ID that identifies the payee.",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "sort_by": {
+        "name": "sort_by",
+        "in": "query",
+        "description": "Sorts the payments in the response by a create time.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "create_time"
+          ]
+        }
+      },
+      "sort_order": {
+        "name": "sort_order",
+        "in": "query",
+        "description": "Sorts the payments in the response in descending order.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "desc"
+          ]
+        }
+      },
+      "payment_id": {
+        "name": "payment_id",
+        "in": "path",
+        "description": "The ID of the payment to execute.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "paypal_request_id": {
+        "name": "PayPal-Request-Id",
+        "description": "The server stores keys for 30 days.",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "maxLength": 78
+        }
+      },
+      "sale_id": {
+        "name": "sale_id",
+        "in": "path",
+        "description": "The ID of the sale transaction to refund.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "authorization_id": {
+        "name": "authorization_id",
+        "in": "path",
+        "description": "The ID of the authorization to re-authorize.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "order_id": {
+        "name": "order_id",
+        "in": "path",
+        "description": "The ID of the order to authorize.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "capture_id": {
+        "name": "capture_id",
+        "in": "path",
+        "description": "The ID of the captured payment to refund.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "refund_id": {
+        "name": "refund_id",
+        "in": "path",
+        "description": "The ID of the refund for which to show details.",
+        "required": true,
+        "schema": {
+          "type": "string"
         }
       }
     }
-  }
+  },
+  "deprecated": true
 }

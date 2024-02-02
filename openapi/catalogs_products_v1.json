@@ -3,7 +3,27 @@
   "info": {
     "title": "Catalog Products",
     "description": "Merchants can use the Catalog Products API to create products, which are goods and services.",
-    "version": "1.0"
+    "version": "1.0",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "products",
+      "description": "Use `/products` resource to create and manage products."
+    }
+  ],
+  "externalDocs": {
+    "url": "https://developer.paypal.com/docs/api/catalog-products/v1/"
   },
   "paths": {
     "/v1/catalogs/products": {
@@ -116,9 +136,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/content_type"
-          },
-          {
             "$ref": "#/components/parameters/prefer"
           },
           {
@@ -132,8 +149,15 @@
                 "$ref": "#/components/schemas/product_request_POST"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/product_request_POST"
+                "product_request_POST": {
+                  "value": {
+                    "name": "Video Streaming Service",
+                    "description": "Video streaming service",
+                    "type": "SERVICE",
+                    "category": "SOFTWARE",
+                    "image_url": "https://example.com/streaming.jpg",
+                    "home_url": "https://example.com/home"
+                  }
                 }
               }
             }
@@ -231,9 +255,6 @@
           }
         },
         "parameters": [
-          {
-            "$ref": "#/components/parameters/content_type"
-          },
           {
             "$ref": "#/components/parameters/page_size"
           },
@@ -338,9 +359,6 @@
           }
         },
         "parameters": [
-          {
-            "$ref": "#/components/parameters/content_type"
-          },
           {
             "$ref": "#/components/parameters/product_id"
           }
@@ -465,9 +483,6 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/content_type"
-          },
-          {
             "$ref": "#/components/parameters/product_id"
           }
         ],
@@ -478,8 +493,14 @@
                 "$ref": "#/components/schemas/patch_request"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/patch_request"
+                "patch_request": {
+                  "value": [
+                    {
+                      "op": "replace",
+                      "path": "/description",
+                      "value": "Premium video streaming service"
+                    }
+                  ]
                 }
               }
             }
@@ -498,25 +519,6 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "products",
-      "description": "Use `/products` resource to create and manage products."
-    }
-  ],
-  "externalDocs": {
-    "url": "https://developer.paypal.com/docs/api/catalog-products/v1/"
-  },
-  "servers": [
-    {
-      "url": "https://api-m.sandbox.paypal.com",
-      "description": "PayPal Sandbox Environment"
-    },
-    {
-      "url": "https://api-m.paypal.com",
-      "description": "PayPal Live Environment"
-    }
-  ],
   "components": {
     "securitySchemes": {
       "Oauth2": {
@@ -529,76 +531,6 @@
               "https://uri.paypal.com/services/subscriptions": "Create and manage products"
             }
           }
-        }
-      }
-    },
-    "parameters": {
-      "content_type": {
-        "name": "Content-Type",
-        "in": "header",
-        "description": "The media type. Required for operations with a request body. The value is `application/<format>`, where `format` is `json`.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "prefer": {
-        "name": "Prefer",
-        "in": "header",
-        "description": "The preferred server response upon successful completion of the request. Value is:<ul><li><code>return=minimal</code>. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the <code>id</code>, <code>status</code> and HATEOAS links.</li><li><code>return=representation</code>. The server returns a complete resource representation, including the current state of the resource.</li></ul>",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "default": "return=minimal"
-        }
-      },
-      "paypal_request_id": {
-        "name": "PayPal-Request-Id",
-        "in": "header",
-        "description": "The server stores keys for 72 hours.",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "page_size": {
-        "name": "page_size",
-        "in": "query",
-        "description": "The number of items to return in the response.",
-        "schema": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 20,
-          "default": 10
-        }
-      },
-      "page": {
-        "name": "page",
-        "in": "query",
-        "description": "A non-zero integer which is the start index of the entire list of items that are returned in the response. So, the combination of `page=1` and `page_size=20` returns the first 20 items. The combination of `page=2` and `page_size=20` returns the next 20 items.",
-        "schema": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 100000,
-          "default": 1
-        }
-      },
-      "total_required": {
-        "name": "total_required",
-        "in": "query",
-        "description": "Indicates whether to show the total items and total pages in the response.",
-        "schema": {
-          "type": "boolean",
-          "default": false
-        }
-      },
-      "product_id": {
-        "name": "product_id",
-        "in": "path",
-        "required": true,
-        "description": "The product ID.",
-        "schema": {
-          "type": "string"
         }
       }
     },
@@ -803,9 +735,7 @@
             "description": "The value of the field that caused the error."
           },
           "location": {
-            "type": "string",
-            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
-            "default": "body"
+            "$ref": "#/components/schemas/error_location"
           },
           "issue": {
             "type": "string",
@@ -819,6 +749,16 @@
         "required": [
           "issue"
         ]
+      },
+      "error_location": {
+        "type": "string",
+        "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+        "enum": [
+          "body",
+          "path",
+          "query"
+        ],
+        "default": "body"
       },
       "error_default": {
         "description": "The default error response.",
@@ -879,17 +819,14 @@
             "description": "The HTTP method required to make the related call.",
             "type": "string",
             "minLength": 3,
-            "maxLength": 7,
+            "maxLength": 6,
             "pattern": "^[A-Z]*$",
             "enum": [
-              "CONNECT",
-              "DELETE",
               "GET",
-              "HEAD",
-              "OPTIONS",
-              "PATCH",
               "POST",
-              "PUT"
+              "PUT",
+              "DELETE",
+              "PATCH"
             ]
           }
         }
@@ -2245,24 +2182,64 @@
         }
       }
     },
-    "examples": {
-      "patch_request": {
-        "value": [
-          {
-            "op": "replace",
-            "path": "/description",
-            "value": "Premium video streaming service"
-          }
-        ]
+    "parameters": {
+      "prefer": {
+        "name": "Prefer",
+        "in": "header",
+        "description": "The preferred server response upon successful completion of the request. Value is:<ul><li><code>return=minimal</code>. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the <code>id</code>, <code>status</code> and HATEOAS links.</li><li><code>return=representation</code>. The server returns a complete resource representation, including the current state of the resource.</li></ul>",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "default": "return=minimal"
+        }
       },
-      "product_request_POST": {
-        "value": {
-          "name": "Video Streaming Service",
-          "description": "Video streaming service",
-          "type": "SERVICE",
-          "category": "SOFTWARE",
-          "image_url": "https://example.com/streaming.jpg",
-          "home_url": "https://example.com/home"
+      "paypal_request_id": {
+        "name": "PayPal-Request-Id",
+        "in": "header",
+        "description": "The server stores keys for 72 hours.",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "page_size": {
+        "name": "page_size",
+        "in": "query",
+        "description": "The number of items to return in the response.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "default": 10
+        }
+      },
+      "page": {
+        "name": "page",
+        "in": "query",
+        "description": "A non-zero integer which is the start index of the entire list of items that are returned in the response. So, the combination of `page=1` and `page_size=20` returns the first 20 items. The combination of `page=2` and `page_size=20` returns the next 20 items.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000,
+          "default": 1
+        }
+      },
+      "total_required": {
+        "name": "total_required",
+        "in": "query",
+        "description": "Indicates whether to show the total items and total pages in the response.",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "product_id": {
+        "name": "product_id",
+        "in": "path",
+        "required": true,
+        "description": "The product ID.",
+        "schema": {
+          "type": "string"
         }
       }
     }

@@ -3,7 +3,8 @@
   "info": {
     "title": "Invoicing",
     "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/invoices</code> endpoint is deprecated. Use the <code>/v2/invoices</code> endpoint instead. For details, see <a href=\"/docs/invoicing/basic-integration/\">PayPal Invoicing Basic Integration</a>.</blockquote>Use the Invoicing API to create, send, and manage invoices. You can also use the API or webhooks to track invoice payments. When you send an invoice to a customer, the invoice moves from draft to payable state. PayPal then emails the customer a link to the invoice on the PayPal website. Customers with a PayPal account can log in and pay the invoice with PayPal. Alternatively, customers can pay as a guest with a debit card or credit card. For more information, see <a href=\"/docs/invoicing/\">Invoicing Overview</a> and the <a href=\"docs/archive/invoicing/integrate/\">Invoicing Integration Guide</a>.",
-    "version": "1.13"
+    "version": "1.13",
+    "contact": {}
   },
   "deprecated": true,
   "paths": {
