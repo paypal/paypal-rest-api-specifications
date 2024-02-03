@@ -3,7 +3,31 @@
   "info": {
     "title": "Orders",
     "description": "Partners can use the Orders API to create, show details for, authorize, and capture payment for orders.<blockquote><strong>Orders API integration note:</strong> The PayPal Commerce Platform is a limited-release solution aimed at partners, crowd funding, and multi-party commerce platforms. To use Orders API for Partners, see <a href=\"/docs/multiparty/\">Multiparty Payments</a>. v1 of the API will be deprecated soon. A new version is available at <a href=\"/docs/api/orders/v2/\">Orders API v2</a>.</blockquote>",
-    "version": "1.1"
+    "version": "1.1",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "orders",
+      "description": "Use the `/checkout/orders` resource to create, cancel, and show details for orders."
+    },
+    {
+      "name": "orders-payment-actions",
+      "description": "Use the `/checkout/orders` resource with the `/pay` action to pay for an order. When you [create an order](#orders_create), the response includes an approval URL. Redirect the customer to this approval URL."
+    }
+  ],
+  "externalDocs": {
+    "url": "https://developer.paypal.com/docs/api/orders/v1/"
   },
   "paths": {
     "/v1/checkout/orders": {
@@ -18,11 +42,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/order"
-                },
-                "examples": {
-                  "0": {
-                    "$ref": "#/components/examples/order"
-                  }
                 }
               }
             }
@@ -48,6 +67,73 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/order"
+              },
+              "examples": {
+                "order": {
+                  "value": {
+                    "purchase_units": [
+                      {
+                        "reference_id": "store_mobile_world_order_1234",
+                        "description": "Mobile World Store order-1234",
+                        "amount": {
+                          "currency": "USD",
+                          "details": {
+                            "subtotal": "1.09",
+                            "shipping": "0.02",
+                            "tax": "0.33"
+                          },
+                          "total": "1.44"
+                        },
+                        "payee": {
+                          "email": "seller@example.com"
+                        },
+                        "items": [
+                          {
+                            "name": "NeoPhone",
+                            "sku": "sku03",
+                            "price": "0.54",
+                            "currency": "USD",
+                            "quantity": "1"
+                          },
+                          {
+                            "name": "Fitness Watch",
+                            "sku": "sku04",
+                            "price": "0.55",
+                            "currency": "USD",
+                            "quantity": "1"
+                          }
+                        ],
+                        "shipping_address": {
+                          "line1": "2211 N First Street",
+                          "line2": "Building 17",
+                          "city": "San Jose",
+                          "country_code": "US",
+                          "postal_code": "95131",
+                          "state": "CA",
+                          "phone": "(123) 456-7890"
+                        },
+                        "shipping_method": "United Postal Service",
+                        "partner_fee_details": {
+                          "receiver": {
+                            "email": "partner@example.com"
+                          },
+                          "amount": {
+                            "value": "0.01",
+                            "currency": "USD"
+                          }
+                        },
+                        "payment_linked_group": 1,
+                        "custom": "custom_value_2388",
+                        "invoice_number": "invoice_number_2388",
+                        "payment_descriptor": "Payment Mobile World"
+                      }
+                    ],
+                    "redirect_urls": {
+                      "return_url": "https://example.com/return",
+                      "cancel_url": "https://example.com/cancel"
+                    }
+                  }
+                }
               }
             }
           },
@@ -233,29 +319,6 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "orders",
-      "description": "Use the `/checkout/orders` resource to create, cancel, and show details for orders."
-    },
-    {
-      "name": "orders-payment-actions",
-      "description": "Use the `/checkout/orders` resource with the `/pay` action to pay for an order. When you [create an order](#orders_create), the response includes an approval URL. Redirect the customer to this approval URL."
-    }
-  ],
-  "externalDocs": {
-    "url": "https://developer.paypal.com/docs/api/orders/v1/"
-  },
-  "servers": [
-    {
-      "url": "https://api-m.sandbox.paypal.com",
-      "description": "PayPal Sandbox Environment"
-    },
-    {
-      "url": "https://api-m.paypal.com",
-      "description": "PayPal Live Environment"
-    }
-  ],
   "components": {
     "securitySchemes": {
       "Oauth2": {
@@ -276,34 +339,6 @@
         }
       }
     },
-    "parameters": {
-      "paypal_partner_attribution_id": {
-        "name": "PayPal-Partner-Attribution-Id",
-        "in": "header",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "order_id": {
-        "name": "order_id",
-        "in": "path",
-        "description": "The ID of the order for which to execute a payment.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "paypal_request_id": {
-        "name": "PayPal-Request-Id",
-        "description": "The server stores keys forever.",
-        "in": "header",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      }
-    },
     "schemas": {
       "error_details": {
         "title": "Error Details",
@@ -319,9 +354,7 @@
             "description": "The value of the field that caused the error."
           },
           "location": {
-            "type": "string",
-            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
-            "default": "body"
+            "$ref": "#/components/schemas/error_location"
           },
           "issue": {
             "type": "string",
@@ -336,37 +369,15 @@
           "issue"
         ]
       },
-      "error_default": {
-        "description": "The default error response.",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/error_400"
-          },
-          {
-            "$ref": "#/components/schemas/error_401"
-          },
-          {
-            "$ref": "#/components/schemas/error_403"
-          },
-          {
-            "$ref": "#/components/schemas/error_404"
-          },
-          {
-            "$ref": "#/components/schemas/error_409"
-          },
-          {
-            "$ref": "#/components/schemas/error_415"
-          },
-          {
-            "$ref": "#/components/schemas/error_422"
-          },
-          {
-            "$ref": "#/components/schemas/error_500"
-          },
-          {
-            "$ref": "#/components/schemas/error_503"
-          }
-        ]
+      "error_location": {
+        "type": "string",
+        "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+        "enum": [
+          "body",
+          "path",
+          "query"
+        ],
+        "default": "body"
       },
       "error_link_description": {
         "title": "Link Description",
@@ -395,17 +406,14 @@
             "description": "The HTTP method required to make the related call.",
             "type": "string",
             "minLength": 3,
-            "maxLength": 7,
+            "maxLength": 6,
             "pattern": "^[A-Z]*$",
             "enum": [
-              "CONNECT",
-              "DELETE",
               "GET",
-              "HEAD",
-              "OPTIONS",
-              "PATCH",
               "POST",
-              "PUT"
+              "PUT",
+              "DELETE",
+              "PATCH"
             ]
           }
         }
@@ -1972,70 +1980,31 @@
         }
       }
     },
-    "examples": {
-      "order": {
-        "value": {
-          "purchase_units": [
-            {
-              "reference_id": "store_mobile_world_order_1234",
-              "description": "Mobile World Store order-1234",
-              "amount": {
-                "currency": "USD",
-                "details": {
-                  "subtotal": "1.09",
-                  "shipping": "0.02",
-                  "tax": "0.33"
-                },
-                "total": "1.44"
-              },
-              "payee": {
-                "email": "seller@example.com"
-              },
-              "items": [
-                {
-                  "name": "NeoPhone",
-                  "sku": "sku03",
-                  "price": "0.54",
-                  "currency": "USD",
-                  "quantity": "1"
-                },
-                {
-                  "name": "Fitness Watch",
-                  "sku": "sku04",
-                  "price": "0.55",
-                  "currency": "USD",
-                  "quantity": "1"
-                }
-              ],
-              "shipping_address": {
-                "line1": "2211 N First Street",
-                "line2": "Building 17",
-                "city": "San Jose",
-                "country_code": "US",
-                "postal_code": "95131",
-                "state": "CA",
-                "phone": "(123) 456-7890"
-              },
-              "shipping_method": "United Postal Service",
-              "partner_fee_details": {
-                "receiver": {
-                  "email": "partner@example.com"
-                },
-                "amount": {
-                  "value": "0.01",
-                  "currency": "USD"
-                }
-              },
-              "payment_linked_group": 1,
-              "custom": "custom_value_2388",
-              "invoice_number": "invoice_number_2388",
-              "payment_descriptor": "Payment Mobile World"
-            }
-          ],
-          "redirect_urls": {
-            "return_url": "https://example.com/return",
-            "cancel_url": "https://example.com/cancel"
-          }
+    "parameters": {
+      "paypal_partner_attribution_id": {
+        "name": "PayPal-Partner-Attribution-Id",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "order_id": {
+        "name": "order_id",
+        "in": "path",
+        "description": "The ID of the order for which to execute a payment.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "paypal_request_id": {
+        "name": "PayPal-Request-Id",
+        "description": "The server stores keys forever.",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string"
         }
       }
     }

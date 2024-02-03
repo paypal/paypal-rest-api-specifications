@@ -3,7 +3,71 @@
   "info": {
     "title": "Disputes",
     "description": "Occasionally, something goes wrong with a customer's order. To dispute a charge, a customer can create a dispute with PayPal. PayPal merchants, partners, and external developers can use the PayPal Disputes API to manage customer disputes.<blockquote><strong>Note:</strong> In the live environment, merchants cannot create disputes but can only respond to customer-created disputes. However, merchants can create disputes in the sandbox environment. When you create an app, enable Disputes in the App feature options section.</blockquote>A customer can also ask his or her bank or credit card company to dispute and reverse a charge, which is known as a <i>chargeback</i>. For more information, see <a href=\"https://www.paypal.com/us/brc/article/customer-disputes-claims-chargebacks-bank-reversals\">Disputes, claims, chargebacks, and bank reversals</a>.<br/><br/>When a customer disputes a charge, you can use this API to provide evidence that the charge is legitimate. To provide evidence or appeal a dispute, you submit a proof of delivery or proof of refund document or notes, which can include logs.<br/><br/>Normally, an agent at PayPal creates a dispute, updates the dispute status, and settles disputes, but now you can run test cases in the sandbox that complete these operations.<br/><br/><blockquote><strong>Important:</strong> The create, cancel, compute metrics, change reason, and validate eligibility methods are available as a limited-release solution at this time. For more information, reach out to your PayPal account manager.</blockquote><br/>For details, see <a href=\"/docs/integration/direct/customer-disputes/\">Disputes Overview</a> documentation.",
-    "version": "1.10"
+    "version": "1.10",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "disputes",
+      "description": "Use the `/disputes` resource to list disputes, create disputes, show dispute details, and partially a dispute. Normally, an agent at PayPal creates disputes but now you can run test cases in the sandbox that create disputes."
+    },
+    {
+      "name": "disputes-actions",
+      "description": "Use the `/disputes` resource with a dispute ID and an action to:<ul><li>Accept a claim.</li><li>Accept an offer to resolve a dispute.</li><li>Acknowledge the return of an item related to a dispute.</li><li>Settle a dispute.</li><li>Appeal a dispute.</li><li>Cancel a dispute.</li><li>Change the reason for a dispute.</li><li>Deny an offer to resolve dispute.</li><li>Escalate a dispute to a claim.</li><li>Make an offer to resolve a dispute.</li><li>Make an offer to resolve a dispute.</li><li>Provide evidence for a dispute.</li><li>Provide supporting information for dispute.</li><li>In the sandbox, update the dispute status.</li><li>Send a message about a dispute to the other party in the dispute.</li><ul>"
+    },
+    {
+      "name": "referred-disputes",
+      "description": "Use the `/customer/referred-disputes` resource to create a dispute for a referred case that was created by a partner or marketplace, show details for a referred dispute, by ID, notify referred refunds completed to PayPal, notify PayPal about referred dispute adjudication updates, and determine the dispute eligibility for referred disputes."
+    },
+    {
+      "name": "validate-eligibility",
+      "description": "Use the `/validate-eligibility/` resource to determine whether you can create a case for a transaction."
+    },
+    {
+      "name": "compute-metrics",
+      "description": "Use the `/compute-metrics` resource to provide metrics for all disputes."
+    },
+    {
+      "name": "validate-referred-dispute-eligibility",
+      "description": "Use the `/validate-referred-dispute-eligibility` resource to determine whether you can create a referred case for a transaction, by encrypted transaction ID."
+    },
+    {
+      "name": "referred-disputes",
+      "description": "Use the `/referred-disputes` resource to create a dispute for a referred case that was created by a partner or marketplace, show details for a referred dispute, by ID, notify referred refunds completed to PayPal, notify PayPal about referred dispute adjudication updates, and determine the dispute eligibility for referred disputes."
+    },
+    {
+      "name": "referred-disputes-actions",
+      "description": "Use the `/referred-disputes` resource with a dispute ID and an action to notify PayPal about adjudication updates for a referred dispute and notify PayPal about a refund for a referred dispute."
+    },
+    {
+      "name": "partner-actions",
+      "description": "Use the `/disputes/{id}/partner-actions/` resource to show dispute action details and partially update a dispute action."
+    },
+    {
+      "name": "search-suggestions",
+      "description": "Use the `/search-suggestions` resource to show search suggestions."
+    },
+    {
+      "name": "dispute-events",
+      "description": "Use the `/dispute-events` resource to send dispute events."
+    },
+    {
+      "name": "refund-preference",
+      "description": "Use the `/disputes/{id}/provide-refund-preference` resource to provide refund preferences for the dispute."
+    }
+  ],
+  "externalDocs": {
+    "url": "https://developer.paypal.com/docs/api/customer-disputes/v1/"
   },
   "paths": {
     "/v1/customer/disputes": {
@@ -233,9 +297,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -314,9 +375,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -384,9 +442,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -449,9 +504,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -542,9 +594,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -554,8 +603,10 @@
                 "$ref": "#/components/schemas/adjudicate"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/adjudicate"
+                "adjudicate": {
+                  "value": {
+                    "adjudication_outcome": "BUYER_FAVOR"
+                  }
                 }
               }
             },
@@ -653,9 +704,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -665,8 +713,10 @@
                 "$ref": "#/components/schemas/require_evidence"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/require_evidence"
+                "escalate": {
+                  "value": {
+                    "note": "Escalating to PayPal claim for resolution."
+                  }
                 }
               }
             },
@@ -765,9 +815,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -777,8 +824,10 @@
                 "$ref": "#/components/schemas/escalate"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/escalate"
+                "require_evidence": {
+                  "value": {
+                    "action": "BUYER_EVIDENCE"
+                  }
                 }
               }
             },
@@ -876,9 +925,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -974,9 +1020,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -986,8 +1029,15 @@
                 "$ref": "#/components/schemas/make_offer"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/make_offer"
+                "make_offer": {
+                  "value": {
+                    "note": "Offer refund with replacement item.",
+                    "offer_amount": {
+                      "currency_code": "USD",
+                      "value": "23"
+                    },
+                    "offer_type": "REFUND_WITH_REPLACEMENT"
+                  }
                 }
               }
             },
@@ -1095,9 +1145,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -1107,8 +1154,10 @@
                 "$ref": "#/components/schemas/accept_offer"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/accept_offer"
+                "accept_offer": {
+                  "value": {
+                    "note": "I am ok with the refund offered."
+                  }
                 }
               }
             },
@@ -1201,9 +1250,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -1213,8 +1259,10 @@
                 "$ref": "#/components/schemas/deny_offer"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/deny_offer"
+                "deny_offer": {
+                  "value": {
+                    "note": "refund offer is very low."
+                  }
                 }
               }
             },
@@ -1307,9 +1355,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -1410,9 +1455,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -1446,69 +1488,6 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "disputes",
-      "description": "Use the `/disputes` resource to list disputes, create disputes, show dispute details, and partially a dispute. Normally, an agent at PayPal creates disputes but now you can run test cases in the sandbox that create disputes."
-    },
-    {
-      "name": "disputes-actions",
-      "description": "Use the `/disputes` resource with a dispute ID and an action to:<ul><li>Accept a claim.</li><li>Accept an offer to resolve a dispute.</li><li>Acknowledge the return of an item related to a dispute.</li><li>Settle a dispute.</li><li>Appeal a dispute.</li><li>Cancel a dispute.</li><li>Change the reason for a dispute.</li><li>Deny an offer to resolve dispute.</li><li>Escalate a dispute to a claim.</li><li>Make an offer to resolve a dispute.</li><li>Make an offer to resolve a dispute.</li><li>Provide evidence for a dispute.</li><li>Provide supporting information for dispute.</li><li>In the sandbox, update the dispute status.</li><li>Send a message about a dispute to the other party in the dispute.</li><ul>"
-    },
-    {
-      "name": "referred-disputes",
-      "description": "Use the `/customer/referred-disputes` resource to create a dispute for a referred case that was created by a partner or marketplace, show details for a referred dispute, by ID, notify referred refunds completed to PayPal, notify PayPal about referred dispute adjudication updates, and determine the dispute eligibility for referred disputes."
-    },
-    {
-      "name": "validate-eligibility",
-      "description": "Use the `/validate-eligibility/` resource to determine whether you can create a case for a transaction."
-    },
-    {
-      "name": "compute-metrics",
-      "description": "Use the `/compute-metrics` resource to provide metrics for all disputes."
-    },
-    {
-      "name": "validate-referred-dispute-eligibility",
-      "description": "Use the `/validate-referred-dispute-eligibility` resource to determine whether you can create a referred case for a transaction, by encrypted transaction ID."
-    },
-    {
-      "name": "referred-disputes",
-      "description": "Use the `/referred-disputes` resource to create a dispute for a referred case that was created by a partner or marketplace, show details for a referred dispute, by ID, notify referred refunds completed to PayPal, notify PayPal about referred dispute adjudication updates, and determine the dispute eligibility for referred disputes."
-    },
-    {
-      "name": "referred-disputes-actions",
-      "description": "Use the `/referred-disputes` resource with a dispute ID and an action to notify PayPal about adjudication updates for a referred dispute and notify PayPal about a refund for a referred dispute."
-    },
-    {
-      "name": "partner-actions",
-      "description": "Use the `/disputes/{id}/partner-actions/` resource to show dispute action details and partially update a dispute action."
-    },
-    {
-      "name": "search-suggestions",
-      "description": "Use the `/search-suggestions` resource to show search suggestions."
-    },
-    {
-      "name": "dispute-events",
-      "description": "Use the `/dispute-events` resource to send dispute events."
-    },
-    {
-      "name": "refund-preference",
-      "description": "Use the `/disputes/{id}/provide-refund-preference` resource to provide refund preferences for the dispute."
-    }
-  ],
-  "externalDocs": {
-    "url": "https://developer.paypal.com/docs/api/customer-disputes/v1/"
-  },
-  "servers": [
-    {
-      "url": "https://api-m.sandbox.paypal.com",
-      "description": "PayPal Sandbox Environment"
-    },
-    {
-      "url": "https://api-m.paypal.com",
-      "description": "PayPal Live Environment"
-    }
-  ],
   "components": {
     "requestBodies": {
       "evidences": {
@@ -1552,123 +1531,6 @@
         }
       }
     },
-    "parameters": {
-      "start_time": {
-        "name": "start_time",
-        "in": "query",
-        "description": "Filters the disputes in the response by a creation date and time. The start time must be within the last 180 days. Value is in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, *`yyyy`*-*`MM`*-*`dd`*`T`*`HH`*:*`mm`*:*`ss`*.*`SSS`*`Z`.<br/><br/>You can specify either but not both the `start_time` and `disputed_transaction_id` query parameters.",
-        "deprecated": true,
-        "schema": {
-          "type": "string",
-          "minLength": 20,
-          "maxLength": 64,
-          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$",
-          "default": "Current date and time"
-        }
-      },
-      "disputed_transaction_id": {
-        "name": "disputed_transaction_id",
-        "in": "query",
-        "description": "Filters the disputes in the response by a transaction, by ID.<br/><br/>You can specify either but not both the `start_time` and `disputed_transaction_id` query parameter.",
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 255,
-          "pattern": "^[0-9A-Z_]+$"
-        }
-      },
-      "page_size": {
-        "name": "page_size",
-        "in": "query",
-        "description": "Limits the number of disputes in the response to this value.",
-        "schema": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 50,
-          "default": 10
-        }
-      },
-      "next_page_token": {
-        "name": "next_page_token",
-        "in": "query",
-        "description": "The token that describes the next page of results to fetch. The <a href=\"/docs/api/customer-disputes/v1/#disputes_list\">list disputes</a> call returns this token in the HATEOAS links in the response.",
-        "deprecated": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 255,
-          "pattern": "^[A-Za-z0-9+\\/=]+$",
-          "default": "The first page of data"
-        }
-      },
-      "dispute_state": {
-        "name": "dispute_state",
-        "in": "query",
-        "description": "Filters the disputes in the response by a state. Separate multiple values with a comma (`,`). When you specify more than one dispute_state, the response lists disputes that belong to any of the specified dispute_state.",
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 2000,
-          "pattern": "^[0-9A-Z_]+$",
-          "enum": [
-            "REQUIRED_ACTION",
-            "REQUIRED_OTHER_PARTY_ACTION",
-            "UNDER_PAYPAL_REVIEW",
-            "RESOLVED",
-            "OPEN_INQUIRIES",
-            "APPEALABLE"
-          ]
-        }
-      },
-      "update_time_before": {
-        "name": "update_time_before",
-        "in": "query",
-        "description": "The date and time when the dispute was last updated, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, *`yyyy`*-*`MM`*-*`dd`*`T`*`HH`*:*`mm`*:*`ss`*.*`SSS`*`Z`. update_time_before must be within the last 180 days and the default is the current time.",
-        "schema": {
-          "type": "string",
-          "format": "ppaas_date_time_v3",
-          "minLength": 20,
-          "maxLength": 64,
-          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$"
-        }
-      },
-      "update_time_after": {
-        "name": "update_time_after",
-        "in": "query",
-        "description": "The date and time when the dispute was last updated, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, *`yyyy`*-*`MM`*-*`dd`*`T`*`HH`*:*`mm`*:*`ss`*.*`SSS`*`Z`. update_time_after must be within the last 180 days and the default is the maximum time (180 days) supported.",
-        "schema": {
-          "type": "string",
-          "format": "ppaas_date_time_v3",
-          "minLength": 20,
-          "maxLength": 64,
-          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$"
-        }
-      },
-      "id": {
-        "name": "id",
-        "in": "path",
-        "description": "The ID of the dispute for which to provide the supporting information.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 255,
-          "pattern": "^[A-Za-z0-9-]+$"
-        }
-      },
-      "content_type": {
-        "name": "Content-Type",
-        "in": "header",
-        "description": "Content type of the request payload.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 255,
-          "pattern": "\\w+\\/[-+.\\w]+"
-        }
-      }
-    },
     "schemas": {
       "error_details": {
         "title": "Error Details",
@@ -1684,9 +1546,7 @@
             "description": "The value of the field that caused the error."
           },
           "location": {
-            "type": "string",
-            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
-            "default": "body"
+            "$ref": "#/components/schemas/error_location"
           },
           "issue": {
             "type": "string",
@@ -1701,37 +1561,15 @@
           "issue"
         ]
       },
-      "error_default": {
-        "description": "The default error response.",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/error_400"
-          },
-          {
-            "$ref": "#/components/schemas/error_401"
-          },
-          {
-            "$ref": "#/components/schemas/error_403"
-          },
-          {
-            "$ref": "#/components/schemas/error_404"
-          },
-          {
-            "$ref": "#/components/schemas/error_409"
-          },
-          {
-            "$ref": "#/components/schemas/error_415"
-          },
-          {
-            "$ref": "#/components/schemas/error_422"
-          },
-          {
-            "$ref": "#/components/schemas/error_500"
-          },
-          {
-            "$ref": "#/components/schemas/error_503"
-          }
-        ]
+      "error_location": {
+        "type": "string",
+        "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+        "enum": [
+          "body",
+          "path",
+          "query"
+        ],
+        "default": "body"
       },
       "error_link_description": {
         "title": "Link Description",
@@ -1760,17 +1598,14 @@
             "description": "The HTTP method required to make the related call.",
             "type": "string",
             "minLength": 3,
-            "maxLength": 7,
+            "maxLength": 6,
             "pattern": "^[A-Z]*$",
             "enum": [
-              "CONNECT",
-              "DELETE",
               "GET",
-              "HEAD",
-              "OPTIONS",
-              "PATCH",
               "POST",
-              "PUT"
+              "PUT",
+              "DELETE",
+              "PATCH"
             ]
           }
         }
@@ -2122,6 +1957,37 @@
           "information_link": "https://developer.paypal.com/docs/api/orders/v2/#error-SERVICE_UNAVAILABLE"
         }
       },
+      "error_details-2": {
+        "title": "Error Details",
+        "type": "object",
+        "description": "The error details. Required for client-side `4XX` errors.",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The field that caused the error. If this field is in the body, set this value to the field's JSON pointer value. Required for client-side errors."
+          },
+          "value": {
+            "type": "string",
+            "description": "The value of the field that caused the error."
+          },
+          "location": {
+            "type": "string",
+            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+            "default": "body"
+          },
+          "issue": {
+            "type": "string",
+            "description": "The unique, fine-grained application-level error code."
+          },
+          "description": {
+            "type": "string",
+            "description": "The human-readable description for an issue. The description can change over the lifetime of an API, so clients must not depend on this value."
+          }
+        },
+        "required": [
+          "issue"
+        ]
+      },
       "link_description": {
         "type": "object",
         "title": "Link Description",
@@ -2181,7 +2047,7 @@
             "type": "array",
             "description": "An array of additional details about the error.",
             "items": {
-              "$ref": "#/components/schemas/error_details"
+              "$ref": "#/components/schemas/error_details-2"
             }
           },
           "links": {
@@ -5653,55 +5519,109 @@
         ]
       }
     },
-    "examples": {
-      "make_offer": {
-        "value": {
-          "note": "Offer refund with replacement item.",
-          "offer_amount": {
-            "currency_code": "USD",
-            "value": "23"
-          },
-          "offer_type": "REFUND_WITH_REPLACEMENT"
+    "parameters": {
+      "start_time": {
+        "name": "start_time",
+        "in": "query",
+        "description": "Filters the disputes in the response by a creation date and time. The start time must be within the last 180 days. Value is in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, *`yyyy`*-*`MM`*-*`dd`*`T`*`HH`*:*`mm`*:*`ss`*.*`SSS`*`Z`.<br/><br/>You can specify either but not both the `start_time` and `disputed_transaction_id` query parameters.",
+        "deprecated": true,
+        "schema": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 64,
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$",
+          "default": "Current date and time"
         }
       },
-      "escalate": {
-        "value": {
-          "note": "Escalating to PayPal claim for resolution."
+      "disputed_transaction_id": {
+        "name": "disputed_transaction_id",
+        "in": "query",
+        "description": "Filters the disputes in the response by a transaction, by ID.<br/><br/>You can specify either but not both the `start_time` and `disputed_transaction_id` query parameter.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[0-9A-Z_]+$"
         }
       },
-      "accept_offer": {
-        "value": {
-          "note": "I am ok with the refund offered."
+      "page_size": {
+        "name": "page_size",
+        "in": "query",
+        "description": "Limits the number of disputes in the response to this value.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 10
         }
       },
-      "require_evidence": {
-        "value": {
-          "action": "BUYER_EVIDENCE"
+      "next_page_token": {
+        "name": "next_page_token",
+        "in": "query",
+        "description": "The token that describes the next page of results to fetch. The <a href=\"/docs/api/customer-disputes/v1/#disputes_list\">list disputes</a> call returns this token in the HATEOAS links in the response.",
+        "deprecated": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[A-Za-z0-9+\\/=]+$",
+          "default": "The first page of data"
         }
       },
-      "adjudicate": {
-        "value": {
-          "adjudication_outcome": "BUYER_FAVOR"
-        }
-      },
-      "deny_offer": {
-        "value": {
-          "note": "refund offer is very low."
-        }
-      },
-      "patch_request": {
-        "value": [
-          {
-            "op": "add",
-            "path": "/partner_actions/-",
-            "value": {
-              "id": "AMX-22345",
-              "name": "ACCEPT_DISPUTE",
-              "create_time": "2018-01-12T10:41:35.000Z",
-              "status": "PENDING"
-            }
-          }
+      "dispute_state": {
+        "name": "dispute_state",
+        "in": "query",
+        "description": "Filters the disputes in the response by a state. Separate multiple values with a comma (`,`). When you specify more than one dispute_state, the response lists disputes that belong to any of the specified dispute_state.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "^[0-9A-Z_]+$"
+        },
+        "enum": [
+          "REQUIRED_ACTION",
+          "REQUIRED_OTHER_PARTY_ACTION",
+          "UNDER_PAYPAL_REVIEW",
+          "RESOLVED",
+          "OPEN_INQUIRIES",
+          "APPEALABLE"
         ]
+      },
+      "update_time_before": {
+        "name": "update_time_before",
+        "in": "query",
+        "description": "The date and time when the dispute was last updated, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, *`yyyy`*-*`MM`*-*`dd`*`T`*`HH`*:*`mm`*:*`ss`*.*`SSS`*`Z`. update_time_before must be within the last 180 days and the default is the current time.",
+        "schema": {
+          "type": "string",
+          "format": "ppaas_date_time_v3",
+          "minLength": 20,
+          "maxLength": 64,
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$"
+        }
+      },
+      "update_time_after": {
+        "name": "update_time_after",
+        "in": "query",
+        "description": "The date and time when the dispute was last updated, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, *`yyyy`*-*`MM`*-*`dd`*`T`*`HH`*:*`mm`*:*`ss`*.*`SSS`*`Z`. update_time_after must be within the last 180 days and the default is the maximum time (180 days) supported.",
+        "schema": {
+          "type": "string",
+          "format": "ppaas_date_time_v3",
+          "minLength": 20,
+          "maxLength": 64,
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$"
+        }
+      },
+      "id": {
+        "name": "id",
+        "in": "path",
+        "description": "The ID of the dispute for which to provide the supporting information.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[A-Za-z0-9-]+$"
+        }
       }
     }
   }

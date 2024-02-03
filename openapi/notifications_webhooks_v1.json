@@ -3,7 +3,71 @@
   "info": {
     "title": "Webhooks Management",
     "description": "The PayPal REST APIs use <a href=\"/docs/api/notifications/webhooks/\"/>webhooks</a> for event notification. Webhooks are HTTP callbacks that receive notification messages for events. After you configure a webhook listener for your app, you can <a href=\"#webhooks_create\">create a webhook</a>, which subscribes the webhook listener for your app to events. The <code>notifications</code> namespace contains resource collections for webhooks.",
-    "version": "1.11"
+    "version": "1.11",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "webhooks",
+      "description": "Use the `/webhooks` resource to subscribe your webhook listener to events, list webhooks for an app, show details for, update, delete, and list event subscriptions for webhooks."
+    },
+    {
+      "name": "webhooks-lookup",
+      "description": "Use the `/webhooks-lookup` resource to create, list, show details for, and delete webhook lookups."
+    },
+    {
+      "name": "verify-webhook-signature",
+      "description": "Use the `/verify-webhook-signature` resource to verify a webhook signature."
+    },
+    {
+      "name": "webhooks-event-types",
+      "description": "Use the `/webhooks-event-types` resource to list available events to which any webhook can subscribe."
+    },
+    {
+      "name": "webhooks-events",
+      "description": "Use the `/webhooks-events` resource to list, show details for, and resend event notifications."
+    },
+    {
+      "name": "simulate-event",
+      "description": "Use the `/simulate-event` resource to use a sample payload to simulate a webhook event. The events that this call generates only serve to validate the connection to the listener URL and to show how webhook events look. <blockquote><strong>Note:</strong> You can also use the <a href=\"/docs/api/notifications/webhooks/simulator/\">Webhooks simulator</a> to simulate webhook events.</blockquote>"
+    },
+    {
+      "name": "publish-event-with-payload",
+      "description": "Use the `/publish-event-with-payload` resource to publish an event with a specified payload."
+    },
+    {
+      "name": "publish-event-with-reference",
+      "description": "Use the `/publish-event-with-reference` resource to publish an event with a specified reference."
+    },
+    {
+      "name": "webhook-event-delivery-status",
+      "description": "Use the `/webhook-event-delivery-status` resource to show the webhook event send status."
+    },
+    {
+      "name": "webhooks-error-types",
+      "description": "Use the `/error-types` resource to create and list available webhook error types."
+    },
+    {
+      "name": "webhooks-errors",
+      "description": "Use the `/webhooks-errors` resource to create, list, show details for, and update webhook errors."
+    },
+    {
+      "name": "batch-resend",
+      "description": "Use the `/batch-resend` resource to send out IPN/Webhooks in batches."
+    }
+  ],
+  "externalDocs": {
+    "url": "https://developer.paypal.com/docs/api/webhooks/v1/"
   },
   "paths": {
     "/v1/notifications/webhooks": {
@@ -40,8 +104,18 @@
                 "$ref": "#/components/schemas/webhook"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/webhook"
+                "webhook": {
+                  "value": {
+                    "url": "https://example.com/example_webhook",
+                    "event_types": [
+                      {
+                        "name": "PAYMENT.AUTHORIZATION.CREATED"
+                      },
+                      {
+                        "name": "PAYMENT.AUTHORIZATION.VOIDED"
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -464,8 +538,59 @@
                 "$ref": "#/components/schemas/verify_webhook_signature"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/verify_webhook_signature"
+                "verify_webhook_signature": {
+                  "value": {
+                    "transmission_id": "69cd13f0-d67a-11e5-baa3-778b53f4ae55",
+                    "transmission_time": "2016-02-18T20:01:35Z",
+                    "cert_url": "cert_url",
+                    "auth_algo": "SHA256withRSA",
+                    "transmission_sig": "lmI95Jx3Y9nhR5SJWlHVIWpg4AgFk7n9bCHSRxbrd8A9zrhdu2rMyFrmz+Zjh3s3boXB07VXCXUZy/UFzUlnGJn0wDugt7FlSvdKeIJenLRemUxYCPVoEZzg9VFNqOa48gMkvF+XTpxBeUx/kWy6B5cp7GkT2+pOowfRK7OaynuxUoKW3JcMWw272VKjLTtTAShncla7tGF+55rxyt2KNZIIqxNMJ48RDZheGU5w1npu9dZHnPgTXB9iomeVRoD8O/jhRpnKsGrDschyNdkeh81BJJMH4Ctc6lnCCquoP/GzCzz33MMsNdid7vL/NIWaCsekQpW26FpWPi/tfj8nLA==",
+                    "webhook_id": "1JE4291016473214C",
+                    "webhook_event": {
+                      "id": "8PT597110X687430LKGECATA",
+                      "create_time": "2013-06-25T21:41:28Z",
+                      "resource_type": "authorization",
+                      "event_type": "PAYMENT.AUTHORIZATION.CREATED",
+                      "summary": "A payment authorization was created",
+                      "resource": {
+                        "id": "2DC87612EK520411B",
+                        "create_time": "2013-06-25T21:39:15Z",
+                        "update_time": "2013-06-25T21:39:17Z",
+                        "state": "authorized",
+                        "amount": {
+                          "total": "7.47",
+                          "currency": "USD",
+                          "details": {
+                            "subtotal": "7.47"
+                          }
+                        },
+                        "parent_payment": "PAY-36246664YD343335CKHFA4AY",
+                        "valid_until": "2013-07-24T21:39:15Z",
+                        "links": [
+                          {
+                            "href": "https://api-m.paypal.com/v1/payments/authorization/2DC87612EK520411B",
+                            "rel": "self",
+                            "method": "GET"
+                          },
+                          {
+                            "href": "https://api-m.paypal.com/v1/payments/authorization/2DC87612EK520411B/capture",
+                            "rel": "capture",
+                            "method": "POST"
+                          },
+                          {
+                            "href": "https://api-m.paypal.com/v1/payments/authorization/2DC87612EK520411B/void",
+                            "rel": "void",
+                            "method": "POST"
+                          },
+                          {
+                            "href": "https://api-m.paypal.com/v1/payments/payment/PAY-36246664YD343335CKHFA4AY",
+                            "rel": "parent_payment",
+                            "method": "GET"
+                          }
+                        ]
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -653,11 +778,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/event_resend"
-              },
-              "examples": {
-                "0": {
-                  "$ref": "#/components/examples/event_resend"
-                }
               }
             }
           }
@@ -708,8 +828,12 @@
                 "$ref": "#/components/schemas/simulate_event"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/simulate_event"
+                "simulate_event": {
+                  "value": {
+                    "url": "https://example.com/example_webhook",
+                    "event_type": "PAYMENT.AUTHORIZATION.CREATED",
+                    "resource_version": "1.0"
+                  }
                 }
               }
             }
@@ -728,69 +852,6 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "webhooks",
-      "description": "Use the `/webhooks` resource to subscribe your webhook listener to events, list webhooks for an app, show details for, update, delete, and list event subscriptions for webhooks."
-    },
-    {
-      "name": "webhooks-lookup",
-      "description": "Use the `/webhooks-lookup` resource to create, list, show details for, and delete webhook lookups."
-    },
-    {
-      "name": "verify-webhook-signature",
-      "description": "Use the `/verify-webhook-signature` resource to verify a webhook signature."
-    },
-    {
-      "name": "webhooks-event-types",
-      "description": "Use the `/webhooks-event-types` resource to list available events to which any webhook can subscribe."
-    },
-    {
-      "name": "webhooks-events",
-      "description": "Use the `/webhooks-events` resource to list, show details for, and resend event notifications."
-    },
-    {
-      "name": "simulate-event",
-      "description": "Use the `/simulate-event` resource to use a sample payload to simulate a webhook event. The events that this call generates only serve to validate the connection to the listener URL and to show how webhook events look. <blockquote><strong>Note:</strong> You can also use the <a href=\"/docs/api/notifications/webhooks/simulator/\">Webhooks simulator</a> to simulate webhook events.</blockquote>"
-    },
-    {
-      "name": "publish-event-with-payload",
-      "description": "Use the `/publish-event-with-payload` resource to publish an event with a specified payload."
-    },
-    {
-      "name": "publish-event-with-reference",
-      "description": "Use the `/publish-event-with-reference` resource to publish an event with a specified reference."
-    },
-    {
-      "name": "webhook-event-delivery-status",
-      "description": "Use the `/webhook-event-delivery-status` resource to show the webhook event send status."
-    },
-    {
-      "name": "webhooks-error-types",
-      "description": "Use the `/error-types` resource to create and list available webhook error types."
-    },
-    {
-      "name": "webhooks-errors",
-      "description": "Use the `/webhooks-errors` resource to create, list, show details for, and update webhook errors."
-    },
-    {
-      "name": "batch-resend",
-      "description": "Use the `/batch-resend` resource to send out IPN/Webhooks in batches."
-    }
-  ],
-  "externalDocs": {
-    "url": "https://developer.paypal.com/docs/api/webhooks/v1/"
-  },
-  "servers": [
-    {
-      "url": "https://api-m.sandbox.paypal.com",
-      "description": "PayPal Sandbox Environment"
-    },
-    {
-      "url": "https://api-m.paypal.com",
-      "description": "PayPal Live Environment"
-    }
-  ],
   "components": {
     "securitySchemes": {
       "Oauth2": {
@@ -808,74 +869,6 @@
       }
     },
     "schemas": {
-      "EventTypeList": {
-        "type": "object",
-        "title": "Event Type List",
-        "description": "A list of webhook events.",
-        "properties": {
-          "event_types": {
-            "type": "array",
-            "description": "An array of webhook events.",
-            "items": {
-              "$ref": "#/components/schemas/event_type"
-            }
-          }
-        }
-      },
-      "WebhookList": {
-        "type": "object",
-        "title": "Webhook List",
-        "description": "A list of webhooks.",
-        "properties": {
-          "webhooks": {
-            "type": "array",
-            "description": "An array of webhooks.",
-            "items": {
-              "$ref": "#/components/schemas/webhook"
-            }
-          }
-        }
-      },
-      "EventList": {
-        "type": "object",
-        "title": "Event List",
-        "description": "A list of webhooks events.",
-        "properties": {
-          "events": {
-            "type": "array",
-            "description": "An array of webhooks events.",
-            "items": {
-              "$ref": "#/components/schemas/event"
-            }
-          },
-          "count": {
-            "type": "integer",
-            "description": "The number of items in each range of results. Note that the response might have fewer items than the requested `page_size` value."
-          },
-          "links": {
-            "type": "array",
-            "description": "An array of request-related [HATEOAS links](/docs/api/reference/api-responses/#hateoas-links).",
-            "readOnly": true,
-            "items": {
-              "$ref": "#/components/schemas/link_description"
-            }
-          }
-        }
-      },
-      "WebhookLookupList": {
-        "type": "object",
-        "title": "Webhook Lookup List",
-        "description": "A list of webhook lookups.",
-        "properties": {
-          "webhooks_lookups": {
-            "type": "array",
-            "description": "An array of webhook lookups.",
-            "items": {
-              "$ref": "#/components/schemas/webhooks_lookup"
-            }
-          }
-        }
-      },
       "error_details": {
         "title": "Error Details",
         "type": "object",
@@ -890,9 +883,7 @@
             "description": "The value of the field that caused the error."
           },
           "location": {
-            "type": "string",
-            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
-            "default": "body"
+            "$ref": "#/components/schemas/error_location"
           },
           "issue": {
             "type": "string",
@@ -907,37 +898,15 @@
           "issue"
         ]
       },
-      "error_default": {
-        "description": "The default error response.",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/error_400"
-          },
-          {
-            "$ref": "#/components/schemas/error_401"
-          },
-          {
-            "$ref": "#/components/schemas/error_403"
-          },
-          {
-            "$ref": "#/components/schemas/error_404"
-          },
-          {
-            "$ref": "#/components/schemas/error_409"
-          },
-          {
-            "$ref": "#/components/schemas/error_415"
-          },
-          {
-            "$ref": "#/components/schemas/error_422"
-          },
-          {
-            "$ref": "#/components/schemas/error_500"
-          },
-          {
-            "$ref": "#/components/schemas/error_503"
-          }
-        ]
+      "error_location": {
+        "type": "string",
+        "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+        "enum": [
+          "body",
+          "path",
+          "query"
+        ],
+        "default": "body"
       },
       "error_link_description": {
         "title": "Link Description",
@@ -966,17 +935,14 @@
             "description": "The HTTP method required to make the related call.",
             "type": "string",
             "minLength": 3,
-            "maxLength": 7,
+            "maxLength": 6,
             "pattern": "^[A-Z]*$",
             "enum": [
-              "CONNECT",
-              "DELETE",
               "GET",
-              "HEAD",
-              "OPTIONS",
-              "PATCH",
               "POST",
-              "PUT"
+              "PUT",
+              "DELETE",
+              "PATCH"
             ]
           }
         }
@@ -1328,6 +1294,105 @@
           "information_link": "https://developer.paypal.com/docs/api/orders/v2/#error-SERVICE_UNAVAILABLE"
         }
       },
+      "EventTypeList": {
+        "type": "object",
+        "title": "Event Type List",
+        "description": "A list of webhook events.",
+        "properties": {
+          "event_types": {
+            "type": "array",
+            "description": "An array of webhook events.",
+            "items": {
+              "$ref": "#/components/schemas/event_type"
+            }
+          }
+        }
+      },
+      "WebhookList": {
+        "type": "object",
+        "title": "Webhook List",
+        "description": "A list of webhooks.",
+        "properties": {
+          "webhooks": {
+            "type": "array",
+            "description": "An array of webhooks.",
+            "items": {
+              "$ref": "#/components/schemas/webhook"
+            }
+          }
+        }
+      },
+      "EventList": {
+        "type": "object",
+        "title": "Event List",
+        "description": "A list of webhooks events.",
+        "properties": {
+          "events": {
+            "type": "array",
+            "description": "An array of webhooks events.",
+            "items": {
+              "$ref": "#/components/schemas/event"
+            }
+          },
+          "count": {
+            "type": "integer",
+            "description": "The number of items in each range of results. Note that the response might have fewer items than the requested `page_size` value."
+          },
+          "links": {
+            "type": "array",
+            "description": "An array of request-related [HATEOAS links](/docs/api/reference/api-responses/#hateoas-links).",
+            "readOnly": true,
+            "items": {
+              "$ref": "#/components/schemas/link_description"
+            }
+          }
+        }
+      },
+      "WebhookLookupList": {
+        "type": "object",
+        "title": "Webhook Lookup List",
+        "description": "A list of webhook lookups.",
+        "properties": {
+          "webhooks_lookups": {
+            "type": "array",
+            "description": "An array of webhook lookups.",
+            "items": {
+              "$ref": "#/components/schemas/webhooks_lookup"
+            }
+          }
+        }
+      },
+      "error_details-2": {
+        "title": "Error Details",
+        "type": "object",
+        "description": "The error details. Required for client-side `4XX` errors.",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The field that caused the error. If this field is in the body, set this value to the field's JSON pointer value. Required for client-side errors."
+          },
+          "value": {
+            "type": "string",
+            "description": "The value of the field that caused the error."
+          },
+          "location": {
+            "type": "string",
+            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+            "default": "body"
+          },
+          "issue": {
+            "type": "string",
+            "description": "The unique, fine-grained application-level error code."
+          },
+          "description": {
+            "type": "string",
+            "description": "The human-readable description for an issue. The description can change over the lifetime of an API, so clients must not depend on this value."
+          }
+        },
+        "required": [
+          "issue"
+        ]
+      },
       "link_description": {
         "type": "object",
         "title": "Link Description",
@@ -1387,7 +1452,7 @@
             "type": "array",
             "description": "An array of additional details about the error.",
             "items": {
-              "$ref": "#/components/schemas/error_details"
+              "$ref": "#/components/schemas/error_details-2"
             }
           },
           "links": {
@@ -1827,107 +1892,6 @@
           "type": "string",
           "maxLength": 50,
           "pattern": "^[a-zA-Z0-9]+$"
-        }
-      }
-    },
-    "examples": {
-      "patch_request": {
-        "value": [
-          {
-            "op": "replace",
-            "path": "/url",
-            "value": "https://example.com/example_webhook_2"
-          },
-          {
-            "op": "replace",
-            "path": "/event_types",
-            "value": [
-              {
-                "name": "PAYMENT.SALE.REFUNDED"
-              }
-            ]
-          }
-        ]
-      },
-      "verify_webhook_signature": {
-        "value": {
-          "transmission_id": "69cd13f0-d67a-11e5-baa3-778b53f4ae55",
-          "transmission_time": "2016-02-18T20:01:35Z",
-          "cert_url": "cert_url",
-          "auth_algo": "SHA256withRSA",
-          "transmission_sig": "lmI95Jx3Y9nhR5SJWlHVIWpg4AgFk7n9bCHSRxbrd8A9zrhdu2rMyFrmz+Zjh3s3boXB07VXCXUZy/UFzUlnGJn0wDugt7FlSvdKeIJenLRemUxYCPVoEZzg9VFNqOa48gMkvF+XTpxBeUx/kWy6B5cp7GkT2+pOowfRK7OaynuxUoKW3JcMWw272VKjLTtTAShncla7tGF+55rxyt2KNZIIqxNMJ48RDZheGU5w1npu9dZHnPgTXB9iomeVRoD8O/jhRpnKsGrDschyNdkeh81BJJMH4Ctc6lnCCquoP/GzCzz33MMsNdid7vL/NIWaCsekQpW26FpWPi/tfj8nLA==",
-          "webhook_id": "1JE4291016473214C",
-          "webhook_event": {
-            "id": "8PT597110X687430LKGECATA",
-            "create_time": "2013-06-25T21:41:28Z",
-            "resource_type": "authorization",
-            "event_type": "PAYMENT.AUTHORIZATION.CREATED",
-            "summary": "A payment authorization was created",
-            "resource": {
-              "id": "2DC87612EK520411B",
-              "create_time": "2013-06-25T21:39:15Z",
-              "update_time": "2013-06-25T21:39:17Z",
-              "state": "authorized",
-              "amount": {
-                "total": "7.47",
-                "currency": "USD",
-                "details": {
-                  "subtotal": "7.47"
-                }
-              },
-              "parent_payment": "PAY-36246664YD343335CKHFA4AY",
-              "valid_until": "2013-07-24T21:39:15Z",
-              "links": [
-                {
-                  "href": "https://api-m.paypal.com/v1/payments/authorization/2DC87612EK520411B",
-                  "rel": "self",
-                  "method": "GET"
-                },
-                {
-                  "href": "https://api-m.paypal.com/v1/payments/authorization/2DC87612EK520411B/capture",
-                  "rel": "capture",
-                  "method": "POST"
-                },
-                {
-                  "href": "https://api-m.paypal.com/v1/payments/authorization/2DC87612EK520411B/void",
-                  "rel": "void",
-                  "method": "POST"
-                },
-                {
-                  "href": "https://api-m.paypal.com/v1/payments/payment/PAY-36246664YD343335CKHFA4AY",
-                  "rel": "parent_payment",
-                  "method": "GET"
-                }
-              ]
-            }
-          }
-        }
-      },
-      "event_resend": {
-        "value": {
-          "webhook_ids": [
-            "12334456"
-          ]
-        }
-      },
-      "simulate_event": {
-        "value": {
-          "url": "https://example.com/example_webhook",
-          "event_type": "PAYMENT.AUTHORIZATION.CREATED",
-          "resource_version": "1.0"
-        }
-      },
-      "webhook": {
-        "value": {
-          "url": "https://example.com/example_webhook",
-          "event_types": [
-            {
-              "name": "PAYMENT.AUTHORIZATION.CREATED"
-            },
-            {
-              "name": "PAYMENT.AUTHORIZATION.VOIDED"
-            }
-          ]
         }
       }
     }

@@ -3,7 +3,31 @@
   "info": {
     "title": "Orders",
     "description": "An order represents a payment between two or more parties. Use the Orders API to create, update, retrieve, authorize, and capture orders.",
-    "version": "2.13"
+    "version": "2.13",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "orders",
+      "description": "Use the `/orders` resource to create, update, retrieve, authorize, capture and track orders."
+    },
+    {
+      "name": "trackers",
+      "description": "Use the `/trackers` resource to update and retrieve tracking information for PayPal orders."
+    }
+  ],
+  "externalDocs": {
+    "url": "https://developer.paypal.com/docs/api/orders/v2/"
   },
   "paths": {
     "/v2/checkout/orders": {
@@ -30,8 +54,19 @@
                   "$ref": "#/components/schemas/order"
                 },
                 "examples": {
-                  "0": {
-                    "$ref": "#/components/examples/order_request_create"
+                  "orders_request_create": {
+                    "value": {
+                      "intent": "CAPTURE",
+                      "purchase_units": [
+                        {
+                          "reference_id": "d9f80740-38f0-11e8-b467-0ed5f89f718b",
+                          "amount": {
+                            "currency_code": "USD",
+                            "value": "100.00"
+                          }
+                        }
+                      ]
+                    }
                   }
                 }
               }
@@ -104,9 +139,6 @@
           },
           {
             "$ref": "#/components/parameters/prefer"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -116,8 +148,33 @@
                 "$ref": "#/components/schemas/order_request"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/order_request"
+                "order_request": {
+                  "value": {
+                    "intent": "CAPTURE",
+                    "purchase_units": [
+                      {
+                        "reference_id": "d9f80740-38f0-11e8-b467-0ed5f89f718b",
+                        "amount": {
+                          "currency_code": "USD",
+                          "value": "100.00"
+                        }
+                      }
+                    ],
+                    "payment_source": {
+                      "paypal": {
+                        "experience_context": {
+                          "payment_method_preference": "IMMEDIATE_PAYMENT_REQUIRED",
+                          "payment_method_selected": "PAYPAL",
+                          "brand_name": "EXAMPLE INC",
+                          "locale": "en-US",
+                          "landing_page": "LOGIN",
+                          "user_action": "PAY_NOW",
+                          "return_url": "https://example.com/returnUrl",
+                          "cancel_url": "https://example.com/cancelUrl"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -194,9 +251,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           },
           {
             "$ref": "#/components/parameters/fields"
@@ -297,9 +351,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -407,9 +458,6 @@
             "$ref": "#/components/parameters/id"
           },
           {
-            "$ref": "#/components/parameters/content_type"
-          },
-          {
             "$ref": "#/components/parameters/prefer"
           }
         ],
@@ -420,8 +468,29 @@
                 "$ref": "#/components/schemas/confirm_order_request"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/confirm_order_request"
+                "confirm_order_request": {
+                  "value": {
+                    "payment_source": {
+                      "paypal": {
+                        "name": {
+                          "given_name": "John",
+                          "surname": "Doe"
+                        },
+                        "email_address": "customer@example.com",
+                        "experience_context": {
+                          "payment_method_preference": "IMMEDIATE_PAYMENT_REQUIRED",
+                          "payment_method_selected": "PAYPAL",
+                          "brand_name": "EXAMPLE INC",
+                          "locale": "en-US",
+                          "landing_page": "LOGIN",
+                          "shipping_preference": "SET_PROVIDED_ADDRESS",
+                          "user_action": "PAY_NOW",
+                          "return_url": "https://example.com/returnUrl",
+                          "cancel_url": "https://example.com/cancelUrl"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -580,9 +649,6 @@
           },
           {
             "$ref": "#/components/parameters/paypal_auth_assertion"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -747,9 +813,6 @@
           },
           {
             "$ref": "#/components/parameters/paypal_auth_assertion"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -888,9 +951,6 @@
           },
           {
             "$ref": "#/components/parameters/paypal_auth_assertion"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -1012,13 +1072,34 @@
           },
           {
             "$ref": "#/components/parameters/tracker_id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
-          "$ref": "#/components/requestBodies/patch_request"
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/patch_request"
+              },
+              "examples": {
+                "orders_patch_request": {
+                  "value": [
+                    {
+                      "op": "replace",
+                      "path": "/purchase_units/@reference_id=='PUHF'/shipping/address",
+                      "value": {
+                        "address_line_1": "2211 N First Street",
+                        "address_line_2": "Building 17",
+                        "admin_area_2": "San Jose",
+                        "admin_area_1": "CA",
+                        "postal_code": "95131",
+                        "country_code": "US"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
         },
         "security": [
           {
@@ -1033,29 +1114,6 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "orders",
-      "description": "Use the `/orders` resource to create, update, retrieve, authorize, capture and track orders."
-    },
-    {
-      "name": "trackers",
-      "description": "Use the `/trackers` resource to update and retrieve tracking information for PayPal orders."
-    }
-  ],
-  "externalDocs": {
-    "url": "https://developer.paypal.com/docs/api/orders/v2/"
-  },
-  "servers": [
-    {
-      "url": "https://api-m.sandbox.paypal.com",
-      "description": "PayPal Sandbox Environment"
-    },
-    {
-      "url": "https://api-m.paypal.com",
-      "description": "PayPal Live Environment"
-    }
-  ],
   "components": {
     "requestBodies": {
       "patch_request": {
@@ -1063,11 +1121,6 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/patch_request"
-            },
-            "examples": {
-              "0": {
-                "$ref": "#/components/examples/patch_request"
-              }
             }
           }
         }
@@ -1087,107 +1140,6 @@
               "https://uri.paypal.com/services/payments/orders/client-side-integration": "Allows client-side integration on Create, Get, Patch, Authorize & Capture Order endpoints."
             }
           }
-        }
-      }
-    },
-    "parameters": {
-      "paypal_request_id": {
-        "name": "PayPal-Request-Id",
-        "in": "header",
-        "description": "The server stores keys for 6 hours. The API callers can request the times to up to 72 hours by speaking to their Account Manager.",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 108
-        }
-      },
-      "paypal_partner_attribution_id": {
-        "name": "PayPal-Partner-Attribution-Id",
-        "in": "header",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 36
-        }
-      },
-      "paypal_client_metadata_id": {
-        "name": "PayPal-Client-Metadata-Id",
-        "in": "header",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 36
-        }
-      },
-      "prefer": {
-        "name": "Prefer",
-        "in": "header",
-        "description": "The preferred server response upon successful completion of the request. Value is:<ul><li><code>return=minimal</code>. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the <code>id</code>, <code>status</code> and HATEOAS links.</li><li><code>return=representation</code>. The server returns a complete resource representation, including the current state of the resource.</li></ul>",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 25,
-          "pattern": "^[a-zA-Z=]*$",
-          "default": "return=minimal"
-        }
-      },
-      "content_type": {
-        "name": "Content-Type",
-        "in": "header",
-        "description": "The media type. Required for operations with a request body. The value is `application/<format>`, where `format` is `json`.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 255,
-          "pattern": "^[A-Za-z0-9/+-]+$"
-        }
-      },
-      "id": {
-        "name": "id",
-        "in": "path",
-        "description": "The ID of the order that the tracking information is associated with.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 36,
-          "pattern": "^[A-Z0-9]+$"
-        }
-      },
-      "fields": {
-        "name": "fields",
-        "description": "A comma-separated list of fields that should be returned for the order. Valid filter field is `payment_source`.",
-        "in": "query",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "pattern": "^[a-z_]*$"
-        }
-      },
-      "paypal_auth_assertion": {
-        "name": "PayPal-Auth-Assertion",
-        "in": "header",
-        "description": "An API-caller-provided JSON Web Token (JWT) assertion that identifies the merchant. For details, see <a href=\"/api/rest/requests/#paypal-auth-assertion\">PayPal-Auth-Assertion</a>.",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "tracker_id": {
-        "name": "tracker_id",
-        "in": "path",
-        "description": "The order tracking ID.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 36,
-          "pattern": "^[A-Z0-9]+$"
         }
       }
     },
@@ -3211,9 +3163,7 @@
             "description": "The value of the field that caused the error."
           },
           "location": {
-            "type": "string",
-            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
-            "default": "body"
+            "$ref": "#/components/schemas/error_location"
           },
           "issue": {
             "type": "string",
@@ -3227,6 +3177,16 @@
         "required": [
           "issue"
         ]
+      },
+      "error_location": {
+        "type": "string",
+        "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+        "enum": [
+          "body",
+          "path",
+          "query"
+        ],
+        "default": "body"
       },
       "error_default": {
         "description": "The default error response.",
@@ -3287,17 +3247,14 @@
             "description": "The HTTP method required to make the related call.",
             "type": "string",
             "minLength": 3,
-            "maxLength": 7,
+            "maxLength": 6,
             "pattern": "^[A-Z]*$",
             "enum": [
-              "CONNECT",
-              "DELETE",
               "GET",
-              "HEAD",
-              "OPTIONS",
-              "PATCH",
               "POST",
-              "PUT"
+              "PUT",
+              "DELETE",
+              "PATCH"
             ]
           }
         }
@@ -6996,6 +6953,13 @@
             "description": "The stock keeping unit (SKU) for the item. This can contain unicode characters.",
             "minLength": 1,
             "maxLength": 127
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "minLength": 1,
+            "maxLength": 2048,
+            "description": "The URL to the item being purchased. Visible to buyer and used in buyer experiences."
           },
           "image_url": {
             "type": "string",
@@ -14603,87 +14567,92 @@
         }
       }
     },
-    "examples": {
-      "patch_request": {
-        "value": [
-          {
-            "op": "replace",
-            "path": "/purchase_units/@reference_id=='PUHF'/shipping/address",
-            "value": {
-              "address_line_1": "2211 N First Street",
-              "address_line_2": "Building 17",
-              "admin_area_2": "San Jose",
-              "admin_area_1": "CA",
-              "postal_code": "95131",
-              "country_code": "US"
-            }
-          }
-        ]
-      },
-      "confirm_order_request": {
-        "value": {
-          "payment_source": {
-            "paypal": {
-              "name": {
-                "given_name": "John",
-                "surname": "Doe"
-              },
-              "email_address": "customer@example.com",
-              "experience_context": {
-                "payment_method_preference": "IMMEDIATE_PAYMENT_REQUIRED",
-                "payment_method_selected": "PAYPAL",
-                "brand_name": "EXAMPLE INC",
-                "locale": "en-US",
-                "landing_page": "LOGIN",
-                "shipping_preference": "SET_PROVIDED_ADDRESS",
-                "user_action": "PAY_NOW",
-                "return_url": "https://example.com/returnUrl",
-                "cancel_url": "https://example.com/cancelUrl"
-              }
-            }
-          }
+    "parameters": {
+      "paypal_request_id": {
+        "name": "PayPal-Request-Id",
+        "in": "header",
+        "description": "The server stores keys for 6 hours. The API callers can request the times to up to 72 hours by speaking to their Account Manager.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 108
         }
       },
-      "order_request_create": {
-        "value": {
-          "intent": "CAPTURE",
-          "purchase_units": [
-            {
-              "reference_id": "d9f80740-38f0-11e8-b467-0ed5f89f718b",
-              "amount": {
-                "currency_code": "USD",
-                "value": "100.00"
-              }
-            }
-          ]
+      "paypal_partner_attribution_id": {
+        "name": "PayPal-Partner-Attribution-Id",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 36
         }
       },
-      "order_request": {
-        "value": {
-          "intent": "CAPTURE",
-          "purchase_units": [
-            {
-              "reference_id": "d9f80740-38f0-11e8-b467-0ed5f89f718b",
-              "amount": {
-                "currency_code": "USD",
-                "value": "100.00"
-              }
-            }
-          ],
-          "payment_source": {
-            "paypal": {
-              "experience_context": {
-                "payment_method_preference": "IMMEDIATE_PAYMENT_REQUIRED",
-                "payment_method_selected": "PAYPAL",
-                "brand_name": "EXAMPLE INC",
-                "locale": "en-US",
-                "landing_page": "LOGIN",
-                "user_action": "PAY_NOW",
-                "return_url": "https://example.com/returnUrl",
-                "cancel_url": "https://example.com/cancelUrl"
-              }
-            }
-          }
+      "paypal_client_metadata_id": {
+        "name": "PayPal-Client-Metadata-Id",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 36
+        }
+      },
+      "prefer": {
+        "name": "Prefer",
+        "in": "header",
+        "description": "The preferred server response upon successful completion of the request. Value is:<ul><li><code>return=minimal</code>. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the <code>id</code>, <code>status</code> and HATEOAS links.</li><li><code>return=representation</code>. The server returns a complete resource representation, including the current state of the resource.</li></ul>",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 25,
+          "pattern": "^[a-zA-Z=]*$",
+          "default": "return=minimal"
+        }
+      },
+      "id": {
+        "name": "id",
+        "in": "path",
+        "description": "The ID of the order that the tracking information is associated with.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 36,
+          "pattern": "^[A-Z0-9]+$"
+        }
+      },
+      "fields": {
+        "name": "fields",
+        "description": "A comma-separated list of fields that should be returned for the order. Valid filter field is `payment_source`.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "pattern": "^[a-z_]*$"
+        }
+      },
+      "paypal_auth_assertion": {
+        "name": "PayPal-Auth-Assertion",
+        "in": "header",
+        "description": "An API-caller-provided JSON Web Token (JWT) assertion that identifies the merchant. For details, see <a href=\"/api/rest/requests/#paypal-auth-assertion\">PayPal-Auth-Assertion</a>.",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "tracker_id": {
+        "name": "tracker_id",
+        "in": "path",
+        "description": "The order tracking ID.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 36,
+          "pattern": "^[A-Z0-9]+$"
         }
       }
     }

@@ -3,7 +3,43 @@
   "info": {
     "title": "Partner Referrals",
     "description": "<blockquote><strong>Deprecation notice:</strong> This integration method is deprecated. PayPal continues to support existing merchants using this method, but be advised that new features and enhancements will not be applied to these integrations. For details, see <a href=\"/docs/multiparty/seller-onboarding/\">Onboard Sellers</a>.</blockquote> Partners can use the Partner Referrals API to add PayPal seller accounts using the <a href=\"/docs/platforms/seller-onboarding/before-payment/\">before payment</a> onboarding model. With this API, you collect seller data and pass it to the account creation and setup forms, reducing the burden on sellers during the signup and setup process.",
-    "version": "1.4"
+    "version": "1.4",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "merchant-integration",
+      "description": "Enables you to get information about a seller-partner integration."
+    },
+    {
+      "name": "partner-referrals",
+      "description": "Enables you to create and get information about shared customer data."
+    },
+    {
+      "name": "partner-referral-link",
+      "description": "Links partner-referral data with a PayPal account."
+    },
+    {
+      "name": "cancel-onboarding",
+      "description": "Enables you to cancel an in-progress seller onboarding."
+    },
+    {
+      "name": "partner",
+      "description": "Enables you to create, update and read partner agreements and preferences."
+    }
+  ],
+  "externalDocs": {
+    "url": "https://developer.paypal.com/docs/platforms/seller-onboarding/before-payment/"
   },
   "paths": {
     "/v1/customer/partner-referrals": {
@@ -40,8 +76,156 @@
                 "$ref": "#/components/schemas/referral_data"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/referral_data"
+                "referral_data": {
+                  "value": {
+                    "customer_data": {
+                      "customer_type": "MERCHANT",
+                      "person_details": {
+                        "email_address": "customer@example.com",
+                        "name": {
+                          "prefix": "Mr.",
+                          "given_name": "Shashank",
+                          "surname": "Wankhede",
+                          "middle_name": "Govind"
+                        },
+                        "phone_contacts": [
+                          {
+                            "phone_number_details": {
+                              "country_code": "91",
+                              "national_number": "9740216087"
+                            },
+                            "phone_type": "HOME"
+                          }
+                        ],
+                        "home_address": {
+                          "line1": "11, outer ring road",
+                          "state": "Karnataka",
+                          "city": "Bangalore",
+                          "country_code": "IN",
+                          "postal_code": "560103"
+                        },
+                        "nationality_country_code": "IN",
+                        "identity_documents": [
+                          {
+                            "type": "SOCIAL_SECURITY_NUMBER",
+                            "value": "ABCDEF34646",
+                            "partial_value": false,
+                            "issuer_country_code": "US"
+                          }
+                        ]
+                      },
+                      "business_details": {
+                        "phone_contacts": [
+                          {
+                            "phone_number_details": {
+                              "country_code": "91",
+                              "national_number": "9740216087"
+                            },
+                            "phone_type": "FAX"
+                          }
+                        ],
+                        "business_address": {
+                          "line1": "11, outer ring road",
+                          "state": "Karnataka",
+                          "city": "Bangalore",
+                          "country_code": "IN",
+                          "postal_code": "560103"
+                        },
+                        "business_type": "PROPRIETORSHIP",
+                        "category": "1004",
+                        "sub_category": "2025",
+                        "merchant_category_code": "8931",
+                        "names": [
+                          {
+                            "type": "LEGAL",
+                            "name": "SHASHANK STORE"
+                          }
+                        ],
+                        "business_description": "Arts and handicrafts",
+                        "event_dates": [
+                          {
+                            "event_type": "ESTABLISHED",
+                            "event_date": "2009-01-31T13:59:45Z"
+                          }
+                        ],
+                        "website_urls": [
+                          "https://example.com/mystore/"
+                        ],
+                        "annual_sales_volume_range": {
+                          "minimum_amount": {
+                            "currency": "USD",
+                            "value": "2000"
+                          },
+                          "maximum_amount": {
+                            "currency": "USD",
+                            "value": "3000"
+                          }
+                        },
+                        "average_monthly_volume_range": {},
+                        "identity_documents": [
+                          {
+                            "type": "TAX_IDENTIFICATION_NUMBER",
+                            "value": "ABCDEF34646",
+                            "partial_value": false,
+                            "issuer_country_code": "US"
+                          }
+                        ],
+                        "email_contacts": [
+                          {
+                            "email_address": "customer-service@example.com",
+                            "role": "CUSTOMER_SERVICE"
+                          }
+                        ]
+                      },
+                      "financial_instrument_data": {
+                        "bank_details": [
+                          {
+                            "nick_name": "Bank of America",
+                            "account_number": "123405668293",
+                            "account_type": "CHECKING",
+                            "currency_code": "USD",
+                            "identifiers": [
+                              {
+                                "type": "ROUTING_NUMBER_1",
+                                "value": "123456789"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "preferred_language_code": "en_US",
+                      "primary_currency_code": "USD",
+                      "referral_user_payer_id": {
+                        "type": "PAYER_ID",
+                        "value": "RFYUH2QQDGUQU"
+                      },
+                      "partner_specific_identifiers": [
+                        {
+                          "type": "TRACKING_ID",
+                          "value": "ABJSDFO343SD"
+                        }
+                      ]
+                    },
+                    "requested_capabilities": [
+                      {
+                        "capability": "BANK_ADDITION"
+                      }
+                    ],
+                    "web_experience_preference": {
+                      "partner_logo_url": "https://example.com/logo/",
+                      "return_url": "https://example.com/",
+                      "action_renewal_url": "https://example.com/renew/"
+                    },
+                    "collected_consents": [
+                      {
+                        "type": "SHARE_DATA_CONSENT",
+                        "granted": true
+                      }
+                    ],
+                    "products": [
+                      "EXPRESS_CHECKOUT"
+                    ]
+                  }
                 }
               }
             }
@@ -312,6 +496,9 @@
           },
           {
             "$ref": "#/components/parameters/content_type"
+          },
+          {
+            "$ref": "#/components/parameters/x_paypal_security_context"
           }
         ],
         "security": [
@@ -387,6 +574,9 @@
           },
           {
             "$ref": "#/components/parameters/content_type"
+          },
+          {
+            "$ref": "#/components/parameters/x_paypal_security_context"
           }
         ],
         "requestBody": {
@@ -468,6 +658,9 @@
           },
           {
             "$ref": "#/components/parameters/content_type"
+          },
+          {
+            "$ref": "#/components/parameters/x_paypal_security_context"
           }
         ],
         "requestBody": {
@@ -486,41 +679,6 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "merchant-integration",
-      "description": "Enables you to get information about a seller-partner integration."
-    },
-    {
-      "name": "partner-referrals",
-      "description": "Enables you to create and get information about shared customer data."
-    },
-    {
-      "name": "partner-referral-link",
-      "description": "Links partner-referral data with a PayPal account."
-    },
-    {
-      "name": "cancel-onboarding",
-      "description": "Enables you to cancel an in-progress seller onboarding."
-    },
-    {
-      "name": "partner",
-      "description": "Enables you to create, update and read partner agreements and preferences."
-    }
-  ],
-  "externalDocs": {
-    "url": "https://developer.paypal.com/docs/platforms/seller-onboarding/before-payment/"
-  },
-  "servers": [
-    {
-      "url": "https://api-m.sandbox.paypal.com",
-      "description": "PayPal Sandbox Environment"
-    },
-    {
-      "url": "https://api-m.paypal.com",
-      "description": "PayPal Live Environment"
-    }
-  ],
   "components": {
     "requestBodies": {
       "partner": {
@@ -550,97 +708,6 @@
         }
       }
     },
-    "parameters": {
-      "partner_referral_id": {
-        "name": "partner_referral_id",
-        "in": "path",
-        "description": "The ID of the partner-referrals data for which to show details.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "partner_id": {
-        "name": "partner_id",
-        "in": "path",
-        "description": "The ID of the partner for which to show onboarded seller's credentials, which is the partner's PayPal account number. To find this ID, log in to the partner's PayPal business account. Navigate to **Profile**, click **Profile and settings**, and click **My business info**. The account number appears in the **Merchant account ID** section.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "tracking_id": {
-        "name": "tracking_id",
-        "in": "query",
-        "description": "Filters the sellers in the response by this partner-provided seller ID (`merchant_id`).",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "merchant_id": {
-        "name": "merchant_id",
-        "in": "path",
-        "description": "The ID of the seller for which to show status information.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "fields": {
-        "name": "fields",
-        "in": "query",
-        "description": "Filters the fields in the response to this comma-separated list of fields.",
-        "schema": {
-          "type": "string"
-        }
-      },
-      "id": {
-        "name": "id",
-        "in": "path",
-        "description": "The ID of the partner, which is the partner's PayPal account number. To find this ID, log in to the partner's PayPal business account. Navigate to **Profile**, click **Profile and settings**, and click **My business info**. The account number appears in the **Merchant account ID** section.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 20,
-          "pattern": "^.*$"
-        }
-      },
-      "country_code": {
-        "name": "country_code",
-        "in": "query",
-        "description": "The country code to load region preferences.",
-        "schema": {
-          "type": "string",
-          "minLength": 2,
-          "maxLength": 2,
-          "pattern": "^([a-zA-Z]{2})$"
-        }
-      },
-      "product": {
-        "name": "product",
-        "in": "query",
-        "description": "The product to load region and integration preferences.",
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 20,
-          "pattern": "^.*$"
-        }
-      },
-      "content_type": {
-        "name": "Content-type",
-        "in": "header",
-        "description": "The Content-type header MUST be described in all externally-accessible APIs.",
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 4000,
-          "pattern": "^.*$"
-        }
-      }
-    },
     "schemas": {
       "error_details": {
         "title": "Error Details",
@@ -656,9 +723,7 @@
             "description": "The value of the field that caused the error."
           },
           "location": {
-            "type": "string",
-            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
-            "default": "body"
+            "$ref": "#/components/schemas/error_location"
           },
           "issue": {
             "type": "string",
@@ -673,37 +738,15 @@
           "issue"
         ]
       },
-      "error_default": {
-        "description": "The default error response.",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/error_400"
-          },
-          {
-            "$ref": "#/components/schemas/error_401"
-          },
-          {
-            "$ref": "#/components/schemas/error_403"
-          },
-          {
-            "$ref": "#/components/schemas/error_404"
-          },
-          {
-            "$ref": "#/components/schemas/error_409"
-          },
-          {
-            "$ref": "#/components/schemas/error_415"
-          },
-          {
-            "$ref": "#/components/schemas/error_422"
-          },
-          {
-            "$ref": "#/components/schemas/error_500"
-          },
-          {
-            "$ref": "#/components/schemas/error_503"
-          }
-        ]
+      "error_location": {
+        "type": "string",
+        "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+        "enum": [
+          "body",
+          "path",
+          "query"
+        ],
+        "default": "body"
       },
       "error_link_description": {
         "title": "Link Description",
@@ -732,17 +775,14 @@
             "description": "The HTTP method required to make the related call.",
             "type": "string",
             "minLength": 3,
-            "maxLength": 7,
+            "maxLength": 6,
             "pattern": "^[A-Z]*$",
             "enum": [
-              "CONNECT",
-              "DELETE",
               "GET",
-              "HEAD",
-              "OPTIONS",
-              "PATCH",
               "POST",
-              "PUT"
+              "PUT",
+              "DELETE",
+              "PATCH"
             ]
           }
         }
@@ -2339,6 +2379,37 @@
           }
         }
       },
+      "error_details-2": {
+        "title": "Error Details",
+        "type": "object",
+        "description": "The error details. Required for client-side `4XX` errors.",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The field that caused the error. If this field is in the body, set this value to the field's JSON pointer value. Required for client-side errors."
+          },
+          "value": {
+            "type": "string",
+            "description": "The value of the field that caused the error."
+          },
+          "location": {
+            "type": "string",
+            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+            "default": "body"
+          },
+          "issue": {
+            "type": "string",
+            "description": "The unique, fine-grained application-level error code."
+          },
+          "description": {
+            "type": "string",
+            "description": "The human-readable description for an issue. The description can change over the lifetime of an API, so clients must not depend on this value."
+          }
+        },
+        "required": [
+          "issue"
+        ]
+      },
       "link_description": {
         "type": "object",
         "title": "Link Description",
@@ -2398,7 +2469,7 @@
             "type": "array",
             "description": "An array of additional details about the error.",
             "items": {
-              "$ref": "#/components/schemas/error_details"
+              "$ref": "#/components/schemas/error_details-2"
             }
           },
           "links": {
@@ -2898,7 +2969,7 @@
           }
         }
       },
-      "error_details-2": {
+      "error_details-3": {
         "type": "object",
         "title": "Error Details",
         "description": "The error details. Required for client-side `4XX` errors.",
@@ -2947,7 +3018,7 @@
             "description": "An array of additional details for the error.",
             "readOnly": true,
             "items": {
-              "$ref": "#/components/schemas/error_details-2"
+              "$ref": "#/components/schemas/error_details-3"
             }
           }
         },
@@ -3202,156 +3273,105 @@
         }
       }
     },
-    "examples": {
-      "referral_data": {
-        "value": {
-          "customer_data": {
-            "customer_type": "MERCHANT",
-            "person_details": {
-              "email_address": "customer@example.com",
-              "name": {
-                "prefix": "Mr.",
-                "given_name": "Shashank",
-                "surname": "Wankhede",
-                "middle_name": "Govind"
-              },
-              "phone_contacts": [
-                {
-                  "phone_number_details": {
-                    "country_code": "91",
-                    "national_number": "9740216087"
-                  },
-                  "phone_type": "HOME"
-                }
-              ],
-              "home_address": {
-                "line1": "11, outer ring road",
-                "state": "Karnataka",
-                "city": "Bangalore",
-                "country_code": "IN",
-                "postal_code": "560103"
-              },
-              "nationality_country_code": "IN",
-              "identity_documents": [
-                {
-                  "type": "SOCIAL_SECURITY_NUMBER",
-                  "value": "ABCDEF34646",
-                  "partial_value": false,
-                  "issuer_country_code": "US"
-                }
-              ]
-            },
-            "business_details": {
-              "phone_contacts": [
-                {
-                  "phone_number_details": {
-                    "country_code": "91",
-                    "national_number": "9740216087"
-                  },
-                  "phone_type": "FAX"
-                }
-              ],
-              "business_address": {
-                "line1": "11, outer ring road",
-                "state": "Karnataka",
-                "city": "Bangalore",
-                "country_code": "IN",
-                "postal_code": "560103"
-              },
-              "business_type": "PROPRIETORSHIP",
-              "category": "1004",
-              "sub_category": "2025",
-              "merchant_category_code": "8931",
-              "names": [
-                {
-                  "type": "LEGAL",
-                  "name": "SHASHANK STORE"
-                }
-              ],
-              "business_description": "Arts and handicrafts",
-              "event_dates": [
-                {
-                  "event_type": "ESTABLISHED",
-                  "event_date": "2009-01-31T13:59:45Z"
-                }
-              ],
-              "website_urls": [
-                "https://example.com/mystore/"
-              ],
-              "annual_sales_volume_range": {
-                "minimum_amount": {
-                  "currency": "USD",
-                  "value": "2000"
-                },
-                "maximum_amount": {
-                  "currency": "USD",
-                  "value": "3000"
-                }
-              },
-              "average_monthly_volume_range": {},
-              "identity_documents": [
-                {
-                  "type": "TAX_IDENTIFICATION_NUMBER",
-                  "value": "ABCDEF34646",
-                  "partial_value": false,
-                  "issuer_country_code": "US"
-                }
-              ],
-              "email_contacts": [
-                {
-                  "email_address": "customer-service@example.com",
-                  "role": "CUSTOMER_SERVICE"
-                }
-              ]
-            },
-            "financial_instrument_data": {
-              "bank_details": [
-                {
-                  "nick_name": "Bank of America",
-                  "account_number": "123405668293",
-                  "account_type": "CHECKING",
-                  "currency_code": "USD",
-                  "identifiers": [
-                    {
-                      "type": "ROUTING_NUMBER_1",
-                      "value": "123456789"
-                    }
-                  ]
-                }
-              ]
-            },
-            "preferred_language_code": "en_US",
-            "primary_currency_code": "USD",
-            "referral_user_payer_id": {
-              "type": "PAYER_ID",
-              "value": "RFYUH2QQDGUQU"
-            },
-            "partner_specific_identifiers": [
-              {
-                "type": "TRACKING_ID",
-                "value": "ABJSDFO343SD"
-              }
-            ]
-          },
-          "requested_capabilities": [
-            {
-              "capability": "BANK_ADDITION"
-            }
-          ],
-          "web_experience_preference": {
-            "partner_logo_url": "https://example.com/logo/",
-            "return_url": "https://example.com/",
-            "action_renewal_url": "https://example.com/renew/"
-          },
-          "collected_consents": [
-            {
-              "type": "SHARE_DATA_CONSENT",
-              "granted": true
-            }
-          ],
-          "products": [
-            "EXPRESS_CHECKOUT"
-          ]
+    "parameters": {
+      "partner_referral_id": {
+        "name": "partner_referral_id",
+        "in": "path",
+        "description": "The ID of the partner-referrals data for which to show details.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "partner_id": {
+        "name": "partner_id",
+        "in": "path",
+        "description": "The ID of the partner for which to show onboarded seller's credentials, which is the partner's PayPal account number. To find this ID, log in to the partner's PayPal business account. Navigate to **Profile**, click **Profile and settings**, and click **My business info**. The account number appears in the **Merchant account ID** section.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "tracking_id": {
+        "name": "tracking_id",
+        "in": "query",
+        "description": "Filters the sellers in the response by this partner-provided seller ID (`merchant_id`).",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "merchant_id": {
+        "name": "merchant_id",
+        "in": "path",
+        "description": "The ID of the seller for which to show status information.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "fields": {
+        "name": "fields",
+        "in": "query",
+        "description": "Filters the fields in the response to this comma-separated list of fields.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "id": {
+        "name": "id",
+        "in": "path",
+        "description": "The ID of the partner, which is the partner's PayPal account number. To find this ID, log in to the partner's PayPal business account. Navigate to **Profile**, click **Profile and settings**, and click **My business info**. The account number appears in the **Merchant account ID** section.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "pattern": "^.*$"
+        }
+      },
+      "country_code": {
+        "name": "country_code",
+        "in": "query",
+        "description": "The country code to load region preferences.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "pattern": "^([a-zA-Z]{2})$"
+        }
+      },
+      "product": {
+        "name": "product",
+        "in": "query",
+        "description": "The product to load region and integration preferences.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "pattern": "^.*$"
+        }
+      },
+      "content_type": {
+        "name": "Content-type",
+        "in": "header",
+        "description": "The Content-type header MUST be described in all externally-accessible APIs.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000,
+          "pattern": "^.*$"
+        }
+      },
+      "x_paypal_security_context": {
+        "name": "X-PAYPAL-SECURITY-CONTEXT",
+        "in": "header",
+        "description": "The X-PAYPAL-SECURITY-CONTEXT header MUST be described in all externally-accessible APIs.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000,
+          "pattern": "^.*$"
         }
       }
     }

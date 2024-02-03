@@ -3,7 +3,51 @@
   "info": {
     "title": "Payments",
     "description": "Call the Payments API to authorize payments, capture authorized payments, refund payments that have already been captured, and show payment information. Use the Payments API in conjunction with the <a href=\"/docs/api/orders/v2/\">Orders API</a>. For more information, see the <a href=\"/docs/checkout/\">PayPal Checkout Overview</a>.",
-    "version": "2.5"
+    "version": "2.5",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "authorizations",
+      "description": "Use the `/authorizations` resource to show details for, capture payment for, reauthorize, and void authorized payments."
+    },
+    {
+      "name": "captures",
+      "description": "Use the `/captures` resource to show details for and refund a captured payment."
+    },
+    {
+      "name": "refunds",
+      "description": "Use the `/refunds` resource to show refund details."
+    },
+    {
+      "name": "assets",
+      "description": "Assets APIs for Checkout"
+    },
+    {
+      "name": "cancel-payment",
+      "description": "Use the <code>/cancel-payment</code> resource to cancel an order capture or order authorization by <code>PayPal-Request-Id</code>. The merchant triggers the cancel action."
+    },
+    {
+      "name": "find-eligible-methods",
+      "description": "Use the `/find-eligible-methods` resource to show list of eligible payment methods for given customer/order context."
+    },
+    {
+      "name": "payment-resource-operations",
+      "description": "Use the `/payment-resource-operations` resource to show verifications details."
+    }
+  ],
+  "externalDocs": {
+    "url": "https://developer.paypal.com/docs/api/payments/v2/"
   },
   "paths": {
     "/v2/payments/authorizations/{authorization_id}": {
@@ -14,9 +58,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/authorization_id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "responses": {
@@ -107,9 +148,6 @@
           },
           {
             "$ref": "#/components/parameters/prefer"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -119,8 +157,17 @@
                 "$ref": "#/components/schemas/capture_request"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/capture_request"
+                "capture_request": {
+                  "value": {
+                    "amount": {
+                      "value": "10.99",
+                      "currency_code": "USD"
+                    },
+                    "invoice_id": "INVOICE-123",
+                    "final_capture": true,
+                    "note_to_payer": "If the ordered color is not available, we will substitute with a different color free of charge.",
+                    "soft_descriptor": "Bob's Custom Sweaters"
+                  }
                 }
               }
             }
@@ -248,9 +295,6 @@
           },
           {
             "$ref": "#/components/parameters/prefer"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -260,8 +304,13 @@
                 "$ref": "#/components/schemas/reauthorize_request"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/reauthorize_request"
+                "reauthorize_request": {
+                  "value": {
+                    "amount": {
+                      "value": "10.99",
+                      "currency_code": "USD"
+                    }
+                  }
                 }
               }
             }
@@ -383,9 +432,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/authorization_id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           },
           {
             "$ref": "#/components/parameters/paypal_auth_assertion"
@@ -530,9 +576,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/capture_id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "responses": {
@@ -625,9 +668,6 @@
             "$ref": "#/components/parameters/prefer"
           },
           {
-            "$ref": "#/components/parameters/content_type"
-          },
-          {
             "$ref": "#/components/parameters/paypal_auth_assertion"
           }
         ],
@@ -638,8 +678,25 @@
                 "$ref": "#/components/schemas/refund_request"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/refund_request"
+                "refund_request": {
+                  "value": {
+                    "amount": {
+                      "value": "10.00",
+                      "currency_code": "USD"
+                    },
+                    "invoice_id": "INVOICE-123",
+                    "note_to_payer": "DefectiveProduct",
+                    "payment_instruction": {
+                      "platform_fees": [
+                        {
+                          "amount": {
+                            "currency_code": "USD",
+                            "value": "1.00"
+                          }
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -785,9 +842,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/refund_id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "responses": {
@@ -872,49 +926,6 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "authorizations",
-      "description": "Use the `/authorizations` resource to show details for, capture payment for, reauthorize, and void authorized payments."
-    },
-    {
-      "name": "captures",
-      "description": "Use the `/captures` resource to show details for and refund a captured payment."
-    },
-    {
-      "name": "refunds",
-      "description": "Use the `/refunds` resource to show refund details."
-    },
-    {
-      "name": "assets",
-      "description": "Assets APIs for Checkout"
-    },
-    {
-      "name": "cancel-payment",
-      "description": "Use the <code>/cancel-payment</code> resource to cancel an order capture or order authorization by <code>PayPal-Request-Id</code>. The merchant triggers the cancel action."
-    },
-    {
-      "name": "find-eligible-methods",
-      "description": "Use the `/find-eligible-methods` resource to show list of eligible payment methods for given customer/order context."
-    },
-    {
-      "name": "payment-resource-operations",
-      "description": "Use the `/payment-resource-operations` resource to show verifications details."
-    }
-  ],
-  "externalDocs": {
-    "url": "https://developer.paypal.com/docs/api/payments/v2/"
-  },
-  "servers": [
-    {
-      "url": "https://api-m.sandbox.paypal.com",
-      "description": "PayPal Sandbox Environment"
-    },
-    {
-      "url": "https://api-m.paypal.com",
-      "description": "PayPal Live Environment"
-    }
-  ],
   "components": {
     "securitySchemes": {
       "Oauth2": {
@@ -931,72 +942,6 @@
               "https://uri.paypal.com/services/payments/reversepayment": "Permission to do any reverse payment"
             }
           }
-        }
-      }
-    },
-    "parameters": {
-      "authorization_id": {
-        "name": "authorization_id",
-        "in": "path",
-        "description": "The PayPal-generated ID for the authorized payment to void.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "content_type": {
-        "name": "Content-Type",
-        "in": "header",
-        "description": "Required for operations with a request body. The value is application/<format>. Where the 'format' is 'json'.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "paypal_request_id": {
-        "name": "PayPal-Request-Id",
-        "in": "header",
-        "description": "The server stores keys for 45 days.",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "prefer": {
-        "name": "Prefer",
-        "in": "header",
-        "description": "The preferred server response upon successful completion of the request. Value is:<ul><li><code>return=minimal</code>. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the <code>id</code>, <code>status</code> and HATEOAS links.</li><li><code>return=representation</code>. The server returns a complete resource representation, including the current state of the resource.</li></ul>",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "default": "return=minimal"
-        }
-      },
-      "paypal_auth_assertion": {
-        "name": "PayPal-Auth-Assertion",
-        "in": "header",
-        "description": "An API-caller-provided JSON Web Token (JWT) assertion that identifies the merchant. For details, see [PayPal-Auth-Assertion](/docs/api/reference/api-requests/#paypal-auth-assertion).<blockquote><strong>Note:</strong>For three party transactions in which a partner is managing the API calls on behalf of a merchant, the partner must identify the merchant using either a PayPal-Auth-Assertion header or an access token with target_subject.</blockquote>",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "capture_id": {
-        "name": "capture_id",
-        "in": "path",
-        "description": "The PayPal-generated ID for the captured payment to refund.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "refund_id": {
-        "name": "refund_id",
-        "in": "path",
-        "description": "The PayPal-generated ID for the refund for which to show details.",
-        "required": true,
-        "schema": {
-          "type": "string"
         }
       }
     },
@@ -1552,9 +1497,7 @@
             "description": "The value of the field that caused the error."
           },
           "location": {
-            "type": "string",
-            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
-            "default": "body"
+            "$ref": "#/components/schemas/error_location"
           },
           "issue": {
             "type": "string",
@@ -1568,6 +1511,16 @@
         "required": [
           "issue"
         ]
+      },
+      "error_location": {
+        "type": "string",
+        "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+        "enum": [
+          "body",
+          "path",
+          "query"
+        ],
+        "default": "body"
       },
       "error_default": {
         "description": "The default error response.",
@@ -1628,17 +1581,14 @@
             "description": "The HTTP method required to make the related call.",
             "type": "string",
             "minLength": 3,
-            "maxLength": 7,
+            "maxLength": 6,
             "pattern": "^[A-Z]*$",
             "enum": [
-              "CONNECT",
-              "DELETE",
               "GET",
-              "HEAD",
-              "OPTIONS",
-              "PATCH",
               "POST",
-              "PUT"
+              "PUT",
+              "DELETE",
+              "PATCH"
             ]
           }
         }
@@ -4012,45 +3962,60 @@
         }
       }
     },
-    "examples": {
-      "capture_request": {
-        "value": {
-          "amount": {
-            "value": "10.99",
-            "currency_code": "USD"
-          },
-          "invoice_id": "INVOICE-123",
-          "final_capture": true,
-          "note_to_payer": "If the ordered color is not available, we will substitute with a different color free of charge.",
-          "soft_descriptor": "Bob's Custom Sweaters"
+    "parameters": {
+      "authorization_id": {
+        "name": "authorization_id",
+        "in": "path",
+        "description": "The PayPal-generated ID for the authorized payment to void.",
+        "required": true,
+        "schema": {
+          "type": "string"
         }
       },
-      "refund_request": {
-        "value": {
-          "amount": {
-            "value": "10.00",
-            "currency_code": "USD"
-          },
-          "invoice_id": "INVOICE-123",
-          "note_to_payer": "DefectiveProduct",
-          "payment_instruction": {
-            "platform_fees": [
-              {
-                "amount": {
-                  "currency_code": "USD",
-                  "value": "1.00"
-                }
-              }
-            ]
-          }
+      "paypal_request_id": {
+        "name": "PayPal-Request-Id",
+        "in": "header",
+        "description": "The server stores keys for 45 days.",
+        "required": false,
+        "schema": {
+          "type": "string"
         }
       },
-      "reauthorize_request": {
-        "value": {
-          "amount": {
-            "value": "10.99",
-            "currency_code": "USD"
-          }
+      "prefer": {
+        "name": "Prefer",
+        "in": "header",
+        "description": "The preferred server response upon successful completion of the request. Value is:<ul><li><code>return=minimal</code>. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the <code>id</code>, <code>status</code> and HATEOAS links.</li><li><code>return=representation</code>. The server returns a complete resource representation, including the current state of the resource.</li></ul>",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "default": "return=minimal"
+        }
+      },
+      "paypal_auth_assertion": {
+        "name": "PayPal-Auth-Assertion",
+        "in": "header",
+        "description": "An API-caller-provided JSON Web Token (JWT) assertion that identifies the merchant. For details, see [PayPal-Auth-Assertion](/docs/api/reference/api-requests/#paypal-auth-assertion).<blockquote><strong>Note:</strong>For three party transactions in which a partner is managing the API calls on behalf of a merchant, the partner must identify the merchant using either a PayPal-Auth-Assertion header or an access token with target_subject.</blockquote>",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "capture_id": {
+        "name": "capture_id",
+        "in": "path",
+        "description": "The PayPal-generated ID for the captured payment to refund.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "refund_id": {
+        "name": "refund_id",
+        "in": "path",
+        "description": "The PayPal-generated ID for the refund for which to show details.",
+        "required": true,
+        "schema": {
+          "type": "string"
         }
       }
     }
