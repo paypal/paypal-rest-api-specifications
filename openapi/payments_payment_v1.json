@@ -3,7 +3,51 @@
   "info": {
     "title": "Payments",
     "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the Payments REST API to easily and securely accept online and mobile payments. The payments name space contains resource collections for payments, sales, refunds, authorizations, captures, and orders.<blockquote><strong>Important:</strong> The use of the PayPal REST <code>/payments</code> APIs to accept credit card payments is restricted. Instead, you can accept credit card payments with <a href=\"https://www.braintreepayments.com/products/braintree-direct\">Braintree Direct</a>.</blockquote>You can enable customers to make PayPal and credit card payments with only a few clicks, depending on the country. You can accept an immediate payment or authorize a payment and capture it later. You can show details for completed payments, refunds, and authorizations. You can make full or partial refunds. You also can void or re-authorize authorizations. For more information, see the <a href=\"/docs/integration/direct/payments/\">Payments overview</a>.",
-    "version": "1.12"
+    "version": "1.12",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "payment",
+      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/payment</code> resource to create a <em>sale</em>, an <em>authorized payment</em>, or an <em>order</em>. A sale is a direct credit card payment, stored credit card payment, or PayPal payment. An authorized payment places funds on hold to be captured later. An order is a purchase that a customer has approved but for which the funds are not placed on hold. You can also use this resource to execute approved PayPal payments and show details for, update, and list payments. For more information, see also <a href=\"/docs/integration/direct/payments/\"Payments</a>."
+    },
+    {
+      "name": "sale",
+      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>A <em>sale</em> is a completed payment. Use the <code>/sale</code> resource to show sale details and refund a sale. For more information, see also <a href=\"/docs/integration/direct/payments/refund-payments/\">Refund payments</a>."
+    },
+    {
+      "name": "authorization",
+      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/authorization</code> resource and related sub-resources to show details for, capture, void, and reauthorize an authorization."
+    },
+    {
+      "name": "orders",
+      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/orders</code> resource to authorize, capture, void, and show details for an order.<blockquote><strong>Note:</strong> You cannot refund an order directly. Instead, you must refund a completed payment for an order. For integration information, see <a href=\"/docs/integration/direct/payments/orders/\">Orders</a> and <a href=\"/docs/integration/direct/payments/refund-payments/\">refund payment</a>.</blockquote>For more information, see also <a href=\"/docs/integration/direct/payments/orders/\">Orders</a>."
+    },
+    {
+      "name": "capture",
+      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/capture</code> resource and sub-resources to show details for and refund captured payments."
+    },
+    {
+      "name": "refund",
+      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/refund</code> resource to show details for a refund on direct and captured payments."
+    },
+    {
+      "name": "receipt",
+      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/receipt</code> resource to show details for a payment receipt."
+    }
+  ],
+  "externalDocs": {
+    "url": "https://developer.paypal.com/docs/api/payments/v1/"
   },
   "paths": {
     "/v1/payments/payment": {
@@ -23,7 +67,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -38,8 +89,73 @@
                 "$ref": "#/components/schemas/payment"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/payment"
+                "payment": {
+                  "value": {
+                    "intent": "sale",
+                    "payer": {
+                      "payment_method": "paypal"
+                    },
+                    "transactions": [
+                      {
+                        "amount": {
+                          "total": "30.11",
+                          "currency": "USD",
+                          "details": {
+                            "subtotal": "30.00",
+                            "tax": "0.07",
+                            "shipping": "0.03",
+                            "handling_fee": "1.00",
+                            "shipping_discount": "-1.00",
+                            "insurance": "0.01"
+                          }
+                        },
+                        "description": "The payment transaction description.",
+                        "custom": "EBAY_EMS_90048630024435",
+                        "invoice_number": "48787589673",
+                        "payment_options": {
+                          "allowed_payment_method": "INSTANT_FUNDING_SOURCE"
+                        },
+                        "soft_descriptor": "ECHI5786786",
+                        "item_list": {
+                          "items": [
+                            {
+                              "name": "hat",
+                              "description": "Brown hat.",
+                              "quantity": "5",
+                              "price": "3",
+                              "tax": "0.01",
+                              "sku": "1",
+                              "currency": "USD"
+                            },
+                            {
+                              "name": "handbag",
+                              "description": "Black handbag.",
+                              "quantity": "1",
+                              "price": "15",
+                              "tax": "0.02",
+                              "sku": "product34",
+                              "currency": "USD"
+                            }
+                          ],
+                          "shipping_address": {
+                            "recipient_name": "Brian Robinson",
+                            "line1": "4th Floor",
+                            "line2": "Unit #34",
+                            "city": "San Jose",
+                            "country_code": "US",
+                            "postal_code": "95131",
+                            "phone": "011862212345678",
+                            "state": "CA"
+                          }
+                        }
+                      }
+                    ],
+                    "note_to_payer": "Contact us for any questions on your order.",
+                    "redirect_urls": {
+                      "return_url": "https://example.com/return",
+                      "cancel_url": "https://example.com/cancel"
+                    }
+                  }
                 }
               }
             }
@@ -92,7 +208,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -170,7 +293,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -220,7 +350,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -235,8 +372,32 @@
                 "$ref": "#/components/schemas/patch_request"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/patch_request"
+                "patch_request": {
+                  "value": [
+                    {
+                      "op": "replace",
+                      "path": "/transactions/0/amount",
+                      "value": {
+                        "total": "18.37",
+                        "currency": "EUR",
+                        "details": {
+                          "subtotal": "13.37",
+                          "shipping": "5.00"
+                        }
+                      }
+                    },
+                    {
+                      "op": "add",
+                      "path": "/transactions/0/item_list/shipping_address",
+                      "value": {
+                        "recipient_name": "Anna Gruneberg",
+                        "line1": "Kathwarinenhof 1",
+                        "city": "Flensburg",
+                        "postal_code": "24939",
+                        "country_code": "DE"
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -286,7 +447,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -307,8 +475,10 @@
                 "$ref": "#/components/schemas/payment_execution"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/payment_execution"
+                "payment_execution": {
+                  "value": {
+                    "payer_id": "CR87QHB7JTRSC"
+                  }
                 }
               }
             }
@@ -353,7 +523,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -425,7 +602,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -437,7 +621,24 @@
           }
         ],
         "requestBody": {
-          "$ref": "#/components/requestBodies/refund_request"
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/refund_request"
+              },
+              "examples": {
+                "refund_request": {
+                  "value": {
+                    "amount": {
+                      "total": "100.00",
+                      "currency": "USD"
+                    },
+                    "invoice_number": "INV-7654321"
+                  }
+                }
+              }
+            }
+          }
         },
         "security": [
           {
@@ -478,17 +679,19 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/authorization"
-                },
-                "examples": {
-                  "0": {
-                    "$ref": "#/components/examples/authorization"
-                  }
                 }
               }
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -540,7 +743,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -549,7 +759,24 @@
           }
         ],
         "requestBody": {
-          "$ref": "#/components/requestBodies/capture"
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/capture"
+              },
+              "examples": {
+                "capture": {
+                  "value": {
+                    "amount": {
+                      "currency": "USD",
+                      "total": "4.54"
+                    },
+                    "is_final_capture": true
+                  }
+                }
+              }
+            }
+          }
         },
         "security": [
           {
@@ -600,7 +827,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -650,7 +884,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -701,17 +942,19 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/order"
-                },
-                "examples": {
-                  "0": {
-                    "$ref": "#/components/examples/order"
-                  }
                 }
               }
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -763,7 +1006,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -813,7 +1063,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -863,7 +1120,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -919,7 +1183,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -991,7 +1262,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -1049,7 +1327,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -1080,53 +1365,6 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "payment",
-      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/payment</code> resource to create a <em>sale</em>, an <em>authorized payment</em>, or an <em>order</em>. A sale is a direct credit card payment, stored credit card payment, or PayPal payment. An authorized payment places funds on hold to be captured later. An order is a purchase that a customer has approved but for which the funds are not placed on hold. You can also use this resource to execute approved PayPal payments and show details for, update, and list payments. For more information, see also <a href=\"/docs/integration/direct/payments/\"Payments</a>."
-    },
-    {
-      "name": "payment-instruction",
-      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/payment-instruction</code> resource to show details for a payment instruction."
-    },
-    {
-      "name": "sale",
-      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>A <em>sale</em> is a completed payment. Use the <code>/sale</code> resource to show sale details and refund a sale. For more information, see also <a href=\"/docs/integration/direct/payments/refund-payments/\">Refund payments</a>."
-    },
-    {
-      "name": "authorization",
-      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/authorization</code> resource and related sub-resources to show details for, capture, void, and reauthorize an authorization."
-    },
-    {
-      "name": "orders",
-      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/orders</code> resource to authorize, capture, void, and show details for an order.<blockquote><strong>Note:</strong> You cannot refund an order directly. Instead, you must refund a completed payment for an order. For integration information, see <a href=\"/docs/integration/direct/payments/orders/\">Orders</a> and <a href=\"/docs/integration/direct/payments/refund-payments/\">refund payment</a>.</blockquote>For more information, see also <a href=\"/docs/integration/direct/payments/orders/\">Orders</a>."
-    },
-    {
-      "name": "capture",
-      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/capture</code> resource and sub-resources to show details for and refund captured payments."
-    },
-    {
-      "name": "refund",
-      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/refund</code> resource to show details for a refund on direct and captured payments."
-    },
-    {
-      "name": "receipt",
-      "description": "<blockquote><strong>Deprecation notice:</strong> The <code>/v1/payments</code> endpoint is deprecated. Use the <code>/v2/payments</code> endpoint instead. For details, see <a href=\"/docs/checkout/integrate/\">PayPal Checkout Basic Integration</a>.</blockquote>Use the <code>/receipt</code> resource to show details for a payment receipt."
-    }
-  ],
-  "externalDocs": {
-    "url": "https://developer.paypal.com/docs/api/payments/v1/"
-  },
-  "servers": [
-    {
-      "url": "https://api-m.sandbox.paypal.com",
-      "description": "PayPal Sandbox Environment"
-    },
-    {
-      "url": "https://api-m.paypal.com",
-      "description": "PayPal Live Environment"
-    }
-  ],
   "components": {
     "requestBodies": {
       "capture": {
@@ -1134,11 +1372,6 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/capture"
-            },
-            "examples": {
-              "0": {
-                "$ref": "#/components/examples/capture"
-              }
             }
           }
         }
@@ -1148,11 +1381,6 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/refund_request"
-            },
-            "examples": {
-              "0": {
-                "$ref": "#/components/examples/refund_request"
-              }
             }
           }
         }
@@ -1181,175 +1409,433 @@
         }
       }
     },
-    "parameters": {
-      "paypal_partner_attribution_id": {
-        "name": "PayPal-Partner-Attribution-Id",
-        "in": "header",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "maxLength": 32
+    "schemas": {
+      "error_details": {
+        "title": "Error Details",
+        "type": "object",
+        "description": "The error details. Required for client-side `4XX` errors.",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The field that caused the error. If this field is in the body, set this value to the field's JSON pointer value. Required for client-side errors."
+          },
+          "value": {
+            "type": "string",
+            "description": "The value of the field that caused the error."
+          },
+          "location": {
+            "$ref": "#/components/schemas/error_location"
+          },
+          "issue": {
+            "type": "string",
+            "description": "The unique, fine-grained application-level error code."
+          },
+          "description": {
+            "type": "string",
+            "description": "The human-readable description for an issue. The description can change over the lifetime of an API, so clients must not depend on this value."
+          }
+        },
+        "required": [
+          "issue"
+        ]
+      },
+      "error_location": {
+        "type": "string",
+        "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+        "enum": [
+          "body",
+          "path",
+          "query"
+        ],
+        "default": "body"
+      },
+      "error_link_description": {
+        "title": "Link Description",
+        "description": "The request-related [HATEOAS link](/api/rest/responses/#hateoas-links) information.",
+        "type": "object",
+        "required": [
+          "href",
+          "rel"
+        ],
+        "properties": {
+          "href": {
+            "description": "The complete target URL. To make the related call, combine the method with this [URI Template-formatted](https://tools.ietf.org/html/rfc6570) link. For pre-processing, include the `$`, `(`, and `)` characters. The `href` is the key HATEOAS component that links a completed call with a subsequent call.",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20000,
+            "pattern": "^.*$"
+          },
+          "rel": {
+            "description": "The [link relation type](https://tools.ietf.org/html/rfc5988#section-4), which serves as an ID for a link that unambiguously describes the semantics of the link. See [Link Relations](https://www.iana.org/assignments/link-relations/link-relations.xhtml).",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 100,
+            "pattern": "^.*$"
+          },
+          "method": {
+            "description": "The HTTP method required to make the related call.",
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 6,
+            "pattern": "^[A-Z]*$",
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE",
+              "PATCH"
+            ]
+          }
         }
       },
-      "count": {
-        "name": "count",
-        "in": "query",
-        "description": "The number of items to list in the response.",
-        "required": false,
-        "schema": {
-          "type": "integer",
-          "maximum": 20,
-          "default": 10
-        }
-      },
-      "start_id": {
-        "name": "start_id",
-        "in": "query",
-        "description": "The ID of the starting resource in the response. When results are paged, you can use the `next_id` value as the `start_id` to continue with the next set of results.",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "start_index": {
-        "name": "start_index",
-        "in": "query",
-        "description": "The start index of the payments to list. Typically, you use the `start_index` to jump to a specific position in the resource history based on its cart. For example, to start at the second item in a list of results, specify `?start_index=2`.",
-        "required": false,
-        "schema": {
-          "type": "integer"
-        }
-      },
-      "start_time": {
-        "name": "start_time",
-        "in": "query",
-        "description": "The start date and time for the range to show in the response, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, `start_time=2016-03-06T11:00:00Z`.",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "end_time": {
-        "name": "end_time",
-        "in": "query",
-        "description": "The end date and time for the range to show in the response, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, `end_time=2016-03-06T11:00:00Z`.",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "payee_id": {
-        "name": "payee_id",
-        "in": "query",
-        "description": "Filters the payments in the response by a PayPal-assigned merchant ID that identifies the payee.",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "sort_by": {
-        "name": "sort_by",
-        "in": "query",
-        "description": "Sorts the payments in the response by a create time.",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "enum": [
-            "create_time"
-          ]
-        }
-      },
-      "sort_order": {
-        "name": "sort_order",
-        "in": "query",
-        "description": "Sorts the payments in the response in descending order.",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "enum": [
-            "desc"
-          ]
-        }
-      },
-      "payment_id": {
-        "name": "payment_id",
-        "in": "path",
-        "description": "The ID of the payment for which to show details.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "paypal_request_id": {
-        "name": "PayPal-Request-Id",
-        "description": "The server stores keys for 30 days.",
-        "in": "header",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "maxLength": 78
-        }
-      },
-      "sale_id": {
-        "name": "sale_id",
-        "in": "path",
-        "description": "The ID of the sale transaction to refund.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "authorization_id": {
-        "name": "authorization_id",
-        "in": "path",
-        "description": "The ID of the authorization to re-authorize.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "order_id": {
-        "name": "order_id",
-        "in": "path",
-        "description": "The ID of the order to authorize.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "capture_id": {
-        "name": "capture_id",
-        "in": "path",
-        "description": "The ID of the captured payment to refund.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "refund_id": {
-        "name": "refund_id",
-        "in": "path",
-        "description": "The ID of the refund for which to show details.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      }
-    },
-    "responses": {
-      "default": {
-        "description": "The default response.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/error_default"
+      "error_400": {
+        "type": "object",
+        "title": "Bad Request Error",
+        "description": "Request is not well-formed, syntactically incorrect, or violates schema.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "INVALID_REQUEST"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Request is not well-formed, syntactically incorrect, or violates schema."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
             }
           }
         }
-      }
-    },
-    "schemas": {
-      "error_details": {
+      },
+      "error_401": {
+        "type": "object",
+        "title": "Unauthorized Error",
+        "description": "Authentication failed due to missing Authorization header, or invalid authentication credentials.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "AUTHENTICATION_FAILURE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Authentication failed due to missing authorization header, or invalid authentication credentials."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_403": {
+        "type": "object",
+        "title": "Not Authorized Error",
+        "description": "The client is not authorized to access this resource, although it may have valid credentials. ",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "NOT_AUTHORIZED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Authorization failed due to insufficient permissions."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_404": {
+        "type": "object",
+        "title": "Not found Error",
+        "description": "The server has not found anything matching the request URI. This either means that the URI is incorrect or the resource is not available.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "RESOURCE_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "The specified resource does not exist."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_409": {
+        "type": "object",
+        "title": "Resource Conflict Error",
+        "description": "The server has detected a conflict while processing this request.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "RESOURCE_CONFLICT"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "The server has detected a conflict while processing this request."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_415": {
+        "type": "object",
+        "title": "Unsupported Media Type Error",
+        "description": "The server does not support the request payload's media type.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "UNSUPPORTED_MEDIA_TYPE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "The server does not support the request payload's media type."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_422": {
+        "type": "object",
+        "title": "Unprocessable Entity Error",
+        "description": "The requested action cannot be performed and may require interaction with APIs or processes outside of the current request. This is distinct from a 500 response in that there are no systemic problems limiting the API from performing the request.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "UNPROCESSABLE_ENTITY"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "The requested action could not be performed, semantically incorrect, or failed business validation."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_500": {
+        "type": "object",
+        "title": "Internal Server Error",
+        "description": "This is either a system or application error, and generally indicates that although the client appeared to provide a correct request, something unexpected has gone wrong on the server.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "INTERNAL_SERVER_ERROR"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "An internal server error occurred."
+            ]
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        },
+        "example": {
+          "name": "INTERNAL_SERVER_ERROR",
+          "message": "An internal server error occurred.",
+          "debug_id": "90957fca61718",
+          "links": [
+            {
+              "href": "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR",
+              "rel": "information_link"
+            }
+          ]
+        }
+      },
+      "error_503": {
+        "type": "object",
+        "title": "Service Unavailable Error",
+        "description": "The server is temporarily unable to handle the request, for example, because of planned maintenance or downtime.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "SERVICE_UNAVAILABLE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Service Unavailable."
+            ]
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        },
+        "example": {
+          "name": "SERVICE_UNAVAILABLE",
+          "message": "Service Unavailable.",
+          "debug_id": "90957fca61718",
+          "information_link": "https://developer.paypal.com/docs/api/orders/v2/#error-SERVICE_UNAVAILABLE"
+        }
+      },
+      "error_details-2": {
         "title": "Error Details",
         "type": "object",
         "description": "The error details. Required for client-side `4XX` errors.",
@@ -1380,346 +1866,83 @@
           "issue"
         ]
       },
-      "error_default": {
-        "description": "The default error response.",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/error_400"
+      "link_description": {
+        "type": "object",
+        "title": "Link Description",
+        "description": "The request-related [HATEOAS link](/docs/api/reference/api-responses/#hateoas-links) information.",
+        "required": [
+          "href",
+          "rel"
+        ],
+        "properties": {
+          "href": {
+            "type": "string",
+            "description": "The complete target URL. To make the related call, combine the method with this [URI Template-formatted](https://tools.ietf.org/html/rfc6570) link. For pre-processing, include the `$`, `(`, and `)` characters. The `href` is the key HATEOAS component that links a completed call with a subsequent call."
           },
-          {
-            "$ref": "#/components/schemas/error_401"
+          "rel": {
+            "type": "string",
+            "description": "The [link relation type](https://tools.ietf.org/html/rfc5988#section-4), which serves as an ID for a link that unambiguously describes the semantics of the link. See [Link Relations](https://www.iana.org/assignments/link-relations/link-relations.xhtml)."
           },
-          {
-            "$ref": "#/components/schemas/error_403"
-          },
-          {
-            "$ref": "#/components/schemas/error_404"
-          },
-          {
-            "$ref": "#/components/schemas/error_409"
-          },
-          {
-            "$ref": "#/components/schemas/error_415"
-          },
-          {
-            "$ref": "#/components/schemas/error_422"
-          },
-          {
-            "$ref": "#/components/schemas/error_500"
-          },
-          {
-            "$ref": "#/components/schemas/error_503"
+          "method": {
+            "type": "string",
+            "description": "The HTTP method required to make the related call.",
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE",
+              "HEAD",
+              "CONNECT",
+              "OPTIONS",
+              "PATCH"
+            ]
           }
+        }
+      },
+      "error": {
+        "type": "object",
+        "title": "Error",
+        "description": "The error details.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The human-readable, unique name of the error."
+          },
+          "message": {
+            "type": "string",
+            "description": "The message that describes the error."
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "information_link": {
+            "type": "string",
+            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
+            "readOnly": true
+          },
+          "details": {
+            "type": "array",
+            "description": "An array of additional details about the error.",
+            "items": {
+              "$ref": "#/components/schemas/error_details-2"
+            }
+          },
+          "links": {
+            "type": "array",
+            "description": "An array of request-related [HATEOAS links](/docs/api/reference/api-responses/#hateoas-links).",
+            "readOnly": true,
+            "items": {
+              "$ref": "#/components/schemas/link_description",
+              "readOnly": true
+            }
+          }
+        },
+        "required": [
+          "name",
+          "message",
+          "debug_id"
         ]
-      },
-      "error_400": {
-        "type": "object",
-        "title": "400 Error",
-        "description": "Error response for 400",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "INVALID_REQUEST"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "Request is not well-formed, syntactically incorrect, or violates schema."
-            ]
-          },
-          "issues": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        }
-      },
-      "error_401": {
-        "type": "object",
-        "title": "401 Error",
-        "description": "Error response for 401",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "AUTHENTICATION_FAILURE"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "Authentication failed due to missing authorization header, or invalid authentication credentials."
-            ]
-          },
-          "issues": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        }
-      },
-      "error_403": {
-        "type": "object",
-        "title": "403 Error",
-        "description": "Error response for 403",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "NOT_AUTHORIZED"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "Authorization failed due to insufficient permissions."
-            ]
-          },
-          "issues": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        }
-      },
-      "error_404": {
-        "type": "object",
-        "title": "404 Error",
-        "description": "Error response for 404",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "RESOURCE_NOT_FOUND"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "The specified resource does not exist."
-            ]
-          },
-          "issues": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        }
-      },
-      "error_409": {
-        "type": "object",
-        "title": "409 Error",
-        "description": "Error response for 409",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "RESOURCE_CONFLICT"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "The server has detected a conflict while processing this request."
-            ]
-          },
-          "issues": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        }
-      },
-      "error_415": {
-        "type": "object",
-        "title": "409 Error",
-        "description": "Error response for 415",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "UNSUPPORTED_MEDIA_TYPE"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "The server does not support the request payload's media type."
-            ]
-          },
-          "issues": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        }
-      },
-      "error_422": {
-        "type": "object",
-        "title": "422 Error",
-        "description": "Error response for 422",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "UNPROCESSABLE_ENTITY"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "The requested action could not be performed, semantically incorrect, or failed business validation."
-            ]
-          },
-          "issues": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        }
-      },
-      "error_500": {
-        "type": "object",
-        "title": "500 Error",
-        "description": "Error response for 500",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "INTERNAL_SERVER_ERROR"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "An internal server error occurred."
-            ]
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "enum": [
-              "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR"
-            ],
-            "readOnly": true
-          }
-        },
-        "example": {
-          "name": "INTERNAL_SERVER_ERROR",
-          "message": "An internal server error occurred.",
-          "debug_id": "90957fca61718",
-          "information_link": "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR"
-        }
-      },
-      "error_503": {
-        "type": "object",
-        "title": "503 Error",
-        "description": "Error response for 503",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "SERVICE_UNAVAILABLE"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "Service Unavailable."
-            ]
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        },
-        "example": {
-          "name": "SERVICE_UNAVAILABLE",
-          "message": "Service Unavailable.",
-          "debug_id": "90957fca61718",
-          "information_link": "https://developer.paypal.com/docs/api/orders/v2/#error-SERVICE_UNAVAILABLE"
-        }
       },
       "credit_card_token": {
         "type": "object",
@@ -2348,39 +2571,6 @@
         "required": [
           "response_code"
         ]
-      },
-      "link_description": {
-        "type": "object",
-        "title": "Link Description",
-        "description": "The request-related [HATEOAS link](/docs/api/reference/api-responses/#hateoas-links) information.",
-        "required": [
-          "href",
-          "rel"
-        ],
-        "properties": {
-          "href": {
-            "type": "string",
-            "description": "The complete target URL. To make the related call, combine the method with this [URI Template-formatted](https://tools.ietf.org/html/rfc6570) link. For pre-processing, include the `$`, `(`, and `)` characters. The `href` is the key HATEOAS component that links a completed call with a subsequent call."
-          },
-          "rel": {
-            "type": "string",
-            "description": "The [link relation type](https://tools.ietf.org/html/rfc5988#section-4), which serves as an ID for a link that unambiguously describes the semantics of the link. See [Link Relations](https://www.iana.org/assignments/link-relations/link-relations.xhtml)."
-          },
-          "method": {
-            "type": "string",
-            "description": "The HTTP method required to make the related call.",
-            "enum": [
-              "GET",
-              "POST",
-              "PUT",
-              "DELETE",
-              "HEAD",
-              "CONNECT",
-              "OPTIONS",
-              "PATCH"
-            ]
-          }
-        }
       },
       "sale": {
         "type": "object",
@@ -3522,188 +3712,163 @@
             }
           }
         ]
-      },
-      "error": {
-        "type": "object",
-        "title": "Error",
-        "description": "The error details.",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The human-readable, unique name of the error."
-          },
-          "message": {
-            "type": "string",
-            "description": "The message that describes the error."
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          },
-          "details": {
-            "type": "array",
-            "description": "An array of additional details about the error.",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "links": {
-            "type": "array",
-            "description": "An array of request-related [HATEOAS links](/docs/api/reference/api-responses/#hateoas-links).",
-            "readOnly": true,
-            "items": {
-              "$ref": "#/components/schemas/link_description",
-              "readOnly": true
-            }
-          }
-        },
-        "required": [
-          "name",
-          "message",
-          "debug_id"
-        ]
       }
     },
-    "examples": {
-      "patch_request": {
-        "value": [
-          {
-            "op": "replace",
-            "path": "/transactions/0/amount",
-            "value": {
-              "total": "18.37",
-              "currency": "EUR",
-              "details": {
-                "subtotal": "13.37",
-                "shipping": "5.00"
-              }
-            }
-          },
-          {
-            "op": "add",
-            "path": "/transactions/0/item_list/shipping_address",
-            "value": {
-              "recipient_name": "Anna Gruneberg",
-              "line1": "Kathwarinenhof 1",
-              "city": "Flensburg",
-              "postal_code": "24939",
-              "country_code": "DE"
-            }
-          }
-        ]
-      },
-      "payment_execution": {
-        "value": {
-          "payer_id": "CR87QHB7JTRSC"
+    "parameters": {
+      "paypal_partner_attribution_id": {
+        "name": "PayPal-Partner-Attribution-Id",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "maxLength": 32
         }
       },
-      "capture": {
-        "value": {
-          "amount": {
-            "currency": "USD",
-            "total": "4.54"
-          },
-          "is_final_capture": true
+      "count": {
+        "name": "count",
+        "in": "query",
+        "description": "The number of items to list in the response.",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "maximum": 20,
+          "default": 10
         }
       },
-      "authorization": {
-        "value": {
-          "amount": {
-            "total": "7.00",
-            "currency": "USD"
-          }
+      "start_id": {
+        "name": "start_id",
+        "in": "query",
+        "description": "The ID of the starting resource in the response. When results are paged, you can use the `next_id` value as the `start_id` to continue with the next set of results.",
+        "required": false,
+        "schema": {
+          "type": "string"
         }
       },
-      "refund_request": {
-        "value": {
-          "amount": {
-            "total": "100.00",
-            "currency": "USD"
-          },
-          "invoice_number": "INV-7654321"
+      "start_index": {
+        "name": "start_index",
+        "in": "query",
+        "description": "The start index of the payments to list. Typically, you use the `start_index` to jump to a specific position in the resource history based on its cart. For example, to start at the second item in a list of results, specify `?start_index=2`.",
+        "required": false,
+        "schema": {
+          "type": "integer"
         }
       },
-      "order": {
-        "value": {
-          "amount": {
-            "currency": "USD",
-            "total": "4.54"
-          }
+      "start_time": {
+        "name": "start_time",
+        "in": "query",
+        "description": "The start date and time for the range to show in the response, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, `start_time=2016-03-06T11:00:00Z`.",
+        "required": false,
+        "schema": {
+          "type": "string"
         }
       },
-      "payment": {
-        "value": {
-          "intent": "sale",
-          "payer": {
-            "payment_method": "paypal"
-          },
-          "transactions": [
-            {
-              "amount": {
-                "total": "30.11",
-                "currency": "USD",
-                "details": {
-                  "subtotal": "30.00",
-                  "tax": "0.07",
-                  "shipping": "0.03",
-                  "handling_fee": "1.00",
-                  "shipping_discount": "-1.00",
-                  "insurance": "0.01"
-                }
-              },
-              "description": "The payment transaction description.",
-              "custom": "EBAY_EMS_90048630024435",
-              "invoice_number": "48787589673",
-              "payment_options": {
-                "allowed_payment_method": "INSTANT_FUNDING_SOURCE"
-              },
-              "soft_descriptor": "ECHI5786786",
-              "item_list": {
-                "items": [
-                  {
-                    "name": "hat",
-                    "description": "Brown hat.",
-                    "quantity": "5",
-                    "price": "3",
-                    "tax": "0.01",
-                    "sku": "1",
-                    "currency": "USD"
-                  },
-                  {
-                    "name": "handbag",
-                    "description": "Black handbag.",
-                    "quantity": "1",
-                    "price": "15",
-                    "tax": "0.02",
-                    "sku": "product34",
-                    "currency": "USD"
-                  }
-                ],
-                "shipping_address": {
-                  "recipient_name": "Brian Robinson",
-                  "line1": "4th Floor",
-                  "line2": "Unit #34",
-                  "city": "San Jose",
-                  "country_code": "US",
-                  "postal_code": "95131",
-                  "phone": "011862212345678",
-                  "state": "CA"
-                }
-              }
-            }
-          ],
-          "note_to_payer": "Contact us for any questions on your order.",
-          "redirect_urls": {
-            "return_url": "https://example.com/return",
-            "cancel_url": "https://example.com/cancel"
-          }
+      "end_time": {
+        "name": "end_time",
+        "in": "query",
+        "description": "The end date and time for the range to show in the response, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, `end_time=2016-03-06T11:00:00Z`.",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "payee_id": {
+        "name": "payee_id",
+        "in": "query",
+        "description": "Filters the payments in the response by a PayPal-assigned merchant ID that identifies the payee.",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "sort_by": {
+        "name": "sort_by",
+        "in": "query",
+        "description": "Sorts the payments in the response by a create time.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "create_time"
+          ]
+        }
+      },
+      "sort_order": {
+        "name": "sort_order",
+        "in": "query",
+        "description": "Sorts the payments in the response in descending order.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "desc"
+          ]
+        }
+      },
+      "payment_id": {
+        "name": "payment_id",
+        "in": "path",
+        "description": "The ID of the payment to execute.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "paypal_request_id": {
+        "name": "PayPal-Request-Id",
+        "description": "The server stores keys for 30 days.",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "maxLength": 78
+        }
+      },
+      "sale_id": {
+        "name": "sale_id",
+        "in": "path",
+        "description": "The ID of the sale transaction to refund.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "authorization_id": {
+        "name": "authorization_id",
+        "in": "path",
+        "description": "The ID of the authorization to re-authorize.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "order_id": {
+        "name": "order_id",
+        "in": "path",
+        "description": "The ID of the order to authorize.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "capture_id": {
+        "name": "capture_id",
+        "in": "path",
+        "description": "The ID of the captured payment to refund.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "refund_id": {
+        "name": "refund_id",
+        "in": "path",
+        "description": "The ID of the refund for which to show details.",
+        "required": true,
+        "schema": {
+          "type": "string"
         }
       }
     }
-  }
+  },
+  "deprecated": true
 }

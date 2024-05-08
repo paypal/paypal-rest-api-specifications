@@ -3,7 +3,71 @@
   "info": {
     "title": "Disputes",
     "description": "Occasionally, something goes wrong with a customer's order. To dispute a charge, a customer can create a dispute with PayPal. PayPal merchants, partners, and external developers can use the PayPal Disputes API to manage customer disputes.<blockquote><strong>Note:</strong> In the live environment, merchants cannot create disputes but can only respond to customer-created disputes. However, merchants can create disputes in the sandbox environment. When you create an app, enable Disputes in the App feature options section.</blockquote>A customer can also ask his or her bank or credit card company to dispute and reverse a charge, which is known as a <i>chargeback</i>. For more information, see <a href=\"https://www.paypal.com/us/brc/article/customer-disputes-claims-chargebacks-bank-reversals\">Disputes, claims, chargebacks, and bank reversals</a>.<br/><br/>When a customer disputes a charge, you can use this API to provide evidence that the charge is legitimate. To provide evidence or appeal a dispute, you submit a proof of delivery or proof of refund document or notes, which can include logs.<br/><br/>Normally, an agent at PayPal creates a dispute, updates the dispute status, and settles disputes, but now you can run test cases in the sandbox that complete these operations.<br/><br/><blockquote><strong>Important:</strong> The create, cancel, compute metrics, change reason, and validate eligibility methods are available as a limited-release solution at this time. For more information, reach out to your PayPal account manager.</blockquote><br/>For details, see <a href=\"/docs/integration/direct/customer-disputes/\">Disputes Overview</a> documentation.",
-    "version": "1.10"
+    "version": "1.10",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "disputes",
+      "description": "Use the `/disputes` resource to list disputes, create disputes, show dispute details, and partially a dispute. Normally, an agent at PayPal creates disputes but now you can run test cases in the sandbox that create disputes."
+    },
+    {
+      "name": "disputes-actions",
+      "description": "Use the `/disputes` resource with a dispute ID and an action to:<ul><li>Accept a claim.</li><li>Accept an offer to resolve a dispute.</li><li>Acknowledge the return of an item related to a dispute.</li><li>Settle a dispute.</li><li>Appeal a dispute.</li><li>Cancel a dispute.</li><li>Change the reason for a dispute.</li><li>Deny an offer to resolve dispute.</li><li>Escalate a dispute to a claim.</li><li>Make an offer to resolve a dispute.</li><li>Make an offer to resolve a dispute.</li><li>Provide evidence for a dispute.</li><li>Provide supporting information for dispute.</li><li>In the sandbox, update the dispute status.</li><li>Send a message about a dispute to the other party in the dispute.</li><ul>"
+    },
+    {
+      "name": "referred-disputes",
+      "description": "Use the `/customer/referred-disputes` resource to create a dispute for a referred case that was created by a partner or marketplace, show details for a referred dispute, by ID, notify referred refunds completed to PayPal, notify PayPal about referred dispute adjudication updates, and determine the dispute eligibility for referred disputes."
+    },
+    {
+      "name": "validate-eligibility",
+      "description": "Use the `/validate-eligibility/` resource to determine whether you can create a case for a transaction."
+    },
+    {
+      "name": "compute-metrics",
+      "description": "Use the `/compute-metrics` resource to provide metrics for all disputes."
+    },
+    {
+      "name": "validate-referred-dispute-eligibility",
+      "description": "Use the `/validate-referred-dispute-eligibility` resource to determine whether you can create a referred case for a transaction, by encrypted transaction ID."
+    },
+    {
+      "name": "referred-disputes",
+      "description": "Use the `/referred-disputes` resource to create a dispute for a referred case that was created by a partner or marketplace, show details for a referred dispute, by ID, notify referred refunds completed to PayPal, notify PayPal about referred dispute adjudication updates, and determine the dispute eligibility for referred disputes."
+    },
+    {
+      "name": "referred-disputes-actions",
+      "description": "Use the `/referred-disputes` resource with a dispute ID and an action to notify PayPal about adjudication updates for a referred dispute and notify PayPal about a refund for a referred dispute."
+    },
+    {
+      "name": "partner-actions",
+      "description": "Use the `/disputes/{id}/partner-actions/` resource to show dispute action details and partially update a dispute action."
+    },
+    {
+      "name": "search-suggestions",
+      "description": "Use the `/search-suggestions` resource to show search suggestions."
+    },
+    {
+      "name": "dispute-events",
+      "description": "Use the `/dispute-events` resource to send dispute events."
+    },
+    {
+      "name": "refund-preference",
+      "description": "Use the `/disputes/{id}/provide-refund-preference` resource to provide refund preferences for the dispute."
+    }
+  ],
+  "externalDocs": {
+    "url": "https://developer.paypal.com/docs/api/customer-disputes/v1/"
   },
   "paths": {
     "/v1/customer/disputes": {
@@ -33,7 +97,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -53,22 +124,10 @@
             "$ref": "#/components/parameters/dispute_state"
           },
           {
-            "$ref": "#/components/parameters/dispute_flows"
-          },
-          {
-            "$ref": "#/components/parameters/create_time_before"
-          },
-          {
-            "$ref": "#/components/parameters/create_time_after"
-          },
-          {
             "$ref": "#/components/parameters/update_time_before"
           },
           {
             "$ref": "#/components/parameters/update_time_after"
-          },
-          {
-            "$ref": "#/components/parameters/search_text"
           }
         ],
         "security": [
@@ -130,7 +189,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -218,19 +284,44 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
-          "$ref": "#/components/requestBodies/patch_request"
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/patch_request"
+              }
+            },
+            "multipart/related": {
+              "schema": {
+                "$ref": "#/components/schemas/patch_request"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/patch_request"
+              }
+            },
+            "multipart/mixed": {
+              "schema": {
+                "$ref": "#/components/schemas/patch_request"
+              }
+            }
+          }
         },
         "security": [
           {
@@ -271,15 +362,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -334,15 +429,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -392,15 +491,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -478,15 +581,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -496,8 +603,10 @@
                 "$ref": "#/components/schemas/adjudicate"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/adjudicate"
+                "adjudicate": {
+                  "value": {
+                    "adjudication_outcome": "BUYER_FAVOR"
+                  }
                 }
               }
             },
@@ -582,15 +691,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -600,8 +713,10 @@
                 "$ref": "#/components/schemas/require_evidence"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/require_evidence"
+                "escalate": {
+                  "value": {
+                    "note": "Escalating to PayPal claim for resolution."
+                  }
                 }
               }
             },
@@ -687,15 +802,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -705,8 +824,10 @@
                 "$ref": "#/components/schemas/escalate"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/escalate"
+                "require_evidence": {
+                  "value": {
+                    "action": "BUYER_EVIDENCE"
+                  }
                 }
               }
             },
@@ -791,15 +912,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -882,15 +1007,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -900,8 +1029,15 @@
                 "$ref": "#/components/schemas/make_offer"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/make_offer"
+                "make_offer": {
+                  "value": {
+                    "note": "Offer refund with replacement item.",
+                    "offer_amount": {
+                      "currency_code": "USD",
+                      "value": "23"
+                    },
+                    "offer_type": "REFUND_WITH_REPLACEMENT"
+                  }
                 }
               }
             },
@@ -996,15 +1132,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -1014,8 +1154,10 @@
                 "$ref": "#/components/schemas/accept_offer"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/accept_offer"
+                "accept_offer": {
+                  "value": {
+                    "note": "I am ok with the refund offered."
+                  }
                 }
               }
             },
@@ -1095,15 +1237,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -1113,8 +1259,10 @@
                 "$ref": "#/components/schemas/deny_offer"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/deny_offer"
+                "deny_offer": {
+                  "value": {
+                    "note": "refund offer is very low."
+                  }
                 }
               }
             },
@@ -1194,15 +1342,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -1290,15 +1442,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -1332,100 +1488,8 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "disputes",
-      "description": "Use the `/disputes` resource to list disputes, create disputes, show dispute details, and partially a dispute. Normally, an agent at PayPal creates disputes but now you can run test cases in the sandbox that create disputes."
-    },
-    {
-      "name": "disputes-actions",
-      "description": "Use the `/disputes` resource with a dispute ID and an action to:<ul><li>Accept a claim.</li><li>Accept an offer to resolve a dispute.</li><li>Acknowledge the return of an item related to a dispute.</li><li>Settle a dispute.</li><li>Appeal a dispute.</li><li>Cancel a dispute.</li><li>Change the reason for a dispute.</li><li>Deny an offer to resolve dispute.</li><li>Escalate a dispute to a claim.</li><li>Make an offer to resolve a dispute.</li><li>Make an offer to resolve a dispute.</li><li>Provide evidence for a dispute.</li><li>Provide supporting information for dispute.</li><li>In the sandbox, update the dispute status.</li><li>Send a message about a dispute to the other party in the dispute.</li><ul>"
-    },
-    {
-      "name": "referred-disputes",
-      "description": "Use the `/customer/referred-disputes` resource to create a dispute for a referred case that was created by a partner or marketplace, show details for a referred dispute, by ID, notify referred refunds completed to PayPal, notify PayPal about referred dispute adjudication updates, and determine the dispute eligibility for referred disputes."
-    },
-    {
-      "name": "validate-eligibility",
-      "description": "Use the `/validate-eligibility/` resource to determine whether you can create a case for a transaction."
-    },
-    {
-      "name": "compute-metrics",
-      "description": "Use the `/compute-metrics` resource to provide metrics for all disputes."
-    },
-    {
-      "name": "validate-referred-dispute-eligibility",
-      "description": "Use the `/validate-referred-dispute-eligibility` resource to determine whether you can create a referred case for a transaction, by encrypted transaction ID."
-    },
-    {
-      "name": "referred-disputes",
-      "description": "Use the `/referred-disputes` resource to create a dispute for a referred case that was created by a partner or marketplace, show details for a referred dispute, by ID, notify referred refunds completed to PayPal, notify PayPal about referred dispute adjudication updates, and determine the dispute eligibility for referred disputes."
-    },
-    {
-      "name": "referred-disputes-actions",
-      "description": "Use the `/referred-disputes` resource with a dispute ID and an action to notify PayPal about adjudication updates for a referred dispute and notify PayPal about a refund for a referred dispute."
-    },
-    {
-      "name": "partner-actions",
-      "description": "Use the `/disputes/{id}/partner-actions/` resource to show dispute action details and partially update a dispute action."
-    },
-    {
-      "name": "search-suggestions",
-      "description": "Use the `/search-suggestions` resource to show search suggestions."
-    },
-    {
-      "name": "dispute-events",
-      "description": "Use the `/dispute-events` resource to send dispute events."
-    },
-    {
-      "name": "refund-preference",
-      "description": "Use the `/disputes/{id}/provide-refund-preference` resource to provide refund preferences for the dispute."
-    }
-  ],
-  "externalDocs": {
-    "url": "https://developer.paypal.com/docs/api/customer-disputes/v1/"
-  },
-  "servers": [
-    {
-      "url": "https://api-m.sandbox.paypal.com",
-      "description": "PayPal Sandbox Environment"
-    },
-    {
-      "url": "https://api-m.paypal.com",
-      "description": "PayPal Live Environment"
-    }
-  ],
   "components": {
     "requestBodies": {
-      "patch_request": {
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/patch_request"
-            },
-            "examples": {
-              "0": {
-                "$ref": "#/components/examples/patch_request"
-              }
-            }
-          },
-          "multipart/related": {
-            "schema": {
-              "$ref": "#/components/schemas/patch_request"
-            }
-          },
-          "multipart/form-data": {
-            "schema": {
-              "$ref": "#/components/schemas/patch_request"
-            }
-          },
-          "multipart/mixed": {
-            "schema": {
-              "$ref": "#/components/schemas/patch_request"
-            }
-          }
-        }
-      },
       "evidences": {
         "content": {
           "multipart/form-data": {
@@ -1467,198 +1531,433 @@
         }
       }
     },
-    "parameters": {
-      "start_time": {
-        "name": "start_time",
-        "in": "query",
-        "description": "Filters the disputes in the response by a creation date and time. The start time must be within the last 180 days. Value is in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, *`yyyy`*-*`MM`*-*`dd`*`T`*`HH`*:*`mm`*:*`ss`*.*`SSS`*`Z`.<br/><br/>You can specify either but not both the `start_time` and `disputed_transaction_id` query parameters.",
-        "deprecated": true,
-        "schema": {
-          "type": "string",
-          "minLength": 20,
-          "maxLength": 64,
-          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$",
-          "default": "Current date and time"
-        }
-      },
-      "disputed_transaction_id": {
-        "name": "disputed_transaction_id",
-        "in": "query",
-        "description": "Filters the disputes in the response by a transaction, by ID.<br/><br/>You can specify either but not both the `start_time` and `disputed_transaction_id` query parameter.",
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 255,
-          "pattern": "^[0-9A-Z_]+$"
-        }
-      },
-      "page_size": {
-        "name": "page_size",
-        "in": "query",
-        "description": "Limits the number of disputes in the response to this value.",
-        "schema": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 50,
-          "default": 10
-        }
-      },
-      "next_page_token": {
-        "name": "next_page_token",
-        "in": "query",
-        "description": "The token that describes the next page of results to fetch. The <a href=\"/docs/api/customer-disputes/v1/#disputes_list\">list disputes</a> call returns this token in the HATEOAS links in the response.",
-        "deprecated": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 255,
-          "pattern": "^[A-Za-z0-9+\\/=]+$",
-          "default": "The first page of data"
-        }
-      },
-      "dispute_state": {
-        "name": "dispute_state",
-        "in": "query",
-        "description": "Filters the disputes in the response by a state. Separate multiple values with a comma (`,`). When you specify more than one dispute_state, the response lists disputes that belong to any of the specified dispute_state.",
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 2000,
-          "pattern": "^[0-9A-Z_]+$",
-          "enum": [
-            "REQUIRED_ACTION",
-            "REQUIRED_OTHER_PARTY_ACTION",
-            "UNDER_PAYPAL_REVIEW",
-            "RESOLVED",
-            "OPEN_INQUIRIES",
-            "APPEALABLE"
-          ]
-        }
-      },
-      "dispute_flows": {
-        "name": "dispute_flows",
-        "in": "query",
-        "description": "Filters the disputes in the response by one or more dispute flows. Separate multiple values with a comma (`,`). When you specify more than one dispute flow, the response lists disputes with any of the specified dispute flows.",
-        "required": false,
-        "style": "form",
-        "explode": false,
-        "schema": {
-          "type": "array",
-          "items": {
+    "schemas": {
+      "error_details": {
+        "title": "Error Details",
+        "type": "object",
+        "description": "The error details. Required for client-side `4XX` errors.",
+        "properties": {
+          "field": {
             "type": "string",
-            "minLength": 1,
-            "maxLength": 255,
-            "pattern": "^[0-9a-zA-Z_.]+$",
+            "description": "The field that caused the error. If this field is in the body, set this value to the field's JSON pointer value. Required for client-side errors."
+          },
+          "value": {
+            "type": "string",
+            "description": "The value of the field that caused the error."
+          },
+          "location": {
+            "$ref": "#/components/schemas/error_location"
+          },
+          "issue": {
+            "type": "string",
+            "description": "The unique, fine-grained application-level error code."
+          },
+          "description": {
+            "type": "string",
+            "description": "The human-readable description for an issue. The description can change over the lifetime of an API, so clients must not depend on this value."
+          }
+        },
+        "required": [
+          "issue"
+        ]
+      },
+      "error_location": {
+        "type": "string",
+        "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+        "enum": [
+          "body",
+          "path",
+          "query"
+        ],
+        "default": "body"
+      },
+      "error_link_description": {
+        "title": "Link Description",
+        "description": "The request-related [HATEOAS link](/api/rest/responses/#hateoas-links) information.",
+        "type": "object",
+        "required": [
+          "href",
+          "rel"
+        ],
+        "properties": {
+          "href": {
+            "description": "The complete target URL. To make the related call, combine the method with this [URI Template-formatted](https://tools.ietf.org/html/rfc6570) link. For pre-processing, include the `$`, `(`, and `)` characters. The `href` is the key HATEOAS component that links a completed call with a subsequent call.",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20000,
+            "pattern": "^.*$"
+          },
+          "rel": {
+            "description": "The [link relation type](https://tools.ietf.org/html/rfc5988#section-4), which serves as an ID for a link that unambiguously describes the semantics of the link. See [Link Relations](https://www.iana.org/assignments/link-relations/link-relations.xhtml).",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 100,
+            "pattern": "^.*$"
+          },
+          "method": {
+            "description": "The HTTP method required to make the related call.",
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 6,
+            "pattern": "^[A-Z]*$",
             "enum": [
-              "THIRD_PARTY_CLAIM",
-              "THIRD_PARTY_DISPUTE"
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE",
+              "PATCH"
+            ]
+          }
+        }
+      },
+      "error_400": {
+        "type": "object",
+        "title": "Bad Request Error",
+        "description": "Request is not well-formed, syntactically incorrect, or violates schema.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "INVALID_REQUEST"
             ]
           },
-          "minItems": 1,
-          "maxItems": 10
-        }
-      },
-      "create_time_before": {
-        "name": "create_time_before",
-        "in": "query",
-        "description": "The date and time when the dispute was created before, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). Seconds are required while fractional seconds are optional.<blockquote><strong>Note:</strong> The regular expression provides guidance but does not reject all invalid dates.</blockquote>",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "format": "ppaas_date_time_v3",
-          "minLength": 20,
-          "maxLength": 64,
-          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$"
-        }
-      },
-      "create_time_after": {
-        "name": "create_time_after",
-        "in": "query",
-        "description": "The date and time when the dispute was created after, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). Seconds are required while fractional seconds are optional.<blockquote><strong>Note:</strong> The regular expression provides guidance but does not reject all invalid dates.</blockquote>",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "format": "ppaas_date_time_v3",
-          "minLength": 20,
-          "maxLength": 64,
-          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$"
-        }
-      },
-      "update_time_before": {
-        "name": "update_time_before",
-        "in": "query",
-        "description": "The date and time when the dispute was last updated, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, *`yyyy`*-*`MM`*-*`dd`*`T`*`HH`*:*`mm`*:*`ss`*.*`SSS`*`Z`. update_time_before must be within the last 180 days and the default is the current time.",
-        "schema": {
-          "type": "string",
-          "format": "ppaas_date_time_v3",
-          "minLength": 20,
-          "maxLength": 64,
-          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$"
-        }
-      },
-      "update_time_after": {
-        "name": "update_time_after",
-        "in": "query",
-        "description": "The date and time when the dispute was last updated, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, *`yyyy`*-*`MM`*-*`dd`*`T`*`HH`*:*`mm`*:*`ss`*.*`SSS`*`Z`. update_time_after must be within the last 180 days and the default is the maximum time (180 days) supported.",
-        "schema": {
-          "type": "string",
-          "format": "ppaas_date_time_v3",
-          "minLength": 20,
-          "maxLength": 64,
-          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$"
-        }
-      },
-      "search_text": {
-        "name": "search_text",
-        "in": "query",
-        "description": "The search text for which auto complete or did you mean is requested. Supported searchable fields include counter party name/email, transaction id, invoice id and dispute id.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "minLength": 2,
-          "maxLength": 255
-        }
-      },
-      "content_type": {
-        "name": "Content-Type",
-        "in": "header",
-        "description": "Content type of the request payload.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 255,
-          "pattern": "\\w+\\/[-+.\\w]+",
-          "default": "application/json"
-        }
-      },
-      "id": {
-        "name": "id",
-        "in": "path",
-        "description": "The ID of the dispute for which to update action details.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 2000,
-          "pattern": "^[A-Za-z0-9-]+$"
-        }
-      }
-    },
-    "responses": {
-      "default": {
-        "description": "The default response.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/error_default"
+          "message": {
+            "type": "string",
+            "enum": [
+              "Request is not well-formed, syntactically incorrect, or violates schema."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
             }
           }
         }
-      }
-    },
-    "schemas": {
-      "error_details": {
+      },
+      "error_401": {
+        "type": "object",
+        "title": "Unauthorized Error",
+        "description": "Authentication failed due to missing Authorization header, or invalid authentication credentials.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "AUTHENTICATION_FAILURE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Authentication failed due to missing authorization header, or invalid authentication credentials."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_403": {
+        "type": "object",
+        "title": "Not Authorized Error",
+        "description": "The client is not authorized to access this resource, although it may have valid credentials. ",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "NOT_AUTHORIZED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Authorization failed due to insufficient permissions."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_404": {
+        "type": "object",
+        "title": "Not found Error",
+        "description": "The server has not found anything matching the request URI. This either means that the URI is incorrect or the resource is not available.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "RESOURCE_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "The specified resource does not exist."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_409": {
+        "type": "object",
+        "title": "Resource Conflict Error",
+        "description": "The server has detected a conflict while processing this request.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "RESOURCE_CONFLICT"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "The server has detected a conflict while processing this request."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_415": {
+        "type": "object",
+        "title": "Unsupported Media Type Error",
+        "description": "The server does not support the request payload's media type.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "UNSUPPORTED_MEDIA_TYPE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "The server does not support the request payload's media type."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_422": {
+        "type": "object",
+        "title": "Unprocessable Entity Error",
+        "description": "The requested action cannot be performed and may require interaction with APIs or processes outside of the current request. This is distinct from a 500 response in that there are no systemic problems limiting the API from performing the request.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "UNPROCESSABLE_ENTITY"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "The requested action could not be performed, semantically incorrect, or failed business validation."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_500": {
+        "type": "object",
+        "title": "Internal Server Error",
+        "description": "This is either a system or application error, and generally indicates that although the client appeared to provide a correct request, something unexpected has gone wrong on the server.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "INTERNAL_SERVER_ERROR"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "An internal server error occurred."
+            ]
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        },
+        "example": {
+          "name": "INTERNAL_SERVER_ERROR",
+          "message": "An internal server error occurred.",
+          "debug_id": "90957fca61718",
+          "links": [
+            {
+              "href": "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR",
+              "rel": "information_link"
+            }
+          ]
+        }
+      },
+      "error_503": {
+        "type": "object",
+        "title": "Service Unavailable Error",
+        "description": "The server is temporarily unable to handle the request, for example, because of planned maintenance or downtime.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "SERVICE_UNAVAILABLE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Service Unavailable."
+            ]
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        },
+        "example": {
+          "name": "SERVICE_UNAVAILABLE",
+          "message": "Service Unavailable.",
+          "debug_id": "90957fca61718",
+          "information_link": "https://developer.paypal.com/docs/api/orders/v2/#error-SERVICE_UNAVAILABLE"
+        }
+      },
+      "error_details-2": {
         "title": "Error Details",
         "type": "object",
         "description": "The error details. Required for client-side `4XX` errors.",
@@ -1689,346 +1988,83 @@
           "issue"
         ]
       },
-      "error_default": {
-        "description": "The default error response.",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/error_400"
+      "link_description": {
+        "type": "object",
+        "title": "Link Description",
+        "description": "The request-related [HATEOAS link](/docs/api/reference/api-responses/#hateoas-links) information.",
+        "required": [
+          "href",
+          "rel"
+        ],
+        "properties": {
+          "href": {
+            "type": "string",
+            "description": "The complete target URL. To make the related call, combine the method with this [URI Template-formatted](https://tools.ietf.org/html/rfc6570) link. For pre-processing, include the `$`, `(`, and `)` characters. The `href` is the key HATEOAS component that links a completed call with a subsequent call."
           },
-          {
-            "$ref": "#/components/schemas/error_401"
+          "rel": {
+            "type": "string",
+            "description": "The [link relation type](https://tools.ietf.org/html/rfc5988#section-4), which serves as an ID for a link that unambiguously describes the semantics of the link. See [Link Relations](https://www.iana.org/assignments/link-relations/link-relations.xhtml)."
           },
-          {
-            "$ref": "#/components/schemas/error_403"
-          },
-          {
-            "$ref": "#/components/schemas/error_404"
-          },
-          {
-            "$ref": "#/components/schemas/error_409"
-          },
-          {
-            "$ref": "#/components/schemas/error_415"
-          },
-          {
-            "$ref": "#/components/schemas/error_422"
-          },
-          {
-            "$ref": "#/components/schemas/error_500"
-          },
-          {
-            "$ref": "#/components/schemas/error_503"
+          "method": {
+            "type": "string",
+            "description": "The HTTP method required to make the related call.",
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE",
+              "HEAD",
+              "CONNECT",
+              "OPTIONS",
+              "PATCH"
+            ]
           }
+        }
+      },
+      "error": {
+        "type": "object",
+        "title": "Error",
+        "description": "The error details.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The human-readable, unique name of the error."
+          },
+          "message": {
+            "type": "string",
+            "description": "The message that describes the error."
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "information_link": {
+            "type": "string",
+            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
+            "readOnly": true
+          },
+          "details": {
+            "type": "array",
+            "description": "An array of additional details about the error.",
+            "items": {
+              "$ref": "#/components/schemas/error_details-2"
+            }
+          },
+          "links": {
+            "type": "array",
+            "description": "An array of request-related [HATEOAS links](/docs/api/reference/api-responses/#hateoas-links).",
+            "readOnly": true,
+            "items": {
+              "$ref": "#/components/schemas/link_description",
+              "readOnly": true
+            }
+          }
+        },
+        "required": [
+          "name",
+          "message",
+          "debug_id"
         ]
-      },
-      "error_400": {
-        "type": "object",
-        "title": "400 Error",
-        "description": "Error response for 400",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "INVALID_REQUEST"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "Request is not well-formed, syntactically incorrect, or violates schema."
-            ]
-          },
-          "issues": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        }
-      },
-      "error_401": {
-        "type": "object",
-        "title": "401 Error",
-        "description": "Error response for 401",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "AUTHENTICATION_FAILURE"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "Authentication failed due to missing authorization header, or invalid authentication credentials."
-            ]
-          },
-          "issues": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        }
-      },
-      "error_403": {
-        "type": "object",
-        "title": "403 Error",
-        "description": "Error response for 403",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "NOT_AUTHORIZED"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "Authorization failed due to insufficient permissions."
-            ]
-          },
-          "issues": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        }
-      },
-      "error_404": {
-        "type": "object",
-        "title": "404 Error",
-        "description": "Error response for 404",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "RESOURCE_NOT_FOUND"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "The specified resource does not exist."
-            ]
-          },
-          "issues": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        }
-      },
-      "error_409": {
-        "type": "object",
-        "title": "409 Error",
-        "description": "Error response for 409",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "RESOURCE_CONFLICT"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "The server has detected a conflict while processing this request."
-            ]
-          },
-          "issues": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        }
-      },
-      "error_415": {
-        "type": "object",
-        "title": "409 Error",
-        "description": "Error response for 415",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "UNSUPPORTED_MEDIA_TYPE"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "The server does not support the request payload's media type."
-            ]
-          },
-          "issues": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        }
-      },
-      "error_422": {
-        "type": "object",
-        "title": "422 Error",
-        "description": "Error response for 422",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "UNPROCESSABLE_ENTITY"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "The requested action could not be performed, semantically incorrect, or failed business validation."
-            ]
-          },
-          "issues": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        }
-      },
-      "error_500": {
-        "type": "object",
-        "title": "500 Error",
-        "description": "Error response for 500",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "INTERNAL_SERVER_ERROR"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "An internal server error occurred."
-            ]
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "enum": [
-              "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR"
-            ],
-            "readOnly": true
-          }
-        },
-        "example": {
-          "name": "INTERNAL_SERVER_ERROR",
-          "message": "An internal server error occurred.",
-          "debug_id": "90957fca61718",
-          "information_link": "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR"
-        }
-      },
-      "error_503": {
-        "type": "object",
-        "title": "503 Error",
-        "description": "Error response for 503",
-        "properties": {
-          "name": {
-            "type": "string",
-            "enum": [
-              "SERVICE_UNAVAILABLE"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "enum": [
-              "Service Unavailable."
-            ]
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          }
-        },
-        "example": {
-          "name": "SERVICE_UNAVAILABLE",
-          "message": "Service Unavailable.",
-          "debug_id": "90957fca61718",
-          "information_link": "https://developer.paypal.com/docs/api/orders/v2/#error-SERVICE_UNAVAILABLE"
-        }
       },
       "date_time": {
         "type": "string",
@@ -2180,39 +2216,6 @@
           "ALERT"
         ]
       },
-      "link_description": {
-        "type": "object",
-        "title": "Link Description",
-        "description": "The request-related [HATEOAS link](/docs/api/reference/api-responses/#hateoas-links) information.",
-        "required": [
-          "href",
-          "rel"
-        ],
-        "properties": {
-          "href": {
-            "type": "string",
-            "description": "The complete target URL. To make the related call, combine the method with this [URI Template-formatted](https://tools.ietf.org/html/rfc6570) link. For pre-processing, include the `$`, `(`, and `)` characters. The `href` is the key HATEOAS component that links a completed call with a subsequent call."
-          },
-          "rel": {
-            "type": "string",
-            "description": "The [link relation type](https://tools.ietf.org/html/rfc5988#section-4), which serves as an ID for a link that unambiguously describes the semantics of the link. See [Link Relations](https://www.iana.org/assignments/link-relations/link-relations.xhtml)."
-          },
-          "method": {
-            "type": "string",
-            "description": "The HTTP method required to make the related call.",
-            "enum": [
-              "GET",
-              "POST",
-              "PUT",
-              "DELETE",
-              "HEAD",
-              "CONNECT",
-              "OPTIONS",
-              "PATCH"
-            ]
-          }
-        }
-      },
       "dispute_info": {
         "type": "object",
         "title": "Dispute Summary Information",
@@ -2312,51 +2315,6 @@
             }
           }
         }
-      },
-      "error": {
-        "type": "object",
-        "title": "Error",
-        "description": "The error details.",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The human-readable, unique name of the error."
-          },
-          "message": {
-            "type": "string",
-            "description": "The message that describes the error."
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes."
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
-          },
-          "details": {
-            "type": "array",
-            "description": "An array of additional details about the error.",
-            "items": {
-              "$ref": "#/components/schemas/error_details"
-            }
-          },
-          "links": {
-            "type": "array",
-            "description": "An array of request-related [HATEOAS links](/docs/api/reference/api-responses/#hateoas-links).",
-            "readOnly": true,
-            "items": {
-              "$ref": "#/components/schemas/link_description",
-              "readOnly": true
-            }
-          }
-        },
-        "required": [
-          "name",
-          "message",
-          "debug_id"
-        ]
       },
       "buyer": {
         "type": "object",
@@ -3018,7 +2976,7 @@
         "description": "The cancellation details.",
         "properties": {
           "cancellation_date": {
-            "description": "The date and time of the cancellation, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6).",
+            "description": "The date and time of the cancellation, in [Internet date and time format](http://tools.ietf.org/html/rfc3339#section-5.6).",
             "$ref": "#/components/schemas/date_time"
           },
           "cancellation_number": {
@@ -3056,7 +3014,7 @@
         "properties": {
           "return_time": {
             "$ref": "#/components/schemas/date_time",
-            "description": "The date and time when the product was returned, [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6)."
+            "description": "The date and time when the product was returned, [Internet date and time format](http://tools.ietf.org/html/rfc3339#section-5.6)."
           },
           "mode": {
             "description": "The method that the customer used to return the product.",
@@ -4183,6 +4141,7 @@
               "FMX",
               "HELLMANN",
               "DHL_REFR",
+              "DHL_HK",
               "SHIP_IT_ASIA",
               "KERRY_ECOMMERCE",
               "GOJEK",
@@ -4543,6 +4502,7 @@
               "JOOM_LOGIS",
               "STRECK_TRANSPORT",
               "HCT_LOGISTICS",
+              "ZA_FASTWAY",
               "CARRY_FLAP",
               "PONY_EXPRESS",
               "US_OLD_DOMINION",
@@ -4922,7 +4882,7 @@
           "date": {
             "readOnly": true,
             "$ref": "#/components/schemas/date_time",
-            "description": "The date and time when the evidence was received, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6)."
+            "description": "The date and time when the evidence was received, in [Internet date and time format](http://tools.ietf.org/html/rfc3339#section-5.6)."
           },
           "item_id": {
             "type": "string",
@@ -4969,7 +4929,7 @@
         "properties": {
           "offer_time": {
             "$ref": "#/components/schemas/date_time",
-            "description": "The date and time when the event occurred, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6)."
+            "description": "The date and time when the event occurred, in [Internet date and time format](http://tools.ietf.org/html/rfc3339#section-5.6)."
           },
           "actor": {
             "type": "string",
@@ -5113,7 +5073,7 @@
           "provided_time": {
             "readOnly": true,
             "$ref": "#/components/schemas/date_time",
-            "description": "The date and time when the information was received, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6)."
+            "description": "The date and time when the information was received, in [Internet date and time format](http://tools.ietf.org/html/rfc3339#section-5.6)."
           },
           "dispute_life_cycle_stage": {
             "readOnly": true,
@@ -5559,55 +5519,109 @@
         ]
       }
     },
-    "examples": {
-      "make_offer": {
-        "value": {
-          "note": "Offer refund with replacement item.",
-          "offer_amount": {
-            "currency_code": "USD",
-            "value": "23"
-          },
-          "offer_type": "REFUND_WITH_REPLACEMENT"
+    "parameters": {
+      "start_time": {
+        "name": "start_time",
+        "in": "query",
+        "description": "Filters the disputes in the response by a creation date and time. The start time must be within the last 180 days. Value is in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, *`yyyy`*-*`MM`*-*`dd`*`T`*`HH`*:*`mm`*:*`ss`*.*`SSS`*`Z`.<br/><br/>You can specify either but not both the `start_time` and `disputed_transaction_id` query parameters.",
+        "deprecated": true,
+        "schema": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 64,
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$",
+          "default": "Current date and time"
         }
       },
-      "escalate": {
-        "value": {
-          "note": "Escalating to PayPal claim for resolution."
+      "disputed_transaction_id": {
+        "name": "disputed_transaction_id",
+        "in": "query",
+        "description": "Filters the disputes in the response by a transaction, by ID.<br/><br/>You can specify either but not both the `start_time` and `disputed_transaction_id` query parameter.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[0-9A-Z_]+$"
         }
       },
-      "accept_offer": {
-        "value": {
-          "note": "I am ok with the refund offered."
+      "page_size": {
+        "name": "page_size",
+        "in": "query",
+        "description": "Limits the number of disputes in the response to this value.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 10
         }
       },
-      "require_evidence": {
-        "value": {
-          "action": "BUYER_EVIDENCE"
+      "next_page_token": {
+        "name": "next_page_token",
+        "in": "query",
+        "description": "The token that describes the next page of results to fetch. The <a href=\"/docs/api/customer-disputes/v1/#disputes_list\">list disputes</a> call returns this token in the HATEOAS links in the response.",
+        "deprecated": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[A-Za-z0-9+\\/=]+$",
+          "default": "The first page of data"
         }
       },
-      "adjudicate": {
-        "value": {
-          "adjudication_outcome": "BUYER_FAVOR"
-        }
-      },
-      "deny_offer": {
-        "value": {
-          "note": "refund offer is very low."
-        }
-      },
-      "patch_request": {
-        "value": [
-          {
-            "op": "add",
-            "path": "/partner_actions/-",
-            "value": {
-              "id": "AMX-22345",
-              "name": "ACCEPT_DISPUTE",
-              "create_time": "2018-01-12T10:41:35.000Z",
-              "status": "PENDING"
-            }
-          }
+      "dispute_state": {
+        "name": "dispute_state",
+        "in": "query",
+        "description": "Filters the disputes in the response by a state. Separate multiple values with a comma (`,`). When you specify more than one dispute_state, the response lists disputes that belong to any of the specified dispute_state.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "^[0-9A-Z_]+$"
+        },
+        "enum": [
+          "REQUIRED_ACTION",
+          "REQUIRED_OTHER_PARTY_ACTION",
+          "UNDER_PAYPAL_REVIEW",
+          "RESOLVED",
+          "OPEN_INQUIRIES",
+          "APPEALABLE"
         ]
+      },
+      "update_time_before": {
+        "name": "update_time_before",
+        "in": "query",
+        "description": "The date and time when the dispute was last updated, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, *`yyyy`*-*`MM`*-*`dd`*`T`*`HH`*:*`mm`*:*`ss`*.*`SSS`*`Z`. update_time_before must be within the last 180 days and the default is the current time.",
+        "schema": {
+          "type": "string",
+          "format": "ppaas_date_time_v3",
+          "minLength": 20,
+          "maxLength": 64,
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$"
+        }
+      },
+      "update_time_after": {
+        "name": "update_time_after",
+        "in": "query",
+        "description": "The date and time when the dispute was last updated, in [Internet date and time format](https://tools.ietf.org/html/rfc3339#section-5.6). For example, *`yyyy`*-*`MM`*-*`dd`*`T`*`HH`*:*`mm`*:*`ss`*.*`SSS`*`Z`. update_time_after must be within the last 180 days and the default is the maximum time (180 days) supported.",
+        "schema": {
+          "type": "string",
+          "format": "ppaas_date_time_v3",
+          "minLength": 20,
+          "maxLength": 64,
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T,t]([0-1][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)([.][0-9]+)?([Zz]|[+-][0-9]{2}:[0-9]{2})$"
+        }
+      },
+      "id": {
+        "name": "id",
+        "in": "path",
+        "description": "The ID of the dispute for which to provide the supporting information.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[A-Za-z0-9-]+$"
+        }
       }
     }
   }
