@@ -1,0 +1,2349 @@
+REST APIs https://PayPal.Me/SamTradersSmcPvtLtd
+Get Started with PayPal REST APIs
+Authentication
+Postman Guide
+API requests
+API responses
+Core Resources
+Overview
+Add Tracking
+Catalog Products
+Disputes
+Identity
+Invoicing
+Orders
+Orders
+POST
+Create order
+GET
+Show order details
+PATCH
+Update order
+POST
+Confirm the Order
+POST
+Authorize payment for order
+POST
+Capture payment for order
+POST
+Add tracking information for an Order.
+PATCH
+Update or cancel tracking information for a PayPal order
+Definitions
+Address Requirements
+Error Messages
+Release Notes
+Partner Referrals
+Payment Experience
+Payment Method Tokens
+Payments
+Payouts
+Referenced Payouts
+Subscriptions
+Transaction Search
+Webhooks Management
+Webhooks
+Overview
+Webhook event names
+Webhooks Events dashboard
+Webhooks simulator
+Integration
+Sandbox
+Overview
+Accounts
+Bulk Accounts
+Card testing
+Codespaces
+Negative Testing
+Go Live
+Production Environment
+PayPal Application Guidelines
+PayPal Security Guidelines
+Rate Limiting Guidelines
+Idempotency
+Reference
+Currency Codes
+Country Codes
+State & Province Codes
+Locale codes
+Deprecated Resources
+Deprecated resources
+Billing Agreements
+Billing Plans
+Invoicing v1
+Orders v1
+Partner Referrals v1
+Payments v1
+Orders
+API Version v2
+An order represents a payment between two or more parties. Use the Orders API to create, update, retrieve, authorize, and capture orders.
+
+Create order
+POST
+/v2/checkout/orders
+Creates an order. Merchants and partners can add Level 2 and 3 data to payments to reduce risk and payment processing costs. For more information about processing payments, see checkout or multiparty checkout.
+
+Note: For error handling and troubleshooting, see Orders v2 errors.
+Security
+Oauth2
+Request
+HEADER PARAMETERS
+PayPal-Request-Id
+string [ 1 .. 108 ] characters
+The server stores keys for 6 hours. The API callers can request the times to up to 72 hours by speaking to their Account Manager.
+
+PayPal-Partner-Attribution-Id
+string [ 1 .. 36 ] characters
+PayPal-Client-Metadata-Id
+string [ 1 .. 36 ] characters
+Prefer
+string [ 1 .. 25 ] characters
+Default: return=minimal
+The preferred server response upon successful completion of the request. Value is:
+
+return=minimal. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the id, status and HATEOAS links.
+return=representation. The server returns a complete resource representation, including the current state of the resource.
+Authorization
+required
+string
+To make REST API calls, include the bearer token in this header with the Bearer authentication scheme. The value is Bearer <Access-Token> or Basic <client_id:secret>.
+
+Content-Type
+required
+string [ 1 .. 255 ] characters
+The media type. Required for operations with a request body. The value is application/<format>, where format is json.
+
+REQUEST BODY SCHEMA: application/json
+￼purchase_units
+required
+Array of objects [ 1 .. 10 ] items
+An array of purchase units. Each purchase unit establishes a contract between a payer and the payee. Each purchase unit represents either a full or partial order that the payer intends to purchase from the payee.
+
+intent
+required
+string
+The intent to either capture payment immediately or authorize a payment for an order after order creation.
+
+Enum: Description
+CAPTURE The merchant intends to capture payment immediately after the customer makes a payment.
+AUTHORIZE The merchant intends to authorize a payment and place funds on hold after the customer makes a payment. Authorized payments are best captured within three days of authorization but are available to capture for up to 29 days. After the three-day honor period, the original authorized payment expires and you must re-authorize the payment. You must make a separate request to capture payments on demand. This intent is not supported when you have more than one purchase_unit within your order.
+￼payer
+object
+DEPRECATED. The customer is also known as the payer. The Payer object was intended to only be used with the payment_source.paypal object. In order to make this design more clear, the details in the payer object are now available under payment_source.paypal. Please use payment_source.paypal.
+
+￼payment_source
+object
+The payment source definition.
+
+￼application_context
+object
+Customize the payer experience during the approval process for the payment with PayPal.
+
+Responses
+200A successful response to an idempotent request returns the HTTP 200 OK status code with a JSON response body that shows order details.
+Request samples
+cURL
+Node.js
+Java
+Python
+￼Copy
+curl -v -X POST https://api-m.sandbox.paypal.com/v2/checkout/orders \
+-H 'Content-Type: application/json' \
+-H 'PayPal-Request-Id: 7b92603e-77ed-4896-8e78-5dea2050476a' \
+-H 'Authorization: Bearer 6V7rbVwmlM1gFZKW_8QtzWXqpcwQ6T5vhEGYNJDAAdn3paCgRpdeMdVYmWzgbKSsECednupJ3Zx5Xd-g' \
+-d '{
+  "intent": "CAPTURE",
+  "purchase_units": [
+    {
+      "reference_id": "d9f80740-38f0-11e8-b467-0ed5f89f718b",
+      "amount": {
+        "currency_code": "USD",
+        "value": "100.00"
+      }
+    }
+  ],
+  "payment_source": {
+    "paypal": {
+      "experience_context": {
+        "payment_method_preference": "IMMEDIATE_PAYMENT_REQUIRED",
+        "brand_name": "EXAMPLE INC",
+        "locale": "en-US",
+        "landing_page": "LOGIN",
+        "shipping_preference": "SET_PROVIDED_ADDRESS",
+        "user_action": "PAY_NOW",
+        "return_url": "https://example.com/returnUrl",
+        "cancel_url": "https://example.com/cancelUrl"
+      }
+    }
+  }
+}'
+Response samples
+200
+application/json
+￼Copy￼Expand all￼Collapse all
+{
+"id": "5O190127TN364715T",
+"status": "PAYER_ACTION_REQUIRED",
+"payment_source": ￼{
+"paypal": { }
+},
+"links": ￼[
+￼{
+"href": "https://api-m.paypal.com/v2/checkout/orders/5O190127TN364715T",
+"rel": "self",
+"method": "GET"
+},
+￼{
+"href": "https://www.paypal.com/checkoutnow?token=5O190127TN364715T",
+"rel": "payer-action",
+"method": "GET"
+}
+]
+}
+Show order details
+GET
+/v2/checkout/orders/{id}
+Shows details for an order, by ID.
+
+Note: For error handling and troubleshooting, see Orders v2 errors.
+Security
+Oauth2
+Request
+PATH PARAMETERS
+id
+required
+string [ 1 .. 36 ] characters
+The ID of the order for which to show details.
+
+QUERY PARAMETERS
+fields
+string
+A comma-separated list of fields that should be returned for the order. Valid filter field is payment_source.
+
+HEADER PARAMETERS
+Authorization
+required
+string
+To make REST API calls, include the bearer token in this header with the Bearer authentication scheme. The value is Bearer <Access-Token> or Basic <client_id:secret>.
+
+Content-Type
+required
+string [ 1 .. 255 ] characters
+The media type. Required for operations with a request body. The value is application/<format>, where format is json.
+
+Responses
+200A successful request returns the HTTP 200 OK status code and a JSON response body that shows order details.
+Request samples
+cURL
+Node.js
+Java
+Python
+￼Copy
+curl -v -X GET https://api-m.sandbox.paypal.com/v2/checkout/orders/5O190127TN364715T \
+-H 'Authorization: Bearer access_token6V7rbVwmlM1gFZKW_8QtzWXqpcwQ6T5vhEGYNJDAAdn3paCgRpdeMdVYmWzgbKSsECednupJ3Zx5Xd-g' 
+Response samples
+200
+application/json
+￼Copy￼Expand all￼Collapse all
+{
+"id": "5O190127TN364715T",
+"status": "APPROVED",
+"intent": "CAPTURE",
+"payment_source": ￼{
+"paypal": ￼{
+"name": ￼{
+"given_name": "John",
+"surname": "Doe"
+},
+"email_address": "customer@example.com",
+"account_id": "QYR5Z8XDVJNXQ"
+}
+},
+"purchase_units": ￼[
+￼{
+"reference_id": "d9f80740-38f0-11e8-b467-0ed5f89f718b",
+"amount": ￼{
+"currency_code": "USD",
+"value": "100.00"
+}
+}
+],
+"payer": ￼{
+"name": ￼{
+"given_name": "John",
+"surname": "Doe"
+},
+"email_address": "customer@example.com",
+"payer_id": "QYR5Z8XDVJNXQ"
+},
+"create_time": "2018-04-01T21:18:49Z",
+"links": ￼[
+￼{
+"href": "https://api-m.paypal.com/v2/checkout/orders/5O190127TN364715T",
+"rel": "self",
+"method": "GET"
+},
+￼{
+"href": "https://www.paypal.com/checkoutnow?token=5O190127TN364715T",
+"rel": "approve",
+"method": "GET"
+},
+￼{
+"href": "https://api-m.paypal.com/v2/checkout/orders/5O190127TN364715T",
+"rel": "update",
+"method": "PATCH"
+},
+￼{
+"href": "https://api-m.paypal.com/v2/checkout/orders/5O190127TN364715T/capture",
+"rel": "capture",
+"method": "POST"
+}
+]
+}
+Update order
+PATCH
+/v2/checkout/orders/{id}
+Updates an order with a CREATED or APPROVED status. You cannot update an order with the COMPLETED status.
+
+To make an update, you must provide a reference_id. If you omit this value with an order that contains only one purchase unit, PayPal sets the value to default which enables you to use the path: "/purchase_units/@reference_id=='default'/{attribute-or-object}". Merchants and partners can add Level 2 and 3 data to payments to reduce risk and payment processing costs. For more information about processing payments, see checkout or multiparty checkout.
+
+Note: For error handling and troubleshooting, see <a href="/api/rest/reference/orders/v2/errors/#patch-order">Orders v2 errors.
+Patchable attributes or objects:
+
+Attribute Op Notes
+intent replace
+payer replace, add Using replace op for payer will replace the whole payer object with the value sent in request.
+purchase_units replace, add
+purchase_units[].custom_id replace, add, remove
+purchase_units[].description replace, add, remove
+purchase_units[].payee.email replace
+purchase_units[].shipping.name replace, add
+purchase_units[].shipping.address replace, add
+purchase_units[].shipping.type replace, add
+purchase_units[].soft_descriptor replace, remove
+purchase_units[].amount replace
+purchase_units[].items replace, add, remove
+purchase_units[].invoice_id replace, add, remove
+purchase_units[].payment_instruction replace
+purchase_units[].payment_instruction.disbursement_mode replace By default, disbursement_mode is INSTANT.
+purchase_units[].payment_instruction.platform_fees replace, add, remove
+purchase_units[].supplementary_data.airline replace, add, remove
+purchase_units[].supplementary_data.card replace, add, remove
+application_context.client_configuration replace, add
+Security
+Oauth2
+Request
+PATH PARAMETERS
+id
+required
+string [ 1 .. 36 ] characters
+The ID of the order to update.
+
+HEADER PARAMETERS
+Authorization
+required
+string
+To make REST API calls, include the bearer token in this header with the Bearer authentication scheme. The value is Bearer <Access-Token> or Basic <client_id:secret>.
+
+Content-Type
+required
+string [ 1 .. 255 ] characters
+The media type. Required for operations with a request body. The value is application/<format>, where format is json.
+
+REQUEST BODY SCHEMA: application/json
+Array
+op
+required
+string
+The operation.
+
+Enum: Description
+add Depending on the target location reference, completes one of these functions:
+The target location is an array index. Inserts a new value into the array at the specified index.
+The target location is an object parameter that does not already exist. Adds a new parameter to the object.
+The target location is an object parameter that does exist. Replaces that parameter's value.
+The value parameter defines the value to add. For more information, see 4.1. add.
+remove Removes the value at the target location. For the operation to succeed, the target location must exist. For more information, see 4.2. remove.
+replace Replaces the value at the target location with a new value. The operation object must contain a value parameter that defines the replacement value. For the operation to succeed, the target location must exist. For more information, see 4.3. replace.
+move Removes the value at a specified location and adds it to the target location. The operation object must contain a from parameter, which is a string that contains a JSON pointer value that references the location in the target document from which to move the value. For the operation to succeed, the from location must exist. For more information, see 4.4. move.
+copy Copies the value at a specified location to the target location. The operation object must contain a from parameter, which is a string that contains a JSON pointer value that references the location in the target document from which to copy the value. For the operation to succeed, the from location must exist. For more information, see 4.5. copy.
+test Tests that a value at the target location is equal to a specified value. The operation object must contain a value parameter that defines the value to compare to the target location's value. For the operation to succeed, the target location must be equal to the value value. For test, equal indicates that the value at the target location and the value that value defines are of the same JSON type. The data type of the value determines how equality is defined:
+Type Considered equal if both values
+strings Contain the same number of Unicode characters and their code points are byte-by-byte equal.
+numbers Are numerically equal.
+arrays Contain the same number of values, and each value is equal to the value at the corresponding position in the other array, by using these type-specific rules.
+objects Contain the same number of parameters, and each parameter is equal to a parameter in the other object, by comparing their keys (as strings) and their values (by using these type-specific rules).
+literals (false, true, and null) Are the same. The comparison is a logical comparison. For example, whitespace between the parameter values of an array is not significant. Also, ordering of the serialization of object parameters is not significant.
+For more information, see 4.6. test.
+path
+string
+The JSON Pointer to the target document location at which to complete the operation.
+
+value
+any
+The value to apply. The remove, copy, and move operations do not require a value. Since JSON Patch allows any type for value, the type property is not specified.
+
+from
+string
+The JSON Pointer to the target document location from which to move the value. Required for the move operation.
+
+Responses
+204A successful request returns the HTTP 204 No Content status code with an empty object in the JSON response body.
+Request samples
+cURL
+Node.js
+Java
+Python
+￼Copy
+curl -v -X PATCH https://api-m.sandbox.paypal.com/v2/checkout/orders/5O190127TN364715T \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer access_token6V7rbVwmlM1gFZKW_8QtzWXqpcwQ6T5vhEGYNJDAAdn3paCgRpdeMdVYmWzgbKSsECednupJ3Zx5Xd-g' \
+-d '[
+  {
+    "op": "replace",
+    "path": "/purchase_units/@reference_id=='PUHF'/shipping/address",
+    "value": {
+      "address_line_1": "2211 N First Street",
+      "address_line_2": "Building 17",
+      "admin_area_2": "San Jose",
+      "admin_area_1": "CA",
+      "postal_code": "95131",
+      "country_code": "US"
+    }
+  }
+]'
+Confirm the Order
+POST
+/v2/checkout/orders/{id}/confirm-payment-source
+Payer confirms their intent to pay for the the Order with the given payment source.
+
+Security
+Oauth2
+Request
+PATH PARAMETERS
+id
+required
+string [ 1 .. 36 ] characters
+The ID of the order for which the payer confirms their intent to pay.
+
+HEADER PARAMETERS
+PayPal-Client-Metadata-Id
+string [ 1 .. 36 ] characters
+Authorization
+required
+string
+To make REST API calls, include the bearer token in this header with the Bearer authentication scheme. The value is Bearer <Access-Token> or Basic <client_id:secret>.
+
+Content-Type
+required
+string [ 1 .. 255 ] characters
+The media type. Required for operations with a request body. The value is application/<format>, where format is json.
+
+Prefer
+string [ 1 .. 25 ] characters
+Default: return=minimal
+The preferred server response upon successful completion of the request. Value is:
+
+return=minimal. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the id, status and HATEOAS links.
+return=representation. The server returns a complete resource representation, including the current state of the resource.
+REQUEST BODY SCHEMA: application/json
+processing_instruction
+string [ 1 .. 36 ] characters ^[0-9A-Z_]+$
+Default: "NO_INSTRUCTION"
+The instruction to process an order.
+
+Enum: Description
+ORDER_COMPLETE_ON_PAYMENT_APPROVAL API Caller expects the Order to be auto completed (i.e. for PayPal to authorize or capture depending on the intent) on completion of payer approval. This option is not relevant for payment_source that typically do not require a payer approval or interaction. This option is currently only available for the following payment_source: Alipay, Bancontact, BLIK, boletobancario, eps, giropay, GrabPay, iDEAL, Multibanco, MyBank, OXXO, P24, PayU, PUI, SafetyPay, SatisPay, Sofort, Trustly, Verkkopankki, WeChat Pay
+NO_INSTRUCTION The API caller intends to authorize v2/checkout/orders/id/authorize or capture v2/checkout/orders/id/capture after the payer approves the order.
+￼application_context
+object
+Customizes the payer confirmation experience.
+
+￼payment_source
+required
+object
+The payment source definition.
+
+Responses
+200A successful request indicates that the payment source was added to the Order. A successful request returns the HTTP 200 OK status code with a JSON response body that shows order details.
+Request samples
+cURL
+Node.js
+Java
+Python
+￼Copy
+curl -v -X POST https://api-m.sandbox.paypal.com/v2/checkout/orders/5O190127TN364715T/confirm-payment-source \
+-H 'Authorization: Bearer access_token6V7rbVwmlM1gFZKW_8QtzWXqpcwQ6T5vhEGYNJDAAdn3paCgRpdeMdVYmWzgbKSsECednupJ3Zx5Xd-g' \
+-d '{
+  "payment_source": {
+    "paypal": {
+      "name": {
+        "given_name": "John",
+        "surname": "Doe"
+      },
+      "email_address": "customer@example.com",
+      "experience_context": {
+        "payment_method_preference": "IMMEDIATE_PAYMENT_REQUIRED",
+        "brand_name": "EXAMPLE INC",
+        "locale": "en-US",
+        "landing_page": "LOGIN",
+        "shipping_preference": "SET_PROVIDED_ADDRESS",
+        "user_action": "PAY_NOW",
+        "return_url": "https://example.com/returnUrl",
+        "cancel_url": "https://example.com/cancelUrl"
+      }
+    }
+  }
+}'
+Response samples
+200
+application/json
+￼Copy￼Expand all￼Collapse all
+{
+"id": "5O190127TN364715T",
+"status": "PAYER_ACTION_REQUIRED",
+"payment_source": ￼{
+"paypal": ￼{
+"name": ￼{
+"given_name": "John",
+"surname": "Doe"
+},
+"email_address": "customer@example.com"
+}
+},
+"payer": ￼{
+"name": ￼{
+"given_name": "John",
+"surname": "Doe"
+},
+"email_address": "customer@example.com"
+},
+"links": ￼[
+￼{
+"href": "https://api.paypal.com/v2/checkout/orders/5O190127TN364715T",
+"rel": "self",
+"method": "GET"
+},
+￼{
+"href": "https://www.paypal.com/checkoutnow?token=5O190127TN364715T",
+"rel": "payer-action",
+"method": "GET"
+}
+]
+}
+Authorize payment for order
+POST
+/v2/checkout/orders/{id}/authorize
+Authorizes payment for an order. To successfully authorize payment for an order, the buyer must first approve the order or a valid payment_source must be provided in the request. A buyer can approve the order upon being redirected to the rel:approve URL that was returned in the HATEOAS links in the create order response.
+
+Note: For error handling and troubleshooting, see Orders v2 errors.
+Security
+Oauth2
+Request
+PATH PARAMETERS
+id
+required
+string [ 1 .. 36 ] characters
+The ID of the order for which to authorize.
+
+HEADER PARAMETERS
+PayPal-Request-Id
+string [ 1 .. 108 ] characters
+The server stores keys for 6 hours. The API callers can request the times to up to 72 hours by speaking to their Account Manager.
+
+Prefer
+string [ 1 .. 25 ] characters
+Default: return=minimal
+The preferred server response upon successful completion of the request. Value is:
+
+return=minimal. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the id, status and HATEOAS links.
+return=representation. The server returns a complete resource representation, including the current state of the resource.
+PayPal-Client-Metadata-Id
+string [ 1 .. 36 ] characters
+Authorization
+required
+string
+To make REST API calls, include the bearer token in this header with the Bearer authentication scheme. The value is Bearer <Access-Token> or Basic <client_id:secret>.
+
+PayPal-Auth-Assertion
+string
+An API-caller-provided JSON Web Token (JWT) assertion that identifies the merchant. For details, see PayPal-Auth-Assertion.
+
+Content-Type
+required
+string [ 1 .. 255 ] characters
+The media type. Required for operations with a request body. The value is application/<format>, where format is json.
+
+REQUEST BODY SCHEMA: application/json
+￼payment_source
+object
+The source of payment for the order, which can be a token or a card. Use this object only if you have not redirected the user after order creation to approve the payment. In such cases, the user-selected payment method in the PayPal flow is implicitly used.
+
+Responses
+201A successful response to a non-idempotent request returns the HTTP 201 Created status code with a JSON response body that shows authorized payment details. If a duplicate response is retried, returns the HTTP 200 OK status code. By default, the response is minimal. If you need the complete resource representation, you must pass the Prefer: return=representation request header.
+Request samples
+cURL
+Node.js
+Java
+Python
+￼Copy
+curl -v -X POST https://api-m.sandbox.paypal.com/v2/checkout/orders/5O190127TN364715T/authorize \
+-H 'PayPal-Request-Id: 7b92603e-77ed-4896-8e78-5dea2050476a' \
+-H 'Authorization: Bearer access_token6V7rbVwmlM1gFZKW_8QtzWXqpcwQ6T5vhEGYNJDAAdn3paCgRpdeMdVYmWzgbKSsECednupJ3Zx5Xd-g' 
+Response samples
+201
+application/json
+￼Copy￼Expand all￼Collapse all
+{
+"id": "5O190127TN364715T",
+"status": "COMPLETED",
+"payment_source": ￼{
+"paypal": ￼{
+"name": ￼{
+"given_name": "John",
+"surname": "Doe"
+},
+"email_address": "customer@example.com",
+"account_id": "QYR5Z8XDVJNXQ"
+}
+},
+"purchase_units": ￼[
+￼{
+"reference_id": "d9f80740-38f0-11e8-b467-0ed5f89f718b",
+"payments": ￼{
+"authorizations": ￼[
+￼{
+"id": "3C679366HH908993F",
+"status": "CREATED",
+"amount": ￼{
+"currency_code": "USD",
+"value": "100.00"
+},
+"seller_protection": ￼{
+"status": "ELIGIBLE",
+"dispute_categories": ￼[
+"ITEM_NOT_RECEIVED",
+"UNAUTHORIZED_TRANSACTION"
+]
+},
+"expiration_time": "2021-10-08T23:37:39Z",
+"links": ￼[
+￼{
+"href": "https://api-m.paypal.com/v2/payments/authorizations/5O190127TN364715T",
+"rel": "self",
+"method": "GET"
+},
+￼{
+"href": "https://api-m.paypal.com/v2/payments/authorizations/5O190127TN364715T/capture",
+"rel": "capture",
+"method": "POST"
+},
+￼{
+"href": "https://api-m.paypal.com/v2/payments/authorizations/5O190127TN364715T/void",
+"rel": "void",
+"method": "POST"
+},
+￼{
+"href": "https://api-m.paypal.com/v2/checkout/orders/5O190127TN364715T",
+"rel": "up",
+"method": "GET"
+}
+]
+}
+]
+}
+}
+],
+"payer": ￼{
+"name": ￼{
+"given_name": "John",
+"surname": "Doe"
+},
+"email_address": "customer@example.com",
+"payer_id": "QYR5Z8XDVJNXQ"
+},
+"links": ￼[
+￼{
+"href": "https://api-m.paypal.com/v2/checkout/orders/5O190127TN364715T",
+"rel": "self",
+"method": "GET"
+}
+]
+}
+Capture payment for order
+POST
+/v2/checkout/orders/{id}/capture
+Captures payment for an order. To successfully capture payment for an order, the buyer must first approve the order or a valid payment_source must be provided in the request. A buyer can approve the order upon being redirected to the rel:approve URL that was returned in the HATEOAS links in the create order response.
+
+Note: For error handling and troubleshooting, see Orders v2 errors.
+Security
+Oauth2
+Request
+PATH PARAMETERS
+id
+required
+string [ 1 .. 36 ] characters
+The ID of the order for which to capture a payment.
+
+HEADER PARAMETERS
+PayPal-Request-Id
+string [ 1 .. 108 ] characters
+The server stores keys for 6 hours. The API callers can request the times to up to 72 hours by speaking to their Account Manager.
+
+Prefer
+string [ 1 .. 25 ] characters
+Default: return=minimal
+The preferred server response upon successful completion of the request. Value is:
+
+return=minimal. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the id, status and HATEOAS links.
+return=representation. The server returns a complete resource representation, including the current state of the resource.
+PayPal-Client-Metadata-Id
+string [ 1 .. 36 ] characters
+Authorization
+required
+string
+To make REST API calls, include the bearer token in this header with the Bearer authentication scheme. The value is Bearer <Access-Token> or Basic <client_id:secret>.
+
+PayPal-Auth-Assertion
+string
+An API-caller-provided JSON Web Token (JWT) assertion that identifies the merchant. For details, see PayPal-Auth-Assertion.
+
+Content-Type
+required
+string [ 1 .. 255 ] characters
+The media type. Required for operations with a request body. The value is application/<format>, where format is json.
+
+REQUEST BODY SCHEMA: application/json
+￼payment_source
+object
+The payment source definition.
+
+Responses
+201A successful response to a non-idempotent request returns the HTTP 201 Created status code with a JSON response body that shows captured payment details. If a duplicate response is retried, returns the HTTP 200 OK status code. By default, the response is minimal. If you need the complete resource representation, pass the Prefer: return=representation request header.
+Request samples
+cURL
+Node.js
+Java
+Python
+￼Copy
+curl -v -X POST https://api-m.sandbox.paypal.com/v2/checkout/orders/5O190127TN364715T/capture \
+-H 'PayPal-Request-Id: 7b92603e-77ed-4896-8e78-5dea2050476a' \
+-H 'Authorization: Bearer access_token6V7rbVwmlM1gFZKW_8QtzWXqpcwQ6T5vhEGYNJDAAdn3paCgRpdeMdVYmWzgbKSsECednupJ3Zx5Xd-g' 
+Response samples
+201
+application/json
+￼Copy￼Expand all￼Collapse all
+{
+"id": "5O190127TN364715T",
+"status": "COMPLETED",
+"payment_source": ￼{
+"paypal": ￼{
+"name": ￼{
+"given_name": "John",
+"surname": "Doe"
+},
+"email_address": "customer@example.com",
+"account_id": "QYR5Z8XDVJNXQ"
+}
+},
+"purchase_units": ￼[
+￼{
+"reference_id": "d9f80740-38f0-11e8-b467-0ed5f89f718b",
+"shipping": ￼{
+"address": ￼{
+"address_line_1": "2211 N First Street",
+"address_line_2": "Building 17",
+"admin_area_2": "San Jose",
+"admin_area_1": "CA",
+"postal_code": "95131",
+"country_code": "US"
+}
+},
+"payments": ￼{
+"captures": ￼[
+￼{
+"id": "3C679366HH908993F",
+"status": "COMPLETED",
+"amount": ￼{
+"currency_code": "USD",
+"value": "100.00"
+},
+"seller_protection": ￼{
+"status": "ELIGIBLE",
+"dispute_categories": ￼[
+"ITEM_NOT_RECEIVED",
+"UNAUTHORIZED_TRANSACTION"
+]
+},
+"final_capture": true,
+"disbursement_mode": "INSTANT",
+"seller_receivable_breakdown": ￼{
+"gross_amount": ￼{
+"currency_code": "USD",
+"value": "100.00"
+},
+"paypal_fee": ￼{
+"currency_code": "USD",
+"value": "3.00"
+},
+"net_amount": ￼{
+"currency_code": "USD",
+"value": "97.00"
+}
+},
+"create_time": "2018-04-01T21:20:49Z",
+"update_time": "2018-04-01T21:20:49Z",
+"links": ￼[
+￼{
+"href": "https://api-m.paypal.com/v2/payments/captures/3C679366HH908993F",
+"rel": "self",
+"method": "GET"
+},
+￼{
+"href": "https://api-m.paypal.com/v2/payments/captures/3C679366HH908993F/refund",
+"rel": "refund",
+"method": "POST"
+}
+]
+}
+]
+}
+}
+],
+"payer": ￼{
+"name": ￼{
+"given_name": "John",
+"surname": "Doe"
+},
+"email_address": "customer@example.com",
+"payer_id": "QYR5Z8XDVJNXQ"
+},
+"links": ￼[
+￼{
+"href": "https://api-m.paypal.com/v2/checkout/orders/5O190127TN364715T",
+"rel": "self",
+"method": "GET"
+}
+]
+}
+Add tracking information for an Order.
+POST
+/v2/checkout/orders/{id}/track
+Adds tracking information for an Order.
+
+Security
+Oauth2
+Request
+PATH PARAMETERS
+id
+required
+string [ 1 .. 36 ] characters
+The ID of the order that the tracking information is associated with.
+
+HEADER PARAMETERS
+Authorization
+required
+string
+To make REST API calls, include the bearer token in this header with the Bearer authentication scheme. The value is Bearer <Access-Token> or Basic <client_id:secret>.
+
+PayPal-Auth-Assertion
+string
+An API-caller-provided JSON Web Token (JWT) assertion that identifies the merchant. For details, see PayPal-Auth-Assertion.
+
+Content-Type
+required
+string [ 1 .. 255 ] characters
+The media type. Required for operations with a request body. The value is application/<format>, where format is json.
+
+REQUEST BODY SCHEMA: application/json
+tracking_number
+required
+string [ 1 .. 64 ] characters
+The tracking number for the shipment. This property supports Unicode.
+
+carrier_name_other
+string [ 1 .. 64 ] characters
+The name of the carrier for the shipment. Provide this value only if the carrier parameter is OTHER. This property supports Unicode.
+
+carrier
+required
+string [ 1 .. 64 ] characters ^[0-9A-Z_]+$
+The carrier for the shipment. Some carriers have a global version as well as local subsidiaries. The subsidiaries are repeated over many countries and might also have an entry in the global list. Choose the carrier for your country. If the carrier is not available for your country, choose the global version of the carrier. If your carrier name is not in the list, set carrier to OTHER and set carrier name in carrier_name_other. For allowed values, see Carriers.
+
+Enum: Description
+DPD_RU DPD Russia.
+BG_BULGARIAN_POST Bulgarian Posts.
+KR_KOREA_POST Koreapost (www.koreapost.go.kr).
+ZA_COURIERIT Courier IT.
+FR_EXAPAQ DPD France (formerly exapaq).
+ARE_EMIRATES_POST Emirates Post.
+GAC GAC.
+GEIS Geis CZ.
+SF_EX SF Express.
+PAGO Pago Logistics.
+MYHERMES MyHermes UK.
+DIAMOND_EUROGISTICS Diamond Eurogistics Limited.
+CORPORATECOURIERS_WEBHOOK Corporate Couriers.
+BOND Bond courier.
+OMNIPARCEL Omni Parcel.
+SK_POSTA Slovenska pošta.
+PUROLATOR purolator.
+FETCHR_WEBHOOK Mena 360 (Fetchr).
+THEDELIVERYGROUP TDG – The Delivery Group.
+CELLO_SQUARE Cello Square.
+TARRIVE TONDA GLOBAL.
+COLLIVERY MDS Collivery Pty (Ltd).
+MAINFREIGHT Mainfreight.
+IND_FIRSTFLIGHT First Flight Couriers.
+ACSWORLDWIDE ACS Worldwide Express.
+AMSTAN Amstan Logistics.
+OKAYPARCEL OkayParcel.
+ENVIALIA_REFERENCE Envialia Reference.
+SEUR_ES Seur Spain.
+CONTINENTAL Continental.
+FDSEXPRESS FDSEXPRESS.
+AMAZON_FBA_SWISHIP Swiship UK.
+WYNGS Wyngs.
+DHL_ACTIVE_TRACING DHL Active Tracing.
+ZYLLEM Zyllem.
+RUSTON Ruston.
+XPOST Xpost.ph.
+CORREOS_ES correos Express (www.correos.es).
+DHL_FR DHL France (www.dhl.com).
+PAN_ASIA Pan-Asia International.
+BRT_IT BRT couriers Italy (www.brt.it).
+SRE_KOREA SRE Korea (www.srekorea.co.kr).
+SPEEDEE Spee-Dee Delivery.
+TNT_UK TNT UK Limited (www.tnt.com).
+VENIPAK Venipak.
+SHREENANDANCOURIER SHREE NANDAN COURIER.
+CROSHOT Croshot.
+NIPOST_NG NIpost (www.nipost.gov.ng).
+EPST_GLBL ePost Global.
+NEWGISTICS Newgistics.
+POST_SLOVENIA Post of Slovenia.
+JERSEY_POST Jersey Post.
+BOMBINOEXP Bombino Express Pvt.
+WMG WMG Delivery.
+XQ_EXPRESS XQ Express.
+FURDECO Furdeco.
+LHT_EXPRESS LHT Express.
+SOUTH_AFRICAN_POST_OFFICE South African Post Office.
+SPOTON SPOTON Logistics Pvt Ltd.
+DIMERCO Dimerco Express Group.
+CYPRUS_POST_CYP cyprus post.
+ABCUSTOM AB Custom Group.
+IND_DELIVREE deliverE.
+CN_BESTEXPRESS Best Express.
+DX_SFTP DX (SFTP).
+PICKUPP_MYS PICK UPP.
+FMX FMX.
+HELLMANN Hellmann Worldwide Logistics.
+SHIP_IT_ASIA Ship It Asia.
+KERRY_ECOMMERCE Kerry eCommerce.
+FRETERAPIDO Frete Rapido.
+PITNEY_BOWES Pitney Bowes.
+XPRESSEN_DK Xpressen courier.
+SEUR_SP_API Spanish Seur API.
+DELIVERYONTIME DELIVERYONTIME LOGISTICS PVT LTD.
+JINSUNG JINSUNG TRADING.
+TRANS_KARGO Trans Kargo Internasional.
+SWISHIP_DE Swiship DE.
+IVOY_WEBHOOK Ivoy courier.
+AIRMEE_WEBHOOK Airmee couriers.
+DHL_BENELUX dhl benelux.
+FIRSTMILE FirstMile.
+FASTWAY_IR Fastway Ireland.
+HH_EXP Hua Han Logistics.
+MYS_MYPOST_ONLINE Mypostonline.
+TNT_NL THT Netherland.
+TIPSA TIPSA courier.
+TAQBIN_MY TAQBIN Malaysia.
+KGMHUB KGM Hub.
+INTEXPRESS Internet Express.
+OVERSE_EXP Overseas Express.
+ONECLICK One click delivery services.
+ROADRUNNER_FREIGHT Roadbull Logistics.
+GLS_CROTIA GLS Croatia.
+MRW_FTP MRW courier.
+BLUEX Blue Express.
+DYLT Daylight Transport.
+DPD_IR DPD Ireland.
+SIN_GLBL Sin Global Express.
+TUFFNELLS_REFERENCE Tuffnells Parcels Express- Reference.
+CJPACKET CJ Packet.
+MILKMAN Milkman courier.
+ASIGNA ASIGNA courier.
+ONEWORLDEXPRESS One World Express.
+ROYAL_MAIL RoyalShipments.
+VIA_EXPRESS Viaxpress.
+TIGFREIGHT TIG Freight.
+ZTO_EXPRESS ZTO Express.
+TWO_GO 2GO Courier.
+IML IML courier.
+INTEL_VALLEY Intel-Valley Supply chain (ShenZhen) Co. Ltd.
+EFS EFS (E-commerce Fulfillment Service).
+UK_UK_MAIL UK mail (ukmail.com).
+RAM RAM courier.
+ALLIEDEXPRESS Allied Express.
+APC_OVERNIGHT APC overnight (apc-overnight.com).
+SHIPPIT Shippit.
+TFM TFM Xpress.
+M_XPRESS M Xpress Sdn Bhd.
+HDB_BOX Haidaibao (BOX).
+CLEVY_LINKS Clevy Links.
+IBEONE Beone Logistics.
+FIEGE_NL Fiege Netherlands.
+KWE_GLOBAL KWE Global.
+CTC_EXPRESS CTC Express.
+LAO_POST Lao Post.
+AMAZON Amazon Shipping.
+MORE_LINK Morelink.
+JX JX courier.
+EASY_MAIL Easy Mail.
+ADUIEPYLE A Duie Pyle.
+GB_PANTHER Panther.
+EXPRESSSALE Expresssale.
+SG_DETRACK Detrack.
+TRUNKRS_WEBHOOK Trunkrs courier.
+MATDESPATCH Matdespatch.
+DICOM GLS Logistic Systems Canada Ltd./Dicom.
+MBW MBW Courier Inc..
+KHM_CAMBODIA_POST Cambodia Post.
+SINOTRANS Sinotrans.
+BRT_IT_PARCELID BRT Bartolini(Parcel ID).
+DHL_SUPPLY_CHAIN DHL Supply Chain APAC.
+DHL_PL DHL Poland.
+TOPYOU TopYou.
+PALEXPRESS PAL Express Limited.
+DHL_SG dhl Singapore.
+CN_WEDO WeDo Logistics.
+FULFILLME Fulfillme.
+DPD_DELISTRACK DPD delistrack.
+UPS_REFERENCE UPS Reference.
+CARIBOU Caribou.
+LOCUS_WEBHOOK Locus courier.
+DSV DSV courier.
+CN_GOFLY GoFly.
+P2P_TRC P2P TrakPak.
+DIRECTPARCELS Direct Parcels.
+NOVA_POSHTA_INT Nova Poshta (International).
+FEDEX_POLAND FedEx® Poland Domestic.
+CN_JCEX JCEX courier.
+FAR_INTERNATIONAL FAR international.
+IDEXPRESS IDEX courier.
+GANGBAO GANGBAO Supplychain.
+NEWAY Neway Transport.
+POSTNL_INT_3_S PostNL International.
+RPX_ID RPX Indonesia.
+DESIGNERTRANSPORT_WEBHOOK Designer Transport.
+GLS_SLOVEN GLS Slovenia.
+PARCELLED_IN Parcelled.in.
+GSI_EXPRESS GSI EXPRESS.
+CON_WAY Con-way Freight.
+BROUWER_TRANSPORT Brouwer Transport en Logistiek.
+CPEX Captain Express International.
+ISRAEL_POST Israel Post.
+DTDC_IN DTDC India.
+PTT_POST PTT Post.
+XDE_WEBHOOK Ximex Delivery Express.
+TOLOS Tolos courier.
+GIAO_HANG Giao hàng nhanh.
+GEODIS_ESPACE Geodis E-space.
+MAGYAR_HU Magyar Post.
+DOORDASH_WEBHOOK DoorDash.
+TIKI_ID Tiki shipment.
+CJ_HK_INTERNATIONAL CJ Logistics International(Hong Kong).
+STAR_TRACK_EXPRESS Star Track Express.
+HELTHJEM Helthjem.
+SFB2C SF International.
+FREIGHTQUOTE Freightquote by C.H. Robinson.
+LANDMARK_GLOBAL_REFERENCE Landmark Global Reference.
+PARCEL2GO Parcel2Go.
+DELNEXT Delnext.
+RCL Red Carpet Logistics.
+CGS_EXPRESS CGS Express.
+HK_POST Hongkong Post (www.hongkongpost.hk).
+SAP_EXPRESS SAP EXPRESS.
+PARCELPOST_SG Parcel Post Singapore.
+HERMES HermesWorld UK.
+IND_SAFEEXPRESS Safexpress.
+TOPHATTEREXPRESS Tophatter Express.
+MGLOBAL PT MGLOBAL LOGISTICS INDONESIA.
+AVERITT Averitt Express.
+LEADER leader.
+_2EBOX 2ebox courier.
+SG_SPEEDPOST Singapore Speedpost.
+DBSCHENKER_SE DB Schenker (www.dbschenker.com).
+ISR_POST_DOMESTIC Israel Post Domestic.
+BESTWAYPARCEL Best Way Parcel.
+ASENDIA_DE asendia_de.
+NIGHTLINE_UK nightline_uk.
+TAQBIN_SG taqbin_sg.
+TCK_EXPRESS TCK Express.
+ENDEAVOUR_DELIVERY Endeavour Delivery.
+NANJINGWOYUAN Nanjing Woyuan.
+HEPPNER_FR Heppner France.
+EMPS_CN EMPS Express.
+FONSEN Fonsen Logistics.
+PICKRR Pickrr.
+APC_OVERNIGHT_CONNUM APC Overnight Consignment.
+STAR_TRACK_NEXT_FLIGHT Star Track Next Flight.
+DAJIN Shanghai Aqrum Chemical Logistics Co.Ltd.
+UPS_FREIGHT UPS Freight.
+POSTA_PLUS Posta Plus.
+CEVA CEVA LOGISTICS.
+ANSERX ANSERX courier.
+JS_EXPRESS JS EXPRESS.
+PADTF padtf.com.
+UPS_MAIL_INNOVATIONS UPS Mail Innovations.
+EZSHIP EZship.
+SYPOST Sunyou Post.
+AMAZON_SHIP_MCF Amazon Shipping + Amazon MCF.
+YUSEN Yusen Logistics.
+BRING Bring.
+SDA_IT SDA Italy.
+GBA GBA Services Ltd.
+NEWEGGEXPRESS Newegg Express.
+SPEEDCOURIERS_GR Speed Couriers.
+FORRUN forrun Pvt Ltd (Arpatech Venture).
+PICKUP Pickupp.
+ECMS ECMS International Logistics Co..
+INTELIPOST Intelipost (TMS for LATAM).
+FLASHEXPRESS Flash Express.
+CN_STO STO Express.
+SEKO_SFTP SEKO Worldwide.
+HOME_DELIVERY_SOLUTIONS Home Delivery Solutions Ltd.
+DPD_HGRY DPD Hungary.
+KERRYTTC_VN Kerry Express (Vietnam) Co Ltd.
+JOYING_BOX Joying Box.
+TOTAL_EXPRESS Total Express.
+ZJS_EXPRESS ZJS International.
+STARKEN STARKEN couriers.
+DEMANDSHIP DemandShip.
+CN_DPEX DPEX.
+AUPOST_CN AuPost China.
+LOGISTERS Logisters.
+GOGLOBALPOST Global Post.
+GLS_CZ GLS Czech Republic.
+PAACK_WEBHOOK Paack courier.
+GRAB_WEBHOOK Grab courier.
+PARCELPOINT Parcelpoint.
+ICUMULUS iCumulus.
+DAIGLOBALTRACK DAI Post.
+GLOBAL_IPARCEL i-parcel.
+YURTICI_KARGO Yurtici Kargo.
+CN_PAYPAL_PACKAGE PayPal Package.
+PARCEL_2_POST Parcel To Post.
+GLS_IT GLS Italy.
+PIL_LOGISTICS PIL Logistics (China) Co..
+HEPPNER Heppner Internationale Spedition GmbH & Co..
+GENERAL_OVERNIGHT Go!Express and logistics.
+HAPPY2POINT Happy 2ThePoint.
+CHITCHATS Chit Chats.
+SMOOTH Smooth Couriers.
+CLE_LOGISTICS CL E-Logistics Solutions Limited.
+FIEGE Fiege Logistics.
+MX_CARGO M&X cargo.
+ZIINGFINALMILE Ziing Final Mile Inc.
+DAYTON_FREIGHT Dayton Freight.
+TCS TCS courier.
+AEX AEX Group.
+HERMES_DE Hermes Germany.
+ROUTIFIC_WEBHOOK Routific.
+GLOBAVEND Globavend.
+CJ_LOGISTICS CJ Logistics International.
+PALLET_NETWORK The Pallet Network.
+RAF_PH RAF Philippines.
+UK_XDP XDP Express.
+PAPER_EXPRESS Paper Express.
+LA_POSTE_SUIVI La Poste.
+PAQUETEXPRESS Paquetexpress.
+LIEFERY liefery.
+STRECK_TRANSPORT Streck Transport.
+PONY_EXPRESS Pony express.
+ALWAYS_EXPRESS Always Express.
+GBS_BROKER GBS-Broker.
+CITYLINK_MY City-Link Express.
+ALLJOY ALLJOY SUPPLY CHAIN.
+YODEL yodel.
+YODEL_DIR Yodel Direct.
+STONE3PL STONE3PL.
+PARCELPAL_WEBHOOK ParcelPal.
+DHL_ECOMERCE_ASA DHL eCommerce Asia (API).
+SIMPLYPOST J&T Express Singapore.
+KY_EXPRESS Kua Yue Express.
+SHENZHEN shenzhen 1st International Logistics(Group)Co.
+US_LASERSHIP LaserShip.
+UC_EXPRE ucexpress.
+DIDADI DIDADI Logistics tech.
+CJ_KR CJ Korea Express.
+DBSCHENKER_B2B DB Schenker B2B.
+MXE MXE Express.
+CAE_DELIVERS CAE Delivers.
+PFCEXPRESS PFC Express.
+WHISTL Whistl.
+WEPOST WePost Sdn Bhd.
+DHL_PARCEL_ES DHL parcel Spain(www.dhl.com).
+DDEXPRESS DD Express Courier.
+ARAMEX_AU Aramex Australia (formerly Fastway AU).
+BNEED Bneed courier.
+HK_TGX Kerry Express Hong Kong.
+LATVIJAS_PASTS Latvijas Pasts.
+VIAEUROPE ViaEurope.
+CORREO_UY Correo Uruguayo.
+CHRONOPOST_FR Chronopost france (www.chronopost.fr).
+J_NET J-Net.
+_6LS 6ls.com.
+BLR_BELPOST Belpost.
+BIRDSYSTEM BirdSystem.
+DOBROPOST DobroPost.
+WAHANA_ID Wahana express (www.wahana.com).
+WEASHIP Weaship.
+SONICTL Sonic Transportation & Logistics.
+KWT Shenzhen Jinghuada Logistics Co..
+AFLLOG_FTP AFL LOGISTICS.
+SKYNET_WORLDWIDE SkyNet Worldwide Express.
+NOVA_POSHTA Nova Poshta (novaposhta.ua).
+SEINO Seino.
+SZENDEX SZENDEX.
+BPOST_INT Bpost international.
+DBSCHENKER_SV DB Schenker Sweden.
+AO_DEUTSCHLAND AO Deutschland.
+EU_FLEET_SOLUTIONS EU Fleet Solutions.
+PCFCORP PCF Final Mile.
+LINKBRIDGE Link Bridge(BeiJing)international logistics co..
+PRIMAMULTICIPTA PT Prima Multi Cipta.
+COUREX Urbanfox.
+ZAJIL_EXPRESS Zajil Express Company.
+COLLECTCO CollectCo.
+JTEXPRESS J&T EXPRESS MALAYSIA.
+FEDEX_UK FedEx® UK.
+USHIP uShip courier.
+PIXSELL PIXSELL LOGISTICS.
+SHIPTOR Shiptor.
+CDEK CDEK courier.
+VNM_VIETTELPOST ViettelPost.
+CJ_CENTURY CJ Century.
+GSO GSO(GLS-USA).
+VIWO VIWO IoT.
+SKYBOX SKYBOX.
+KERRYTJ Kerry TJ Logistics.
+NTLOGISTICS_VN Nhat Tin Logistics.
+SDH_SCM lightning monkey.
+ZINC Zinc courier.
+DPE_SOUTH_AFRC DPE South Africa.
+CESKA_CZ Czech Post.
+ACS_GR ACS Courier.
+DEALERSEND DealerSend.
+JOCOM Jocom.
+CSE CSE courier.
+TFORCE_FINALMILE TForce Final Mile.
+SHIP_GATE ShipGate.
+SHIPTER SHIPTER.
+NATIONAL_SAMEDAY National Sameday.
+YUNEXPRESS YunExpress.
+CAINIAO AliExpress Standard Shipping.
+DMS_MATRIX DMSMatrix.
+DIRECTLOG Directlog (www.directlog.com.br).
+ASENDIA_US Asendia USA.
+_3JMSLOGISTICS 3JMS Logistics.
+LICCARDI_EXPRESS LICCARDI EXPRESS COURIER.
+SKY_POSTAL SkyPostal.
+CNWANGTONG cnwangtong.
+POSTNORD_LOGISTICS_DK ostnord denmark.
+LOGISTIKA Logistika.
+CELERITAS Celeritas Transporte.
+PRESSIODE Pressio.
+SHREE_MARUTI Shree Maruti Courier Services Pvt Ltd.
+LOGISTICSWORLDWIDE_HK Logistic Worldwide Express (LWE Honkong).
+EFEX eFEx (E-Commerce Fulfillment & Express).
+LOTTE Lotte Global Logistics.
+LONESTAR Lone Star Overnight.
+APRISAEXPRESS Aprisa Express.
+BEL_RS BEL North Russia.
+OSM_WORLDWIDE OSM Worldwide.
+WESTGATE_GL Westgate Global.
+FASTRACK Fasttrack.
+DTD_EXPR DTD Express.
+ALFATREX AlfaTrex.
+PROMEDDELIVERY ProMed Delivery.
+THABIT_LOGISTICS Thabit Logistics.
+HCT_LOGISTICS HCT LOGISTICS CO.LTD..
+CARRY_FLAP Carry-Flap Co..
+US_OLD_DOMINION Old Dominion Freight Line.
+ANICAM_BOX ANICAM BOX EXPRESS.
+WANBEXPRESS WanbExpress.
+AN_POST An Post.
+DPD_LOCAL DPD Local.
+STALLIONEXPRESS Stallion Express.
+RAIDEREX RaidereX.
+SHOPFANS ShopfansRU LLC.
+KYUNGDONG_PARCEL Kyungdong Parcel.
+CHAMPION_LOGISTICS Champion Logistics.
+PICKUPP_SGP PICK UPP (Singapore).
+MORNING_EXPRESS Morning Express.
+NACEX NACEX.
+THENILE_WEBHOOK SortHub courier.
+HOLISOL Holisol.
+LBCEXPRESS_FTP LBC EXPRESS INC..
+KURASI KURASI.
+USF_REDDAWAY USF Reddaway.
+APG APG eCommerce Solutions.
+CN_BOXC BoxC courier.
+ECOSCOOTING ECOSCOOTING.
+MAINWAY Mainway.
+PAPERFLY Paperfly Private Limited.
+HOUNDEXPRESS Hound Express.
+BOX_BERRY Boxberry courier.
+EP_BOX EP-Box courier.
+PLUS_LOG_UK Plus UK Logistics.
+FULFILLA Fulfilla.
+ASE ASE KARGO.
+MAIL_PLUS MailPlus.
+XPO_LOGISTICS XPO logistics.
+WNDIRECT wnDirect.
+CLOUDWISH_ASIA Cloudwish Asia.
+ZELERIS Zeleris.
+GIO_EXPRESS Gio Express.
+OCS_WORLDWIDE OCS WORLDWIDE.
+ARK_LOGISTICS ARK Logistics.
+AQUILINE Aquiline.
+PILOT_FREIGHT Pilot Freight Services.
+QWINTRY Qwintry Logistics.
+DANSKE_FRAGT Danske Fragtaend.
+CARRIERS Carriers courier.
+AIR_CANADA_GLOBAL Rivo (Air canada).
+PRESIDENT_TRANS PRESIDENT TRANSNET CORP.
+STEPFORWARDFS STEP FORWARD FREIGHT SERVICE CO LTD.
+SKYNET_UK Skynet UK.
+PITTOHIO PITT OHIO.
+CORREOS_EXPRESS Correos Express.
+RL_US RL Carriers.
+MARA_XPRESS Mara Xpress.
+DESTINY Destiny Transportation.
+UK_YODEL Yodel (www.yodel.co.uk).
+COMET_TECH CometTech.
+DHL_PARCEL_RU DHL Parcel Russia.
+TNT_REFR TNT Reference.
+SHREE_ANJANI_COURIER Shree Anjani Courier.
+MIKROPAKKET_BE Mikropakket Belgium.
+ETS_EXPRESS RETS express.
+COLIS_PRIVE Colis Privé.
+CN_YUNDA Yunda Express.
+AAA_COOPER AAA Cooper.
+ROCKET_PARCEL Rocket Parcel International.
+_360LION 360 Lion Express.
+PANDU PANDU.
+PROFESSIONAL_COURIERS PROFESSIONAL COURIERS.
+FLYTEXPRESS FLYTEXPRESS.
+LOGISTICSWORLDWIDE_MY LOGISTICSWORLDWIDE MY.
+CORREOS_DE_ESPANA CORREOS DE ESPANA.
+IMX IMX.
+FOUR_PX_EXPRESS FOUR PX EXPRESS.
+XPRESSBEES XPRESSBEES.
+PICKUPP_VNM pickupp_vnm.
+STARTRACK_EXPRESS startrack_express.
+FR_COLISSIMO fr_colissimo.
+NACEX_SPAIN_REFERENCE nacex_spain_reference.
+DHL_SUPPLY_CHAIN_AU dhl_supply_chain_au.
+ESHIPPING Eshipping.
+SHREETIRUPATI SHREE TIRUPATI COURIER SERVICES PVT. LTD..
+HX_EXPRESS HX Express.
+INDOPAKET INDOPAKET.
+CN_17POST 17 Post Service.
+K1_EXPRESS K1 Express.
+CJ_GLS CJ GLS.
+MYS_GDEX GDEX courier.
+NATIONEX Nationex courier.
+ANJUN Anjun couriers.
+FARGOOD FarGood.
+SMG_EXPRESS SMG Direct.
+RZYEXPRESS RZY Express.
+SEFL Southeastern Freight Lines.
+TNT_CLICK_IT TNT-Click Italy.
+HDB Haidaibao.
+HIPSHIPPER Hipshipper.
+RPXLOGISTICS RPX Logistics.
+KUEHNE Kuehne + Nagel.
+IT_NEXIVE Nexive (TNT Post Italy).
+PTS PTS courier.
+SWISS_POST_FTP Swiss Post FTP.
+FASTRK_SERV Fastrak Services.
+_4_72 4-72 Entregando.
+US_YRC YRC courier.
+POSTNL_INTL_3S PostNL International 3S.
+ELIAN_POST Yilian (Elian) Supply Chain.
+CUBYN Cubyn.
+SAU_SAUDI_POST Saudi Post.
+ABXEXPRESS_MY ABX Express.
+HUAHAN_EXPRESS HUAHANG EXPRESS.
+IND_JAYONEXPRESS Jayon Express (JEX).
+ZES_EXPRESS Eshun international Logistic.
+ZEPTO_EXPRESS ZeptoExpress.
+SKYNET_ZA Skynet World Wide Express South Africa.
+ZEEK_2_DOOR Zeek2Door.
+BLINKLASTMILE Blink.
+POSTA_UKR UkrPoshta.
+CHROBINSON C.H. Robinson Worldwide.
+CN_POST56 Post56.
+COURANT_PLUS Courant Plus.
+SCUDEX_EXPRESS Scudex Express.
+SHIPENTEGRA ShipEntegra.
+B_TWO_C_EUROPE B2C courier Europe.
+COPE Cope Sensitive Freight.
+IND_GATI Gati-KWE.
+CN_WISHPOST WishPost.
+NACEX_ES NACEX Spain.
+TAQBIN_HK TAQBIN Hong Kong.
+GLOBALTRANZ GlobalTranz.
+HKD Qingdao HKD International Logistics.
+BJSHOMEDELIVERY BJS Distribution courier.
+OMNIVA Omniva.
+SUTTON Sutton Transport.
+PANTHER_REFERENCE Panther Reference.
+SFCSERVICE SFC Service.
+LTL LTL COURIER.
+PARKNPARCEL Park N Parcel.
+SPRING_GDS Spring GDS.
+ECEXPRESS ECexpress.
+INTERPARCEL_AU Interparcel Australia.
+AGILITY Agility.
+XL_EXPRESS XL Express.
+ADERONLINE Ader couriers.
+DIRECTCOURIERS Direct Couriers.
+PLANZER Planzer Group.
+SENDING Sending Transporte Urgente y Comunicacion.
+NINJAVAN_WB Ninjavan Webhook.
+NATIONWIDE_MY Nationwide Express Courier Services Bhd (www.nationwide.com.my).
+SENDIT Sendit.
+GB_ARROW Arrow XL.
+IND_GOJAVAS GoJavas.
+KPOST Korea Post.
+DHL_FREIGHT DHL Freight.
+BLUECARE Bluecare Express Ltd.
+JINDOUYUN jindouyun courier.
+TRACKON Trackon Couriers Pvt. Ltd.
+GB_TUFFNELLS Tuffnells Parcels Express.
+TRUMPCARD TRUMPCARD LLC.
+ETOTAL eTotal Solution Limited.
+SFPLUS_WEBHOOK Zeek courier.
+SEKOLOGISTICS SEKO Logistics.
+HERMES_2MANN_HANDLING Hermes Einrichtungs Service GmbH & Co. KG.
+DPD_LOCAL_REF DPD Local reference.
+UDS United Delivery Service.
+ZA_SPECIALISED_FREIGHT Specialised Freight.
+THA_KERRY Kerry Express Thailand.
+PRT_INT_SEUR SEUR International.
+BRA_CORREIOS Correios Brazil.
+NZ_NZ_POST New Zealand Post.
+CN_EQUICK Equick China.
+MYS_EMS Malaysia Post EMS / Pos Laju.
+GB_NORSK Norsk Global.
+ESP_MRW MRW spain.
+ESP_PACKLINK Packlink.
+KANGAROO_MY Kangaroo Worldwide Express.
+RPX RPX Online.
+XDP_UK_REFERENCE XDP Express Reference.
+NINJAVAN_MY ninja van (www.ninjavan.co).
+ADICIONAL Adicional Logistics.
+NINJAVAN_ID Ninja Van Indonesia.
+ROADBULL Red Carpet Logistics.
+YAKIT Yakit courier.
+MAILAMERICAS MailAmericas.
+MIKROPAKKET Mikropakket.
+DYNALOGIC Dynamic Logistics.
+DHL_ES DHL Spain(www.dhl.com).
+DHL_PARCEL_NL DHL Parcel NL.
+DHL_GLOBAL_MAIL_ASIA DHL Global Mail Asia (www.dhl.com).
+DAWN_WING Dawn Wing.
+GENIKI_GR Geniki Taxydromiki.
+HERMESWORLD_UK hermesworld_uk.
+ALPHAFAST Alphafast (www.alphafast.com).
+BUYLOGIC buylogic.
+EKART Ekart logistics (ekartlogistics.com).
+MEX_SENDA mexico senda express.
+SFC_LOGISTICS SFC.
+POST_SERBIA Posta Serbia.
+IND_DELHIVERY Delhivery India.
+DE_DPD_DELISTRACK DPD Germany.
+RPD2MAN RPD2man Deliveries.
+CN_SF_EXPRESS SF Express (www.sf-express.com).
+YANWEN Yanwen Logistics.
+MYS_SKYNET Skynet Malaysia.
+CORREOS_DE_MEXICO correos mexico.
+CBL_LOGISTICA CBL Logistica.
+MEX_ESTAFETA Estafeta (www.estafeta.com).
+AU_AUSTRIAN_POST Austrian Post (Registered).
+RINCOS Rincos.
+NLD_DHL DHL Netherland.
+RUSSIAN_POST Russian post.
+COURIERS_PLEASE CouriersPlease (couriersplease.com.au).
+POSTNORD_LOGISTICS PostNord Logistics.
+FEDEX Fedex.
+DPE_EXPRESS DPE Express.
+DPD DPD.
+ADSONE ADSone.
+IDN_JNE JNE Express (Jalur Nugraha Ekakurir).
+THECOURIERGUY The Courier Guy.
+CNEXPS CNE Express.
+PRT_CHRONOPOST Chronopost Portugal.
+LANDMARK_GLOBAL Landmark Global.
+IT_DHL_ECOMMERCE DHL International.
+ESP_NACEX NACEX Spain.
+PRT_CTT CTT Portugal.
+BE_KIALA Kiala.
+ASENDIA_UK Asendia UK.
+GLOBAL_TNT TNT global.
+POSTUR_IS Iceland Post.
+EPARCEL_KR eParcel Korea.
+INPOST_PACZKOMATY InPost Paczkomaty.
+IT_POSTE_ITALIA Poste italiane (www.poste.it).
+BE_BPOST Bpost (www.bpost.be).
+PL_POCZTA_POLSKA Poczta Polska (www.poczta-polska.pl).
+MYS_MYS_POST Malaysia Post.
+SG_SG_POST Singapore Post.
+THA_THAILAND_POST Thailand Post (www.thailandpost.co.th).
+LEXSHIP LexShip.
+FASTWAY_NZ Fastway New Zealand.
+DHL_AU DHL Supply Chain Australia.
+COSTMETICSNOW Cosmetics Now.
+PFLOGISTICS PFL.
+LOOMIS_EXPRESS Loomis Express.
+GLS_ITALY GLS Italy.
+LINE Line Clear Express & Logistics Sdn Bhd.
+GEL_EXPRESS Gel Express Logistik.
+HUODULL Huodull.
+NINJAVAN_SG Ninja van Singapore.
+JANIO Janio Asia.
+AO_COURIER AO Logistics.
+BRT_IT_SENDER_REF BRT Bartolini(Sender Reference).
+SAILPOST SAILPOST.
+LALAMOVE Lalamove.
+NEWZEALAND_COURIERS NEW ZEALAND COURIERS.
+ETOMARS Etomars.
+VIRTRANSPORT VIR Transport.
+WIZMO Wizmo.
+PALLETWAYS Palletways.
+I_DIKA i-dika.
+CFL_LOGISTICS CFL Logistics.
+GEMWORLDWIDE GEM Worldwide.
+GLOBAL_EXPRESS Tai Wan Global Business.
+LOGISTYX_TRANSGROUP Transgroup courier.
+WESTBANK_COURIER West Bank Courier.
+ARCO_SPEDIZIONI Arco Spedizioni SP.
+YDH_EXPRESS YDH express.
+PARCELINKLOGISTICS Parcelink Logistics.
+CNDEXPRESS CND Express.
+NOX_NIGHT_TIME_EXPRESS NOX NightTimeExpress.
+AERONET Aeronet couriers.
+LTIANEXP LTIAN EXP.
+INTEGRA2_FTP Integra2.
+PARCELONE PARCEL ONE.
+NOX_NACHTEXPRESS Innight Express Germany GmbH (nox NachtExpress).
+CN_CHINA_POST_EMS China Post.
+CHUKOU1 Chukou1.
+GLS_SLOV GLS General Logistics Systems Slovakia s.r.o..
+ORANGE_DS OrangeDS (Orange Distribution Solutions Inc).
+JOOM_LOGIS Joom Logistics.
+AUS_STARTRACK StarTrack (startrack.com.au).
+DHL dhl Global.
+GB_APC APC postal logistics germany.
+BONDSCOURIERS Bonds Courier Service (bondscouriers.com.au).
+JPN_JAPAN_POST Japan Post.
+USPS United States Postal Service.
+WINIT WinIt.
+ARG_OCA OCA Argentina.
+TW_TAIWAN_POST Taiwan Post.
+DMM_NETWORK DMM Network.
+TNT TNT Express.
+BH_POSTA BH Posta (www.posta.ba).
+SWE_POSTNORD Postnord sweden.
+CA_CANADA_POST Canada Post.
+WISELOADS Wiseloads.
+ASENDIA_HK Asendia HonKong.
+NLD_GLS GLS Netherland.
+MEX_REDPACK Redpack.
+JET_SHIP Jet-Ship Worldwide.
+DE_DHL_EXPRESS DHL Express.
+NINJAVAN_THAI Ninja van Thai.
+RABEN_GROUP Raben Group.
+ESP_ASM ASM(GLS Spain).
+HRV_HRVATSKA Hrvatska posta.
+GLOBAL_ESTES Estes Express Lines.
+LTU_LIETUVOS Lietuvos pastas.
+BEL_DHL DHL Benelux.
+AU_AU_POST Australia Post.
+SPEEDEXCOURIER SPEEDEX couriers.
+FR_COLIS Colissimo.
+ARAMEX Aramex.
+DPEX DPEX (www.dpex.com).
+MYS_AIRPAK Airpak Express.
+CUCKOOEXPRESS Cuckoo Express.
+DPD_POLAND DPD Poland.
+NLD_POSTNL PostNL International.
+NIM_EXPRESS Nim Express.
+QUANTIUM Quantium.
+SENDLE Sendle.
+ESP_REDUR Redur Spain.
+MATKAHUOLTO Matkahuolto.
+CPACKET Cpacket couriers.
+POSTI Posti courier.
+HUNTER_EXPRESS Hunter Express.
+CHOIR_EXP Choir Express Indonesia.
+LEGION_EXPRESS Legion Express.
+AUSTRIAN_POST_EXPRESS austrian post.
+GRUPO Grupo ampm.
+POSTA_RO Post Roman (www.posta-romana.ro).
+INTERPARCEL_UK Interparcel UK.
+GLOBAL_ABF ABF Freight.
+POSTEN_NORGE Posten Norge (www.posten.no).
+XPERT_DELIVERY Xpert Delivery.
+DHL_REFR DHl (Reference number).
+DHL_HK DHL HonKong.
+SKYNET_UAE SKYNET UAE.
+GOJEK Gojek.
+YODEL_INTNL Yodel International.
+JANCO Janco Ecommerce.
+YTO YTO Express.
+WISE_EXPRESS Wise Express.
+JTEXPRESS_VN J&T Express Vietnam.
+FEDEX_INTL_MLSERV FedEx International MailService.
+VAMOX VAMOX.
+AMS_GRP AMS Group.
+DHL_JP DHL Japan.
+HRPARCEL HR Parcel.
+GESWL GESWL Express.
+BLUESTAR Blue Star.
+CDEK_TR CDEK TR.
+DESCARTES Innovel courier.
+DELTEC_UK Deltec Courier.
+DTDC_EXPRESS DTDC express.
+TOURLINE tourline.
+BH_WORLDWIDE B&H Worldwide.
+OCS OCS ANA Group.
+YINGNUO_LOGISTICS yingnuo logistics.
+UPS United Parcel Service.
+TOLL Toll IPEC.
+PRT_SEUR SEUR portugal.
+DTDC_AU DTDC Australia.
+THA_DYNAMIC_LOGISTICS Dynamic Logistics.
+UBI_LOGISTICS UBI Smart Parcel.
+FEDEX_CROSSBORDER FedEx Cross Border.
+A1POST A1Post.
+TAZMANIAN_FREIGHT Tazmanian Freight Systems.
+CJ_INT_MY CJ International malaysia.
+SAIA_FREIGHT Saia LTL Freight.
+SG_QXPRESS Qxpress.
+NHANS_SOLUTIONS Nhans Solutions.
+DPD_FR DPD France.
+COORDINADORA Coordinadora.
+ANDREANI Grupo logistico Andreani.
+DOORA Doora Logistics.
+INTERPARCEL_NZ Interparcel New Zealand.
+PHL_JAMEXPRESS Jam Express Philippines.
+BEL_BELGIUM_POST bel_belgium_post.
+US_APC us_apc.
+IDN_POS idn_pos.
+FR_MONDIAL fr_mondial.
+DE_DHL DE DHL.
+HK_RPX hk_rpx.
+DHL_PIECEID dhl_pieceid.
+VNPOST_EMS vnpost_ems.
+RRDONNELLEY rrdonnelley.
+DPD_DE dpd_de.
+DELCART_IN delcart_in.
+IMEXGLOBALSOLUTIONS imexglobalsolutions.
+ACOMMERCE ACOMMERCE.
+EURODIS eurodis.
+CANPAR CANPAR.
+GLS GLS.
+IND_ECOM Ecom Express.
+ESP_ENVIALIA Envialia.
+DHL_UK dhl UK.
+SMSA_EXPRESS SMSA Express.
+TNT_FR TNT France.
+DEX_I DEX-I courier.
+BUDBEE_WEBHOOK Budbee courier.
+COPA_COURIER Copa Airlines Courier.
+VNM_VIETNAM_POST Vietnam Post.
+DPD_HK DPD HongKong.
+TOLL_NZ Toll New Zealand.
+ECHO Echo courier.
+FEDEX_FR FedEx® Freight.
+BORDEREXPRESS Border Express.
+MAILPLUS_JPN MailPlus (Japan).
+TNT_UK_REFR TNT UK Reference.
+KEC KEC courier.
+DPD_RO DPD Romania.
+TNT_JP TNT_JP.
+TH_CJ TH_CJ.
+EC_CN EC_CN.
+FASTWAY_UK FASTWAY_UK.
+FASTWAY_US FASTWAY_US.
+GLS_DE GLS_DE.
+GLS_ES GLS_ES.
+GLS_FR GLS_FR.
+MONDIAL_BE MONDIAL_BE.
+SGT_IT SGT_IT.
+TNT_CN TNT_CN.
+TNT_DE TNT_DE.
+TNT_ES TNT_ES.
+TNT_PL TNT_PL.
+PARCELFORCE PARCELFORCE.
+SWISS_POST SWISS POST.
+TOLL_IPEC TOLL IPEC.
+AIR_21 AIR 21.
+AIRSPEED AIRSPEED.
+BERT BERT.
+BLUEDART BLUEDART.
+COLLECTPLUS COLLECTPLUS.
+COURIERPLUS COURIERPLUS.
+COURIER_POST COURIER POST.
+DHL_GLOBAL_MAIL dhl_global_mail.
+DPD_UK dpd_uk.
+DELTEC_DE DELTEC DE.
+DEUTSCHE_DE deutsche_de.
+DOTZOT DOTZOT.
+ELTA_GR elta_gr.
+EMS_CN ems_cn.
+ECARGO ECARGO.
+ENSENDA ENSENDA.
+FERCAM_IT fercam_it.
+FASTWAY_ZA fastway_za.
+FASTWAY_AU fastway_au.
+FIRST_LOGISITCS first_logisitcs.
+GEODIS GEODIS.
+GLOBEGISTICS GLOBEGISTICS.
+GREYHOUND GREYHOUND.
+JETSHIP_MY jetship_my.
+LION_PARCEL LION PARCEL.
+AEROFLASH AEROFLASH.
+ONTRAC ONTRAC.
+SAGAWA SAGAWA.
+SIODEMKA SIODEMKA.
+STARTRACK startrack.
+TNT_AU tnt_au.
+TNT_IT tnt_it.
+TRANSMISSION TRANSMISSION.
+YAMATO YAMATO.
+DHL_IT dhl_it.
+DHL_AT dhl_at.
+LOGISTICSWORLDWIDE_KR LOGISTICSWORLDWIDE KR.
+GLS_SPAIN gls_spain.
+AMAZON_UK_API amazon_uk_api.
+DPD_FR_REFERENCE dpd_fr_reference.
+DHLPARCEL_UK dhlparcel_uk.
+MEGASAVE megasave.
+QUALITYPOST qualitypost.
+IDS_LOGISTICS ids_logistics.
+JOYINGBOX joyingbox.
+PANTHER_ORDER_NUMBER panther_order_number.
+WATKINS_SHEPARD watkins_shepard.
+FASTTRACK fasttrack.
+UP_EXPRESS up_express.
+ELOGISTICA elogistica.
+ECOURIER ecourier.
+CJ_PHILIPPINES cj_philippines.
+SPEEDEX speedex.
+ORANGECONNEX orangeconnex.
+TECOR tecor.
+SAEE saee.
+GLS_ITALY_FTP gls_italy_ftp.
+DELIVERE delivere.
+YYCOM yycom.
+ADICIONAL_PT Adicional Logistics.
+DKSH DKSH.
+NIPPON_EXPRESS_FTP Nippon Express.
+GOLS GO Logistics & Storage.
+FUJEXP FUJIE EXPRESS.
+QTRACK QTrack.
+OMLOGISTICS_API OM LOGISTICS LTD.
+GDPHARM GDPharm Logistics.
+MISUMI_CN MISUMI Group Inc..
+AIR_CANADA Rivo.
+CITY56_WEBHOOK City Express.
+SAGAWA_API Sagawa.
+KEDAEX KedaEX.
+PGEON_API Pgeon.
+WEWORLDEXPRESS We World Express.
+JT_LOGISTICS J&T International logistics.
+TRUSK Trusk France.
+VIAXPRESS ViaXpress.
+DHL_SUPPLYCHAIN_ID DHL Supply Chain Indonesia.
+ZUELLIGPHARMA_SFTP Zuellig Pharma Korea.
+MEEST Meest.
+TOLL_PRIORITY Toll Priority.
+MOTHERSHIP_API Mothership.
+CAPITAL Capital Transport.
+EUROPAKET_API Europacket+.
+HFD HFD.
+TOURLINE_REFERENCE Tourline Express.
+GIO_ECOURIER GIO Express Inc.
+CN_LOGISTICS CN Logistics.
+PANDION Pandion.
+BPOST_API Bpost API.
+PASSPORTSHIPPING Passport Shipping.
+PAKAJO Pakajo World.
+DACHSER DACHSER.
+YUSEN_SFTP Yusen Logistics.
+SHYPLITE Shypmax.
+XYY Xingyunyi Logistics.
+MWD Metropolitan Warehouse & Delivery.
+FAXECARGO Faxe Cargo.
+MAZET Groupe Mazet.
+FIRST_LOGISTICS_API First Logistics.
+SPRINT_PACK SPRINT PACK.
+HERMES_DE_FTP Hermes Germany.
+CONCISE Concise.
+KERRY_EXPRESS_TW_API Kerry Express TaiWan.
+EWE EWE Global Express.
+FASTDESPATCH Fast Despatch Logistics Limited.
+ABCUSTOM_SFTP AB Custom Group.
+CHAZKI Chazki.
+SHIPPIE Shippie.
+GEODIS_API GEODIS - Distribution & Express.
+NAQEL_EXPRESS Naqel Express.
+PAPA_WEBHOOK Papa.
+FORWARDAIR Forward Air.
+DIALOGO_LOGISTICA_API Dialogo Logistica.
+LALAMOVE_API Lalamove.
+TOMYDOOR Tomydoor.
+KRONOS_WEBHOOK Kronos Express.
+JTCARGO J&T CARGO.
+T_CAT T-cat.
+CONCISE_WEBHOOK Concise.
+TELEPORT_WEBHOOK Teleport.
+CUSTOMCO_API The Custom Companies.
+SPX_TH Shopee Xpress.
+BOLLORE_LOGISTICS Bollore Logistics.
+CLICKLINK_SFTP ClickLink.
+M3LOGISTICS M3 Logistics.
+VNPOST_API Vietnam Post.
+AXLEHIRE_FTP Axlehire.
+SHADOWFAX Shadowfax.
+MYHERMES_UK_API EVRi.
+DAIICHI Daiichi Freight System Inc.
+MENSAJEROSURBANOS_API Mensajeros Urbanos.
+POLARSPEED PolarSpeed Inc.
+IDEXPRESS_ID iDexpress Indonesia.
+PAYO Payo.
+WHISTL_SFTP Whistl.
+INTEX_DE INTEX Paketdienst GmbH.
+TRANS2U Trans2u.
+PRODUCTCAREGROUP_SFTP Product Care Services Limited.
+BIGSMART Big Smart.
+EXPEDITORS_API_REF Expeditors API Reference.
+AITWORLDWIDE_API AIT.
+WORLDCOURIER World Courier.
+QUIQUP Quiqup.
+AGEDISS_SFTP Agediss.
+ANDREANI_API Andreani.
+CRLEXPRESS CRL Express.
+SMARTCAT SMARTCAT.
+CROSSFLIGHT Crossflight Limited.
+PROCARRIER Pro Carrier.
+DHL_REFERENCE_API DHL (Reference number).
+SEINO_API Seino.
+WSPEXPRESS WSP Express.
+KRONOS Kronos Express.
+TOTAL_EXPRESS_API Total Express.
+PARCLL PARCLL.
+XPEDIGO Xpedigo.
+STAR_TRACK_WEBHOOK StarTrack.
+GPOST Georgian Post.
+UCS UCS.
+DMFGROUP DMF.
+COORDINADORA_API Coordinadora.
+MARKEN Marken.
+NTL NTL logistics.
+REDJEPAKKETJE Red je Pakketje.
+ALLIED_EXPRESS_FTP Allied Express (FTP).
+MONDIALRELAY_ES Mondial Relay Spain(Punto Pack).
+NAEKO_FTP Naeko Logistics.
+MHI Mhi.
+SHIPPIFY Shippify, Inc.
+MALCA_AMIT_API Malca Amit.
+JTEXPRESS_SG_API J&T Express Singapore.
+DACHSER_WEB DACHSER.
+FLIGHTLG Flight Logistics Group.
+CAGO Cago.
+COM1EXPRESS ComOne Express.
+TONAMI_FTP Tonami.
+PACKFLEET PACKFLEET.
+PUROLATOR_INTERNATIONAL Purolator International.
+WINESHIPPING_WEBHOOK Wineshipping.
+DHL_ES_SFTP DHL Spain Domestic.
+PCHOME_API 網家速配股份有限公司.
+CESKAPOSTA_API Czech Post.
+GORUSH Go Rush.
+HOMERUNNER HomeRunner.
+AMAZON_ORDER Amazon order.
+EFWNOW_API Estes Forwarding Worldwide.
+CBL_LOGISTICA_API CBL Logistica (API).
+NIMBUSPOST NimbusPost.
+LOGWIN_LOGISTICS Logwin Logistics.
+NOWLOG_API Sequoialog.
+DPD_NL DPD Netherlands.
+GODEPENDABLE Dependable Supply Chain Services.
+ESDEX Top Ideal Express.
+LOGISYSTEMS_SFTP Kiitäjät.
+EXPEDITORS Expeditors.
+SNTGLOBAL_API Snt Global Etrax.
+SHIPX ShipX.
+QINTL_API Quickstat Courier LLC.
+PACKS Packs.
+POSTNL_INTERNATIONAL PostNL International.
+AMAZON_EMAIL_PUSH Amazon.
+DHL_API DHL.
+SPX Shopee Express.
+AXLEHIRE AxleHire.
+ICSCOURIER ICS COURIER.
+DIALOGO_LOGISTICA Dialogo Logistica.
+SHUNBANG_EXPRESS ShunBang Express.
+TCS_API TCS.
+SF_EXPRESS_CN SF Express China.
+PACKETA Packeta.
+SIC_TELIWAY Teliway SIC Express.
+MONDIALRELAY_FR Mondial Relay France.
+INTIME_FTP InTime.
+JD_EXPRESS 京东物流.
+FASTBOX Fastbox.
+PATHEON Patheon Logistics.
+INDIA_POST India Post Domestic.
+TIPSA_REF Tipsa Reference.
+ECOFREIGHT Eco Freight.
+VOX VOX SOLUCION EMPRESARIAL SRL.
+DIRECTFREIGHT_AU_REF Direct Freight Express.
+BESTTRANSPORT_SFTP Best Transport.
+AUSTRALIA_POST_API Australia Post.
+FRAGILEPAK_SFTP FragilePAK.
+FLIPXP FlipXpress.
+VALUE_WEBHOOK Value Logistics.
+DAESHIN Daeshin.
+SHERPA Sherpa.
+MWD_API Metropolitan Warehouse & Delivery.
+SMARTKARGO SmartKargo.
+DNJ_EXPRESS DNJ Express.
+GOPEOPLE Go People.
+MYSENDLE_API mySendle.
+ARAMEX_API Aramex.
+PIDGE Pidge.
+THAIPARCELS TP Logistic.
+PANTHER_REFERENCE_API Panther Reference.
+POSTAPLUS Posta Plus.
+BUFFALO BUFFALO.
+U_ENVIOS U-ENVIOS.
+ELITE_CO Elite Express.
+BARQEXP Barq.
+ROCHE_INTERNAL_SFTP Roche Internal Courier.
+DBSCHENKER_ICELAND DB Schenker Iceland.
+TNT_FR_REFERENCE TNT France Reference.
+NEWGISTICSAPI Newgistics API.
+GLOVO Glovo.
+GWLOGIS_API G.I.G.
+SPREETAIL_API Spreetail.
+MOOVA Moova.
+PLYCONGROUP Plycon Transportation Group.
+USPS_WEBHOOK USPS Informed Visibility - Webhook.
+REIMAGINEDELIVERY maergo.
+EDF_FTP Eurodifarm.
+DAO365 DAO365.
+BIOCAIR_FTP BioCair.
+RANSA_WEBHOOK Ransa.
+SHIPXPRES SHIPXPRESS.
+COURANT_PLUS_API Courant Plus.
+SHIPA SHIPA.
+HOMELOGISTICS Home Logistics.
+DX DX.
+POSTE_ITALIANE_PACCOCELERE Poste Italiane Paccocelere.
+TOLL_WEBHOOK Toll Group.
+LCTBR_API LCT do Brasil.
+DX_FREIGHT DX Freight.
+DHL_SFTP DHL Express.
+SHIPROCKET Shiprocket X.
+UBER_WEBHOOK Uber.
+STATOVERNIGHT Stat Overnight.
+BURD Burd Delivery.
+FASTSHIP Fastship Express.
+IBVENTURE_WEBHOOK IB Venture.
+GATI_KWE_API Gati-KWE.
+CRYOPDP_FTP CryoPDP.
+HUBBED HUBBED.
+TIPSA_API Tipsa API.
+ARASKARGO Aras Cargo.
+THIJS_NL Thijs Logistiek.
+ATSHEALTHCARE_REFERENCE ATS Healthcare.
+99MINUTOS 99minutos.
+HELLENIC_POST Hellenic (Greece) Post.
+HSM_GLOBAL HSM Global.
+MNX MNX.
+NMTRANSFER N&M Transfer Co., Inc..
+LOGYSTO Logysto.
+INDIA_POST_INT India Post International.
+AMAZON_FBA_SWISHIP_IN Swiship IN.
+SRT_TRANSPORT SRT Transport.
+BOMI Bomi Group.
+DELIVERR_SFTP Deliverr.
+HSDEXPRESS HSDEXPRESS.
+SIMPLETIRE_WEBHOOK SimpleTire.
+HUNTER_EXPRESS_SFTP Hunter Express.
+UPS_API UPS.
+WOOYOUNG_LOGISTICS_SFTP WOO YOUNG LOGISTICS CO.,LTD..
+PHSE_API PHSE.
+WISH_EMAIL_PUSH Wish.
+NORTHLINE Northline.
+MEDAFRICA Med Africa Logistics.
+DPD_AT_SFTP DPD Austria.
+ANTERAJA Anteraja.
+DHL_GLOBAL_FORWARDING_API DHL Global Forwarding API.
+LBCEXPRESS_API LBC EXPRESS INC..
+SIMSGLOBAL Sims Global.
+CDLDELIVERS CDL Last Mile.
+TYP TYP.
+TESTING_COURIER_WEBHOOK Testing Courier.
+PANDAGO_API Pandago.
+ROYAL_MAIL_FTP Royal Mail.
+THUNDEREXPRESS Thunder Express Australia.
+SECRETLAB_WEBHOOK Secretlab.
+SETEL Setel Express.
+JD_WORLDWIDE JD Worldwide.
+DPD_RU_API DPD Russia.
+ARGENTS_WEBHOOK Argents Express Group.
+POSTONE Post ONE.
+TUSKLOGISTICS Tusk Logistics.
+RHENUS_UK_API Rhenus Logistics UK.
+TAQBIN_SG_API Yamato Singapore.
+INNTRALOG_SFTP Inntralog GmbH.
+DAYROSS Day & Ross.
+CORREOSEXPRESS_API Correos Express (API).
+INTERNATIONAL_SEUR_API International Seur API.
+YODEL_API Yodel API.
+HEROEXPRESS Hero Express.
+DHL_SUPPLYCHAIN_IN DHL supply chain India.
+URGENT_CARGUS Urgent Cargus.
+FRONTDOORCORP FRONTdoor Collective.
+JTEXPRESS_PH J&T Express Philippines.
+PARCELSTARS_WEBHOOK Parcelstars.
+DPD_SK_SFTP DPD Slovakia.
+MOVIANTO Movianto.
+OZEPARTS_SHIPPING Ozeparts Shipping.
+KARGOMKOLAY KargomKolay (CargoMini).
+TRUNKRS Trunkrs.
+OMNIRPS_WEBHOOK Omni Returns.
+CHILEXPRESS Chile Express.
+TESTING_COURIER Testing Courier.
+JNE_API JNE (API).
+BJSHOMEDELIVERY_FTP BJS Distribution, Storage & Couriers - FTP.
+DEXPRESS_WEBHOOK D Express.
+USPS_API USPS API.
+TRANSVIRTUAL TransVirtual.
+SOLISTICA_API solistica.
+CHIENVENTURE_WEBHOOK Chienventure.
+DPD_UK_SFTP DPD UK.
+INPOST_UK InPost.
+JAVIT Javit.
+ZTO_DOMESTIC ZTO Express China.
+DHL_GT_API DHL Global Forwarding Guatemala.
+CEVA_TRACKING CEVA Package.
+KOMON_EXPRESS Komon Express.
+EASTWESTCOURIER_FTP East West Courier Pte Ltd.
+DANNIAO Danniao.
+SPECTRAN Spectran.
+DELIVER_IT Deliver-iT.
+RELAISCOLIS Relais Colis.
+GLS_SPAIN_API GLS Spain.
+POSTPLUS PostPlus.
+AIRTERRA Airterra.
+GIO_ECOURIER_API GIO Express Ecourier.
+DPD_CH_SFTP DPD Switzerland.
+FEDEX_API FedEx®.
+INTERSMARTTRANS INTERSMARTTRANS & SOLUTIONS SL.
+HERMES_UK_SFTP Hermes UK.
+EXELOT_FTP Exelot Ltd..
+DHL_PA_API DHL GLOBAL FORWARDING PANAMÁ.
+VIRTRANSPORT_SFTP Vir Transport.
+WORLDNET Worldnet Logistics.
+INSTABOX_WEBHOOK Instabox.
+KNG Keuhne + Nagel Global.
+FLASHEXPRESS_WEBHOOK Flash Express.
+MAGYAR_POSTA_API Magyar Posta.
+WESHIP_API WeShip.
+OHI_WEBHOOK Ohi.
+MUDITA MUDITA.
+BLUEDART_API Bluedart.
+T_CAT_API T-cat.
+ADS ADS Express.
+HERMES_IT HR Parcel.
+FITZMARK_API FitzMark.
+POSTI_API Posti API.
+SMSA_EXPRESS_WEBHOOK SMSA Express.
+TAMERGROUP_WEBHOOK Tamer Logistics.
+LIVRAPIDE Livrapide.
+NIPPON_EXPRESS Nippon Express.
+BETTERTRUCKS Better Trucks.
+FAN FAN COURIER EXPRESS.
+PB_USPSFLATS_FTP USPS Flats (Pitney Bowes).
+PARCELRIGHT Parcel Right.
+ITHINKLOGISTICS iThink Logistics.
+KERRY_EXPRESS_TH_WEBHOOK Kerry Logistics.
+ECOUTIER eCoutier.
+SHOWL SENHONG INTERNATIONAL LOGISTICS.
+BRT_IT_API BRT Bartolini API.
+RIXONHK_API Rixon Logistics.
+DBSCHENKER_API DB Schenker.
+ILYANGLOGIS Ilyang logistics.
+MAIL_BOX_ETC Mail Boxes Etc..
+WESHIP WeShip.
+DHL_GLOBAL_MAIL_API DHL eCommerce Solutions.
+ACTIVOS24_API Activos24.
+ATSHEALTHCARE ATS Healthcare.
+LUWJISTIK Luwjistik.
+GW_WORLD Gebrüder Weiss.
+FAIRSENDEN_API fairsenden.
+SERVIP_WEBHOOK SerVIP.
+SWISHIP Swiship.
+TANET Transport Ambientales.
+HOTSIN_CARGO SHENZHEN HOTSIN CARGO INT'L FORWARDING CO.,LTD.
+DIREX Direx.
+HUANTONG HuanTong.
+IMILE_API iMile.
+BDMNET BDMnet.
+AUEXPRESS Au Express.
+NYTLOGISTICS NYT SUPPLY CHAIN LOGISTICS Co.,LTD.
+DSV_REFERENCE DSV Futurewave.
+NOVOFARMA_WEBHOOK Novofarma.
+AITWORLDWIDE_SFTP AIT.
+SHOPOLIVE Olive.
+FNF_ZA Fast & Furious.
+DHL_ECOMMERCE_GC DHL eCommerce Greater China.
+FETCHR Fetchr.
+STARLINKS_API Starlinks Global.
+YYEXPRESS YYEXPRESS.
+SERVIENTREGA Servientrega.
+HANJIN HanJin.
+SPANISH_SEUR_FTP Spanish Seur.
+DX_B2B_CONNUM DX (B2B).
+HELTHJEM_API Helthjem.
+INEXPOST Inexpost.
+A2B_BA A2B Express Logistics.
+RHENUS_GROUP Rhenus Logistics.
+SBERLOGISTICS_RU Sber Logistics.
+MALCA_AMIT Malca-Amit.
+PPL Professional Parcel Logistics.
+OSM_WORLDWIDE_SFTP OSM Worldwide.
+ACILOGISTIX ACI Logistix.
+OPTIMACOURIER Optima Courier.
+NOVA_POSHTA_API Nova Poshta API.
+LOGGI Loggi.
+YIFAN YiFan Express.
+MYDYNALOGIC My DynaLogic.
+MORNINGLOBAL Morning Global.
+CONCISE_API Concise.
+FXTRAN Falcon Express.
+DELIVERYOURPARCEL_ZA Deliver Your Parcel.
+UPARCEL uParcel.
+MOBI_BR Mobi Logistica.
+LOGINEXT_WEBHOOK T&W Delivery.
+EMS EMS.
+SPEEDY Speedy.
+capture_id
+required
+string [ 1 .. 50 ] characters
+The PayPal capture ID.
+
+notify_payer
+boolean
+Default: false
+If true, sends an email notification to the payer of the PayPal transaction. The email contains the tracking information that was uploaded through the API.
+
+￼items
+Array of objects
+An array of details of items in the shipment.
+
+Responses
+201A successful response to a non-idempotent request returns the HTTP 201 Created status code with a JSON response body that shows tracker details. If a duplicate response is retried, returns the HTTP 200 OK status code.
+Request samples
+cURL
+Node.js
+Java
+Python
+￼Copy
+curl -v -X POST https://api-m.sandbox.paypal.com/v2/checkout/orders/5O190127TN364715T/track \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer access_token6V7rbVwmlM1gFZKW_8QtzWXqpcwQ6T5vhEGYNJDAAdn3paCgRpdeMdVYmWzgbKSsECednupJ3Zx5Xd-g' \
+-d '{
+  "capture_id": "8MC585209K746392H",
+  "tracking_number": "443844607820",
+  "carrier": "FEDEX",
+  "notify_payer": false,
+  "items": [
+    {
+      "name": "T-Shirt",
+      "sku": "sku02",
+      "quantity": "1",
+      "upc": {
+        "type": "UPC-A",
+        "code": "upc001"
+      },
+      "image_url": "https://www.example.com/example.jpg",
+      "url": "https://www.example.com/example"
+    }
+  ]
+}'
+Response samples
+201
+application/json
+￼Copy￼Expand all￼Collapse all
+{
+"id": "5O190127TN364715T",
+"status": "COMPLETED",
+"purchase_units": ￼[
+￼{
+"reference_id": "d9f80740-38f0-11e8-b467-0ed5f89f718b",
+"items": ￼[
+￼{
+"name": "Air Jordan Shoe",
+"sku": "sku01",
+"quantity": "1"
+},
+￼{
+"name": "T-Shirt",
+"sku": "sku02",
+"quantity": "1"
+}
+],
+"shipping": ￼{
+"trackers": ￼[
+￼{
+"id": "8MC585209K746392H-443844607820",
+"links": ￼[
+￼{
+"href": "https://api-m.paypal.com/v2/checkout/orders/5O190127TN364715T",
+"rel": "up",
+"method": "GET"
+},
+￼{
+"href": "https://api-m.paypal.com/v2/checkout/orders/5O190127TN364715T/trackers/8MC585209K746392H-443844607820",
+"rel": "update",
+"method": "PATCH"
+}
+],
+"create_time": "2022-08-12T21:20:49Z",
+"update_time": "2022-08-12T21:20:49Z"
+}
+]
+},
+"payments": ￼{
+"captures": ￼[
+￼{
+"id": "8MC585209K746392H",
+"status": "COMPLETED",
+"amount": ￼{
+"currency_code": "USD",
+"value": "100.00"
+},
+"seller_protection": ￼{
+"status": "NOT_ELIGIBLE"
+},
+"final_capture": true,
+"seller_receivable_breakdown": ￼{
+"gross_amount": ￼{
+"currency_code": "USD",
+"value": "100.00"
+},
+"paypal_fee": ￼{
+"currency_code": "USD",
+"value": "3.00"
+},
+"net_amount": ￼{
+"currency_code": "USD",
+"value": "97.00"
+}
+},
+"create_time": "2018-04-01T21:20:49Z",
+"update_time": "2018-04-01T21:20:49Z",
+"links": ￼[
+￼{
+"href": "https://api-m.paypal.com/v2/payments/captures/8MC585209K746392H",
+"rel": "self",
+"method": "GET"
+},
+￼{
+"href": "https://api-m.paypal.com/v2/payments/captures/8MC585209K746392H/refund",
+"rel": "refund",
+"method": "POST"
+}
+]
+}
+]
+}
+}
+],
+"links": ￼[
+￼{
+"href": "https://api-m.paypal.com/v2/checkout/orders/5O190127TN364715T",
+"rel": "self",
+"method": "GET"
+}
+]
+}
+Update or cancel tracking information for a PayPal order
+PATCH
+/v2/checkout/orders/{id}/trackers/{tracker_id}
+Updates or cancels the tracking information for a PayPal order, by ID. Updatable attributes or objects:
+
+
+Attribute Op Notes
+items replace Using replace op for items will replace the entire items object with the value sent in request.
+notify_payer replace, add
+Security
+Oauth2
+Request
+PATH PARAMETERS
+id
+required
+string [ 1 .. 36 ] characters
+The ID of the order that the tracking information is associated with.
+
+tracker_id
+required
+string [ 1 .. 36 ] characters
+The order tracking ID.
+
+HEADER PARAMETERS
+Authorization
+required
+string
+To make REST API calls, include the bearer token in this header with the Bearer authentication scheme. The value is Bearer <Access-Token> or Basic <client_id:secret>.
+
+Content-Type
+required
+string [ 1 .. 255 ] characters
+The media type. Required for operations with a request body. The value is application/<format>, where format is json.
+
+REQUEST BODY SCHEMA: application/json
+Array
+op
+required
+string
+The operation.
+
+Enum: Description
+add Depending on the target location reference, completes one of these functions:
+The target location is an array index. Inserts a new value into the array at the specified index.
+The target location is an object parameter that does not already exist. Adds a new parameter to the object.
+The target location is an object parameter that does exist. Replaces that parameter's value.
+The value parameter defines the value to add. For more information, see 4.1. add.
+remove Removes the value at the target location. For the operation to succeed, the target location must exist. For more information, see 4.2. remove.
+replace Replaces the value at the target location with a new value. The operation object must contain a value parameter that defines the replacement value. For the operation to succeed, the target location must exist. For more information, see 4.3. replace.
+move Removes the value at a specified location and adds it to the target location. The operation object must contain a from parameter, which is a string that contains a JSON pointer value that references the location in the target document from which to move the value. For the operation to succeed, the from location must exist. For more information, see 4.4. move.
+copy Copies the value at a specified location to the target location. The operation object must contain a from parameter, which is a string that contains a JSON pointer value that references the location in the target document from which to copy the value. For the operation to succeed, the from location must exist. For more information, see 4.5. copy.
+test Tests that a value at the target location is equal to a specified value. The operation object must contain a value parameter that defines the value to compare to the target location's value. For the operation to succeed, the target location must be equal to the value value. For test, equal indicates that the value at the target location and the value of destination
+
+
+Courtesy: @mmu094
+Rizq Revolution 
+ceo_samtraders@zohomail.com
+https://samtraderssmcpvtltd.zohodesk.com
+A Project Of Sam Traders Smc Pvt Ltd 
