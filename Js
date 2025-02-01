@@ -1,0 +1,25 @@
+function activateCreditCard(cardNumber, expDate, ccv) {
+    const cardDetails = {
+        number: cardNumber,
+        expiration: expDate,
+        ccv: ccv
+    };
+
+    // Simulate activation process
+    console.log("Activating credit card...");
+    console.log("Card Number: " + cardDetails.number);
+    console.log("Expiration Date: " + cardDetails.expiration);
+    console.log("CCV: " + cardDetails.ccv);
+    
+    // Here you would typically send the card details to a server for activation
+    // For demonstration, we will just return a success message
+    return "Credit card activated successfully!";
+}
+
+// Example usage
+const cardNumber = "1234-5678-9012-3456";
+const expDate = "12/25";
+const ccv = "123";
+
+const activationMessage = activateCreditCard(cardNumber, expDate, ccv);
+console.log(activationMessage);
