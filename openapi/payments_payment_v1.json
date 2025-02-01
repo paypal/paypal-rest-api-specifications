@@ -1958,8 +1958,8 @@
           "payer_id": {
             "type": "string",
             "description": "Deprecated. A unique ID that you can assign and track when you store a credit card in the vault or use a vaulted credit card. This ID can help to avoid unintentional use or misuse of credit cards and can be any value, such as a UUID, user name, or email address. **Required** when you use a vaulted credit card and if a `payer_id` was originally provided when you vaulted the credit card. Use external_customer_id instead.",
-            "maxLength": 1,
-            "minLength": 256
+            "minLength": 1,
+            "maxLength": 256
           },
           "external_customer_id": {
             "type": "string",
