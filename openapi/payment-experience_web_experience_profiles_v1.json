@@ -3,7 +3,27 @@
   "info": {
     "title": "Payment Experience Web Profiles",
     "description": "Use the Payment Experience API to create seamless payment experience profiles. For information about how to create a PayPal payment with a web experience profile, see <a href=\"/docs/integration/direct/payment-experience/\">Web experience profiles</a>.",
-    "version": "1.3"
+    "version": "1.3",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "web-profiles",
+      "description": "Use the `/payment-experience/web-profiles` resource to create, show details for, list, update, partially update, and delete web experience profiles."
+    }
+  ],
+  "externalDocs": {
+    "url": "https://developer.paypal.com/docs/api/payment-experience/v1/"
   },
   "paths": {
     "/v1/payment-experience/web-profiles": {
@@ -43,15 +63,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/paypal_request_id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -99,7 +123,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -112,11 +143,6 @@
             "Oauth2": [
               "https://uri.paypal.com/services/payments/realtimepayment"
             ]
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "tags": [
@@ -144,15 +170,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -193,15 +223,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -211,8 +245,18 @@
                 "$ref": "#/components/schemas/patch_request"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/patch_request"
+                "patch_request": {
+                  "value": [
+                    {
+                      "op": "add",
+                      "path": "/presentation/brand_name",
+                      "value": "new_brand_name"
+                    },
+                    {
+                      "op": "remove",
+                      "path": "/flow_config/landing_page_type"
+                    }
+                  ]
                 }
               }
             }
@@ -260,15 +304,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "security": [
@@ -306,15 +354,19 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "security": [
@@ -335,25 +387,6 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "web-profiles",
-      "description": "Use the `/payment-experience/web-profiles` resource to create, show details for, list, update, partially update, and delete web experience profiles."
-    }
-  ],
-  "externalDocs": {
-    "url": "https://developer.paypal.com/docs/api/payment-experience/v1/"
-  },
-  "servers": [
-    {
-      "url": "https://api-m.sandbox.paypal.com",
-      "description": "PayPal Sandbox Environment"
-    },
-    {
-      "url": "https://api-m.paypal.com",
-      "description": "PayPal Live Environment"
-    }
-  ],
   "components": {
     "requestBodies": {
       "web_profile": {
@@ -361,11 +394,6 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/web_profile"
-            },
-            "examples": {
-              "0": {
-                "$ref": "#/components/examples/web_profile"
-              }
             }
           }
         }
@@ -386,48 +414,6 @@
         }
       }
     },
-    "parameters": {
-      "paypal_request_id": {
-        "name": "PayPal-Request-Id",
-        "in": "header",
-        "description": "The server stores keys for three hours.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "content_type": {
-        "name": "Content-Type",
-        "in": "header",
-        "description": "Required for operations with a request body. The value is application/<format>. Where the 'format' is 'json'.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "default": "application/json"
-        }
-      },
-      "id": {
-        "name": "id",
-        "in": "path",
-        "description": "The ID of the profile to delete.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      }
-    },
-    "responses": {
-      "default": {
-        "description": "The default response.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/error_default"
-            }
-          }
-        }
-      }
-    },
     "schemas": {
       "error_details": {
         "title": "Error Details",
@@ -443,9 +429,7 @@
             "description": "The value of the field that caused the error."
           },
           "location": {
-            "type": "string",
-            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
-            "default": "body"
+            "$ref": "#/components/schemas/error_location"
           },
           "issue": {
             "type": "string",
@@ -460,42 +444,59 @@
           "issue"
         ]
       },
-      "error_default": {
-        "description": "The default error response.",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/error_400"
+      "error_location": {
+        "type": "string",
+        "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+        "enum": [
+          "body",
+          "path",
+          "query"
+        ],
+        "default": "body"
+      },
+      "error_link_description": {
+        "title": "Link Description",
+        "description": "The request-related [HATEOAS link](/api/rest/responses/#hateoas-links) information.",
+        "type": "object",
+        "required": [
+          "href",
+          "rel"
+        ],
+        "properties": {
+          "href": {
+            "description": "The complete target URL. To make the related call, combine the method with this [URI Template-formatted](https://tools.ietf.org/html/rfc6570) link. For pre-processing, include the `$`, `(`, and `)` characters. The `href` is the key HATEOAS component that links a completed call with a subsequent call.",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20000,
+            "pattern": "^.*$"
           },
-          {
-            "$ref": "#/components/schemas/error_401"
+          "rel": {
+            "description": "The [link relation type](https://tools.ietf.org/html/rfc5988#section-4), which serves as an ID for a link that unambiguously describes the semantics of the link. See [Link Relations](https://www.iana.org/assignments/link-relations/link-relations.xhtml).",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 100,
+            "pattern": "^.*$"
           },
-          {
-            "$ref": "#/components/schemas/error_403"
-          },
-          {
-            "$ref": "#/components/schemas/error_404"
-          },
-          {
-            "$ref": "#/components/schemas/error_409"
-          },
-          {
-            "$ref": "#/components/schemas/error_415"
-          },
-          {
-            "$ref": "#/components/schemas/error_422"
-          },
-          {
-            "$ref": "#/components/schemas/error_500"
-          },
-          {
-            "$ref": "#/components/schemas/error_503"
+          "method": {
+            "description": "The HTTP method required to make the related call.",
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 6,
+            "pattern": "^[A-Z]*$",
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE",
+              "PATCH"
+            ]
           }
-        ]
+        }
       },
       "error_400": {
         "type": "object",
-        "title": "400 Error",
-        "description": "Error response for 400",
+        "title": "Bad Request Error",
+        "description": "Request is not well-formed, syntactically incorrect, or violates schema.",
         "properties": {
           "name": {
             "type": "string",
@@ -509,7 +510,7 @@
               "Request is not well-formed, syntactically incorrect, or violates schema."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -519,17 +520,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_401": {
         "type": "object",
-        "title": "401 Error",
-        "description": "Error response for 401",
+        "title": "Unauthorized Error",
+        "description": "Authentication failed due to missing Authorization header, or invalid authentication credentials.",
         "properties": {
           "name": {
             "type": "string",
@@ -543,7 +548,7 @@
               "Authentication failed due to missing authorization header, or invalid authentication credentials."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -553,17 +558,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_403": {
         "type": "object",
-        "title": "403 Error",
-        "description": "Error response for 403",
+        "title": "Not Authorized Error",
+        "description": "The client is not authorized to access this resource, although it may have valid credentials. ",
         "properties": {
           "name": {
             "type": "string",
@@ -577,7 +586,7 @@
               "Authorization failed due to insufficient permissions."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -587,17 +596,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_404": {
         "type": "object",
-        "title": "404 Error",
-        "description": "Error response for 404",
+        "title": "Not found Error",
+        "description": "The server has not found anything matching the request URI. This either means that the URI is incorrect or the resource is not available.",
         "properties": {
           "name": {
             "type": "string",
@@ -611,7 +624,7 @@
               "The specified resource does not exist."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -621,17 +634,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_409": {
         "type": "object",
-        "title": "409 Error",
-        "description": "Error response for 409",
+        "title": "Resource Conflict Error",
+        "description": "The server has detected a conflict while processing this request.",
         "properties": {
           "name": {
             "type": "string",
@@ -645,7 +662,7 @@
               "The server has detected a conflict while processing this request."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -655,17 +672,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_415": {
         "type": "object",
-        "title": "409 Error",
-        "description": "Error response for 415",
+        "title": "Unsupported Media Type Error",
+        "description": "The server does not support the request payload's media type.",
         "properties": {
           "name": {
             "type": "string",
@@ -679,7 +700,7 @@
               "The server does not support the request payload's media type."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -689,17 +710,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_422": {
         "type": "object",
-        "title": "422 Error",
-        "description": "Error response for 422",
+        "title": "Unprocessable Entity Error",
+        "description": "The requested action cannot be performed and may require interaction with APIs or processes outside of the current request. This is distinct from a 500 response in that there are no systemic problems limiting the API from performing the request.",
         "properties": {
           "name": {
             "type": "string",
@@ -713,7 +738,7 @@
               "The requested action could not be performed, semantically incorrect, or failed business validation."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -723,17 +748,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_500": {
         "type": "object",
-        "title": "500 Error",
-        "description": "Error response for 500",
+        "title": "Internal Server Error",
+        "description": "This is either a system or application error, and generally indicates that although the client appeared to provide a correct request, something unexpected has gone wrong on the server.",
         "properties": {
           "name": {
             "type": "string",
@@ -751,26 +780,32 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "enum": [
-              "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR"
-            ],
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         },
         "example": {
           "name": "INTERNAL_SERVER_ERROR",
           "message": "An internal server error occurred.",
           "debug_id": "90957fca61718",
-          "information_link": "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR"
+          "links": [
+            {
+              "href": "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR",
+              "rel": "information_link"
+            }
+          ]
         }
       },
       "error_503": {
         "type": "object",
-        "title": "503 Error",
-        "description": "Error response for 503",
+        "title": "Service Unavailable Error",
+        "description": "The server is temporarily unable to handle the request, for example, because of planned maintenance or downtime.",
         "properties": {
           "name": {
             "type": "string",
@@ -788,10 +823,14 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         },
         "example": {
@@ -800,6 +839,65 @@
           "debug_id": "90957fca61718",
           "information_link": "https://developer.paypal.com/docs/api/orders/v2/#error-SERVICE_UNAVAILABLE"
         }
+      },
+      "error_details-2": {
+        "type": "object",
+        "title": "Error Details",
+        "description": "The error details. Required for client-side `4XX` errors.",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The name of the field that caused the error."
+          },
+          "issue": {
+            "type": "string",
+            "description": "The reason for the error."
+          }
+        },
+        "required": [
+          "field",
+          "issue"
+        ]
+      },
+      "error": {
+        "type": "object",
+        "title": "Error",
+        "description": "The error information.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The human-readable, unique name of the error.",
+            "readOnly": true
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes.",
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "description": "The message that describes the error.",
+            "readOnly": true
+          },
+          "information_link": {
+            "type": "string",
+            "description": "The URI to detailed information related to this error for the developer.",
+            "readOnly": true
+          },
+          "details": {
+            "type": "array",
+            "description": "An array of additional details for the error.",
+            "readOnly": true,
+            "items": {
+              "$ref": "#/components/schemas/error_details-2"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "message",
+          "information_link"
+        ]
       },
       "web_profile": {
         "type": "object",
@@ -925,65 +1023,6 @@
           "$ref": "#/components/schemas/web_profile"
         }
       },
-      "error_details-2": {
-        "type": "object",
-        "title": "Error Details",
-        "description": "The error details. Required for client-side `4XX` errors.",
-        "properties": {
-          "field": {
-            "type": "string",
-            "description": "The name of the field that caused the error."
-          },
-          "issue": {
-            "type": "string",
-            "description": "The reason for the error."
-          }
-        },
-        "required": [
-          "field",
-          "issue"
-        ]
-      },
-      "error": {
-        "type": "object",
-        "title": "Error",
-        "description": "The error information.",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The human-readable, unique name of the error.",
-            "readOnly": true
-          },
-          "debug_id": {
-            "type": "string",
-            "description": "The PayPal internal ID. Used for correlation purposes.",
-            "readOnly": true
-          },
-          "message": {
-            "type": "string",
-            "description": "The message that describes the error.",
-            "readOnly": true
-          },
-          "information_link": {
-            "type": "string",
-            "description": "The URI to detailed information related to this error for the developer.",
-            "readOnly": true
-          },
-          "details": {
-            "type": "array",
-            "description": "An array of additional details for the error.",
-            "readOnly": true,
-            "items": {
-              "$ref": "#/components/schemas/error_details-2"
-            }
-          }
-        },
-        "required": [
-          "name",
-          "message",
-          "information_link"
-        ]
-      },
       "patch": {
         "type": "object",
         "title": "Patch",
@@ -1027,35 +1066,24 @@
         }
       }
     },
-    "examples": {
-      "web_profile": {
-        "value": {
-          "name": "exampleProfile",
-          "presentation": {
-            "logo_image": "https://example.com/logo_image/"
-          },
-          "input_fields": {
-            "no_shipping": 1,
-            "address_override": 1
-          },
-          "flow_config": {
-            "landing_page_type": "billing",
-            "bank_txn_pending_url": "https://example.com/flow_config/"
-          }
+    "parameters": {
+      "paypal_request_id": {
+        "name": "PayPal-Request-Id",
+        "in": "header",
+        "description": "The server stores keys for three hours.",
+        "required": true,
+        "schema": {
+          "type": "string"
         }
       },
-      "patch_request": {
-        "value": [
-          {
-            "op": "add",
-            "path": "/presentation/brand_name",
-            "value": "new_brand_name"
-          },
-          {
-            "op": "remove",
-            "path": "/flow_config/landing_page_type"
-          }
-        ]
+      "id": {
+        "name": "id",
+        "in": "path",
+        "description": "The ID of the profile to delete.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
       }
     }
   }

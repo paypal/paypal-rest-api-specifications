@@ -3,7 +3,43 @@
   "info": {
     "title": "Partner Referrals",
     "description": "<blockquote><strong>Deprecation notice:</strong> This integration method is deprecated. PayPal continues to support existing merchants using this method, but be advised that new features and enhancements will not be applied to these integrations. For details, see <a href=\"/docs/multiparty/seller-onboarding/\">Onboard Sellers</a>.</blockquote> Partners can use the Partner Referrals API to add PayPal seller accounts using the <a href=\"/docs/platforms/seller-onboarding/before-payment/\">before payment</a> onboarding model. With this API, you collect seller data and pass it to the account creation and setup forms, reducing the burden on sellers during the signup and setup process.",
-    "version": "1.4"
+    "version": "1.4",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "merchant-integration",
+      "description": "Enables you to get information about a seller-partner integration."
+    },
+    {
+      "name": "partner-referrals",
+      "description": "Enables you to create and get information about shared customer data."
+    },
+    {
+      "name": "partner-referral-link",
+      "description": "Links partner-referral data with a PayPal account."
+    },
+    {
+      "name": "cancel-onboarding",
+      "description": "Enables you to cancel an in-progress seller onboarding."
+    },
+    {
+      "name": "partner",
+      "description": "Enables you to create, update and read partner agreements and preferences."
+    }
+  ],
+  "externalDocs": {
+    "url": "https://developer.paypal.com/docs/platforms/seller-onboarding/before-payment/"
   },
   "paths": {
     "/v1/customer/partner-referrals": {
@@ -23,7 +59,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -33,8 +76,156 @@
                 "$ref": "#/components/schemas/referral_data"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/referral_data"
+                "referral_data": {
+                  "value": {
+                    "customer_data": {
+                      "customer_type": "MERCHANT",
+                      "person_details": {
+                        "email_address": "customer@example.com",
+                        "name": {
+                          "prefix": "Mr.",
+                          "given_name": "Shashank",
+                          "surname": "Wankhede",
+                          "middle_name": "Govind"
+                        },
+                        "phone_contacts": [
+                          {
+                            "phone_number_details": {
+                              "country_code": "91",
+                              "national_number": "9740216087"
+                            },
+                            "phone_type": "HOME"
+                          }
+                        ],
+                        "home_address": {
+                          "line1": "11, outer ring road",
+                          "state": "Karnataka",
+                          "city": "Bangalore",
+                          "country_code": "IN",
+                          "postal_code": "560103"
+                        },
+                        "nationality_country_code": "IN",
+                        "identity_documents": [
+                          {
+                            "type": "SOCIAL_SECURITY_NUMBER",
+                            "value": "ABCDEF34646",
+                            "partial_value": false,
+                            "issuer_country_code": "US"
+                          }
+                        ]
+                      },
+                      "business_details": {
+                        "phone_contacts": [
+                          {
+                            "phone_number_details": {
+                              "country_code": "91",
+                              "national_number": "9740216087"
+                            },
+                            "phone_type": "FAX"
+                          }
+                        ],
+                        "business_address": {
+                          "line1": "11, outer ring road",
+                          "state": "Karnataka",
+                          "city": "Bangalore",
+                          "country_code": "IN",
+                          "postal_code": "560103"
+                        },
+                        "business_type": "PROPRIETORSHIP",
+                        "category": "1004",
+                        "sub_category": "2025",
+                        "merchant_category_code": "8931",
+                        "names": [
+                          {
+                            "type": "LEGAL",
+                            "name": "SHASHANK STORE"
+                          }
+                        ],
+                        "business_description": "Arts and handicrafts",
+                        "event_dates": [
+                          {
+                            "event_type": "ESTABLISHED",
+                            "event_date": "2009-01-31T13:59:45Z"
+                          }
+                        ],
+                        "website_urls": [
+                          "https://example.com/mystore/"
+                        ],
+                        "annual_sales_volume_range": {
+                          "minimum_amount": {
+                            "currency": "USD",
+                            "value": "2000"
+                          },
+                          "maximum_amount": {
+                            "currency": "USD",
+                            "value": "3000"
+                          }
+                        },
+                        "average_monthly_volume_range": {},
+                        "identity_documents": [
+                          {
+                            "type": "TAX_IDENTIFICATION_NUMBER",
+                            "value": "ABCDEF34646",
+                            "partial_value": false,
+                            "issuer_country_code": "US"
+                          }
+                        ],
+                        "email_contacts": [
+                          {
+                            "email_address": "customer-service@example.com",
+                            "role": "CUSTOMER_SERVICE"
+                          }
+                        ]
+                      },
+                      "financial_instrument_data": {
+                        "bank_details": [
+                          {
+                            "nick_name": "Bank of America",
+                            "account_number": "123405668293",
+                            "account_type": "CHECKING",
+                            "currency_code": "USD",
+                            "identifiers": [
+                              {
+                                "type": "ROUTING_NUMBER_1",
+                                "value": "123456789"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "preferred_language_code": "en_US",
+                      "primary_currency_code": "USD",
+                      "referral_user_payer_id": {
+                        "type": "PAYER_ID",
+                        "value": "RFYUH2QQDGUQU"
+                      },
+                      "partner_specific_identifiers": [
+                        {
+                          "type": "TRACKING_ID",
+                          "value": "ABJSDFO343SD"
+                        }
+                      ]
+                    },
+                    "requested_capabilities": [
+                      {
+                        "capability": "BANK_ADDITION"
+                      }
+                    ],
+                    "web_experience_preference": {
+                      "partner_logo_url": "https://example.com/logo/",
+                      "return_url": "https://example.com/",
+                      "action_renewal_url": "https://example.com/renew/"
+                    },
+                    "collected_consents": [
+                      {
+                        "type": "SHARE_DATA_CONSENT",
+                        "granted": true
+                      }
+                    ],
+                    "products": [
+                      "EXPRESS_CHECKOUT"
+                    ]
+                  }
                 }
               }
             }
@@ -70,7 +261,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -105,7 +303,14 @@
             "description": "A successful request returns the HTTP `201 Created` status code and a JSON response body that lists sellers. For each seller, the response shows the seller ID (`merchant_id`), the tracking ID, and [HATEOAS links](/docs/api/reference/api-responses/#hateoas-links) to show the seller-partner information."
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -145,7 +350,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -188,7 +400,14 @@
             }
           },
           "default": {
-            "$ref": "#/components/responses/default"
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -207,40 +426,272 @@
           "merchant-integration"
         ]
       }
+    },
+    "/v1/customer/partners/{id}": {
+      "get": {
+        "summary": "Show partner information - agreements and preferences",
+        "description": "Shows partner information - agreements and preferences - by partner ID.",
+        "operationId": "partner.read",
+        "responses": {
+          "200": {
+            "description": "A successful request returns the HTTP `200 OK` status code and a JSON response body that shows partner information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/partner"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization failed due to insufficient permissions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-2"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The specified resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-2"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An internal server error has occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-2"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-2"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          },
+          {
+            "$ref": "#/components/parameters/country_code"
+          },
+          {
+            "$ref": "#/components/parameters/product"
+          },
+          {
+            "$ref": "#/components/parameters/content_type"
+          },
+          {
+            "$ref": "#/components/parameters/x_paypal_security_context"
+          }
+        ],
+        "security": [
+          {
+            "Oauth2": [
+              "https://uri.paypal.com/services/customer/partner"
+            ]
+          }
+        ],
+        "tags": [
+          "partner"
+        ]
+      },
+      "post": {
+        "summary": "Create partner information - agreements and preferences",
+        "description": "Creates partner information - agreements and preferences - for the given partner.",
+        "operationId": "partner.create",
+        "responses": {
+          "201": {
+            "description": "A successful request returns the HTTP `201 Created` status code and a JSON response body that contains an array of [HATEOAS links](/docs/api/reference/api-responses/#hateoas-links) that show the partner info.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/partner"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request is not well-formed, syntactically incorrect, or violates schema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-2"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization failed due to insufficient permissions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-2"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An internal server error has occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-2"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-2"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          },
+          {
+            "$ref": "#/components/parameters/content_type"
+          },
+          {
+            "$ref": "#/components/parameters/x_paypal_security_context"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/partner"
+        },
+        "security": [
+          {
+            "Oauth2": [
+              "https://uri.paypal.com/services/customer/partner"
+            ]
+          }
+        ],
+        "tags": [
+          "partner"
+        ]
+      },
+      "put": {
+        "summary": "Update partner information - agreements and preferences",
+        "description": "Updates partner information - agreements and preferences - for the given partner.",
+        "operationId": "partner.update",
+        "responses": {
+          "204": {
+            "description": "The server has successfully executed the method, but there is no entity body to return."
+          },
+          "400": {
+            "description": "Request is not well-formed, syntactically incorrect, or violates schema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-2"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization failed due to insufficient permissions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-2"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The specified resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-2"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An internal server error has occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-2"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-2"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          },
+          {
+            "$ref": "#/components/parameters/content_type"
+          },
+          {
+            "$ref": "#/components/parameters/x_paypal_security_context"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/partner"
+        },
+        "security": [
+          {
+            "Oauth2": [
+              "https://uri.paypal.com/services/customer/partner"
+            ]
+          }
+        ],
+        "tags": [
+          "partner"
+        ]
+      }
     }
   },
-  "tags": [
-    {
-      "name": "merchant-integration",
-      "description": "Enables you to get information about a seller-partner integration."
-    },
-    {
-      "name": "partner-referrals",
-      "description": "Enables you to create and get information about shared customer data."
-    },
-    {
-      "name": "partner-referral-link",
-      "description": "Links partner-referral data with a PayPal account."
-    },
-    {
-      "name": "cancel-onboarding",
-      "description": "Enables you to cancel an in-progress seller onboarding."
-    }
-  ],
-  "externalDocs": {
-    "url": "https://developer.paypal.com/docs/platforms/seller-onboarding/before-payment/"
-  },
-  "servers": [
-    {
-      "url": "https://api-m.sandbox.paypal.com",
-      "description": "PayPal Sandbox Environment"
-    },
-    {
-      "url": "https://api-m.paypal.com",
-      "description": "PayPal Live Environment"
-    }
-  ],
   "components": {
+    "requestBodies": {
+      "partner": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/partner"
+            }
+          }
+        },
+        "required": true
+      }
+    },
     "securitySchemes": {
       "Oauth2": {
         "type": "oauth2",
@@ -252,64 +703,6 @@
               "https://uri.paypal.com/services/customer/partner": "Manage seller resources.",
               "https://uri.paypal.com/services/customer/partner-referrals/readwrite": "Manage external referral data with PayPal",
               "https://uri.paypal.com/services/customer/partner-referrals": "Manage referral data shared by Partner with PayPal. To be used by only internal apps"
-            }
-          }
-        }
-      }
-    },
-    "parameters": {
-      "partner_referral_id": {
-        "name": "partner_referral_id",
-        "in": "path",
-        "description": "Filters the links in the response by this partner referral ID.",
-        "schema": {
-          "type": "string"
-        },
-        "required": true
-      },
-      "partner_id": {
-        "name": "partner_id",
-        "in": "path",
-        "description": "The ID of the partner for which to show onboarded seller's credentials, which is the partner's PayPal account number. To find this ID, log in to the partner's PayPal business account. Navigate to **Profile**, click **Profile and settings**, and click **My business info**. The account number appears in the **Merchant account ID** section.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "tracking_id": {
-        "name": "tracking_id",
-        "in": "query",
-        "description": "Filters the sellers in the response by this partner-provided seller ID (`merchant_id`).",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "merchant_id": {
-        "name": "merchant_id",
-        "in": "path",
-        "description": "The ID of the seller for which to show status information.",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "fields": {
-        "name": "fields",
-        "in": "query",
-        "description": "Filters the fields in the response to this comma-separated list of fields.",
-        "schema": {
-          "type": "string"
-        }
-      }
-    },
-    "responses": {
-      "default": {
-        "description": "The default response.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/error_default"
             }
           }
         }
@@ -330,9 +723,7 @@
             "description": "The value of the field that caused the error."
           },
           "location": {
-            "type": "string",
-            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
-            "default": "body"
+            "$ref": "#/components/schemas/error_location"
           },
           "issue": {
             "type": "string",
@@ -347,42 +738,59 @@
           "issue"
         ]
       },
-      "error_default": {
-        "description": "The default error response.",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/error_400"
+      "error_location": {
+        "type": "string",
+        "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+        "enum": [
+          "body",
+          "path",
+          "query"
+        ],
+        "default": "body"
+      },
+      "error_link_description": {
+        "title": "Link Description",
+        "description": "The request-related [HATEOAS link](/api/rest/responses/#hateoas-links) information.",
+        "type": "object",
+        "required": [
+          "href",
+          "rel"
+        ],
+        "properties": {
+          "href": {
+            "description": "The complete target URL. To make the related call, combine the method with this [URI Template-formatted](https://tools.ietf.org/html/rfc6570) link. For pre-processing, include the `$`, `(`, and `)` characters. The `href` is the key HATEOAS component that links a completed call with a subsequent call.",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20000,
+            "pattern": "^.*$"
           },
-          {
-            "$ref": "#/components/schemas/error_401"
+          "rel": {
+            "description": "The [link relation type](https://tools.ietf.org/html/rfc5988#section-4), which serves as an ID for a link that unambiguously describes the semantics of the link. See [Link Relations](https://www.iana.org/assignments/link-relations/link-relations.xhtml).",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 100,
+            "pattern": "^.*$"
           },
-          {
-            "$ref": "#/components/schemas/error_403"
-          },
-          {
-            "$ref": "#/components/schemas/error_404"
-          },
-          {
-            "$ref": "#/components/schemas/error_409"
-          },
-          {
-            "$ref": "#/components/schemas/error_415"
-          },
-          {
-            "$ref": "#/components/schemas/error_422"
-          },
-          {
-            "$ref": "#/components/schemas/error_500"
-          },
-          {
-            "$ref": "#/components/schemas/error_503"
+          "method": {
+            "description": "The HTTP method required to make the related call.",
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 6,
+            "pattern": "^[A-Z]*$",
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE",
+              "PATCH"
+            ]
           }
-        ]
+        }
       },
       "error_400": {
         "type": "object",
-        "title": "400 Error",
-        "description": "Error response for 400",
+        "title": "Bad Request Error",
+        "description": "Request is not well-formed, syntactically incorrect, or violates schema.",
         "properties": {
           "name": {
             "type": "string",
@@ -396,7 +804,7 @@
               "Request is not well-formed, syntactically incorrect, or violates schema."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -406,17 +814,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_401": {
         "type": "object",
-        "title": "401 Error",
-        "description": "Error response for 401",
+        "title": "Unauthorized Error",
+        "description": "Authentication failed due to missing Authorization header, or invalid authentication credentials.",
         "properties": {
           "name": {
             "type": "string",
@@ -430,7 +842,7 @@
               "Authentication failed due to missing authorization header, or invalid authentication credentials."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -440,17 +852,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_403": {
         "type": "object",
-        "title": "403 Error",
-        "description": "Error response for 403",
+        "title": "Not Authorized Error",
+        "description": "The client is not authorized to access this resource, although it may have valid credentials. ",
         "properties": {
           "name": {
             "type": "string",
@@ -464,7 +880,7 @@
               "Authorization failed due to insufficient permissions."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -474,17 +890,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_404": {
         "type": "object",
-        "title": "404 Error",
-        "description": "Error response for 404",
+        "title": "Not found Error",
+        "description": "The server has not found anything matching the request URI. This either means that the URI is incorrect or the resource is not available.",
         "properties": {
           "name": {
             "type": "string",
@@ -498,7 +918,7 @@
               "The specified resource does not exist."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -508,17 +928,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_409": {
         "type": "object",
-        "title": "409 Error",
-        "description": "Error response for 409",
+        "title": "Resource Conflict Error",
+        "description": "The server has detected a conflict while processing this request.",
         "properties": {
           "name": {
             "type": "string",
@@ -532,7 +956,7 @@
               "The server has detected a conflict while processing this request."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -542,17 +966,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_415": {
         "type": "object",
-        "title": "409 Error",
-        "description": "Error response for 415",
+        "title": "Unsupported Media Type Error",
+        "description": "The server does not support the request payload's media type.",
         "properties": {
           "name": {
             "type": "string",
@@ -566,7 +994,7 @@
               "The server does not support the request payload's media type."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -576,17 +1004,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_422": {
         "type": "object",
-        "title": "422 Error",
-        "description": "Error response for 422",
+        "title": "Unprocessable Entity Error",
+        "description": "The requested action cannot be performed and may require interaction with APIs or processes outside of the current request. This is distinct from a 500 response in that there are no systemic problems limiting the API from performing the request.",
         "properties": {
           "name": {
             "type": "string",
@@ -600,7 +1032,7 @@
               "The requested action could not be performed, semantically incorrect, or failed business validation."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -610,17 +1042,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_500": {
         "type": "object",
-        "title": "500 Error",
-        "description": "Error response for 500",
+        "title": "Internal Server Error",
+        "description": "This is either a system or application error, and generally indicates that although the client appeared to provide a correct request, something unexpected has gone wrong on the server.",
         "properties": {
           "name": {
             "type": "string",
@@ -638,26 +1074,32 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "enum": [
-              "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR"
-            ],
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         },
         "example": {
           "name": "INTERNAL_SERVER_ERROR",
           "message": "An internal server error occurred.",
           "debug_id": "90957fca61718",
-          "information_link": "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR"
+          "links": [
+            {
+              "href": "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR",
+              "rel": "information_link"
+            }
+          ]
         }
       },
       "error_503": {
         "type": "object",
-        "title": "503 Error",
-        "description": "Error response for 503",
+        "title": "Service Unavailable Error",
+        "description": "The server is temporarily unable to handle the request, for example, because of planned maintenance or downtime.",
         "properties": {
           "name": {
             "type": "string",
@@ -675,10 +1117,14 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         },
         "example": {
@@ -1933,6 +2379,37 @@
           }
         }
       },
+      "error_details-2": {
+        "title": "Error Details",
+        "type": "object",
+        "description": "The error details. Required for client-side `4XX` errors.",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The field that caused the error. If this field is in the body, set this value to the field's JSON pointer value. Required for client-side errors."
+          },
+          "value": {
+            "type": "string",
+            "description": "The value of the field that caused the error."
+          },
+          "location": {
+            "type": "string",
+            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+            "default": "body"
+          },
+          "issue": {
+            "type": "string",
+            "description": "The unique, fine-grained application-level error code."
+          },
+          "description": {
+            "type": "string",
+            "description": "The human-readable description for an issue. The description can change over the lifetime of an API, so clients must not depend on this value."
+          }
+        },
+        "required": [
+          "issue"
+        ]
+      },
       "link_description": {
         "type": "object",
         "title": "Link Description",
@@ -1965,6 +2442,51 @@
             ]
           }
         }
+      },
+      "error": {
+        "type": "object",
+        "title": "Error",
+        "description": "The error details.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The human-readable, unique name of the error."
+          },
+          "message": {
+            "type": "string",
+            "description": "The message that describes the error."
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "information_link": {
+            "type": "string",
+            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
+            "readOnly": true
+          },
+          "details": {
+            "type": "array",
+            "description": "An array of additional details about the error.",
+            "items": {
+              "$ref": "#/components/schemas/error_details-2"
+            }
+          },
+          "links": {
+            "type": "array",
+            "description": "An array of request-related [HATEOAS links](/docs/api/reference/api-responses/#hateoas-links).",
+            "readOnly": true,
+            "items": {
+              "$ref": "#/components/schemas/link_description",
+              "readOnly": true
+            }
+          }
+        },
+        "required": [
+          "name",
+          "message",
+          "debug_id"
+        ]
       },
       "create_referral_data_response": {
         "type": "object",
@@ -2317,6 +2839,20 @@
             "type": "string",
             "description": "The payer ID of the seller after creation of their PayPal account."
           },
+          "given_name": {
+            "type": "string",
+            "description": "The given name of the seller. Only available for casual sellers.",
+            "maxLength": 140,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z ,.'-]+$"
+          },
+          "surname": {
+            "type": "string",
+            "description": "The surname of the seller. Only available for casual sellers.",
+            "maxLength": 140,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z ,.'-]+$"
+          },
           "products": {
             "type": "array",
             "description": "An array of all products that are integrated with the partner for the seller.",
@@ -2327,6 +2863,10 @@
           "payments_receivable": {
             "type": "boolean",
             "description": "Indicates whether the seller account can receive payments."
+          },
+          "legal_name": {
+            "type": "string",
+            "description": "The legal business name of the seller."
           },
           "primary_email_confirmed": {
             "type": "boolean",
@@ -2428,158 +2968,410 @@
             "maxLength": 255
           }
         }
-      }
-    },
-    "examples": {
-      "referral_data": {
-        "value": {
-          "customer_data": {
-            "customer_type": "MERCHANT",
-            "person_details": {
-              "email_address": "customer@example.com",
-              "name": {
-                "prefix": "Mr.",
-                "given_name": "Shashank",
-                "surname": "Wankhede",
-                "middle_name": "Govind"
-              },
-              "phone_contacts": [
-                {
-                  "phone_number_details": {
-                    "country_code": "91",
-                    "national_number": "9740216087"
-                  },
-                  "phone_type": "HOME"
-                }
-              ],
-              "home_address": {
-                "line1": "11, outer ring road",
-                "state": "Karnataka",
-                "city": "Bangalore",
-                "country_code": "IN",
-                "postal_code": "560103"
-              },
-              "nationality_country_code": "IN",
-              "identity_documents": [
-                {
-                  "type": "SOCIAL_SECURITY_NUMBER",
-                  "value": "ABCDEF34646",
-                  "partial_value": false,
-                  "issuer_country_code": "US"
-                }
-              ]
-            },
-            "business_details": {
-              "phone_contacts": [
-                {
-                  "phone_number_details": {
-                    "country_code": "91",
-                    "national_number": "9740216087"
-                  },
-                  "phone_type": "FAX"
-                }
-              ],
-              "business_address": {
-                "line1": "11, outer ring road",
-                "state": "Karnataka",
-                "city": "Bangalore",
-                "country_code": "IN",
-                "postal_code": "560103"
-              },
-              "business_type": "PROPRIETORSHIP",
-              "category": "1004",
-              "sub_category": "2025",
-              "merchant_category_code": "8931",
-              "names": [
-                {
-                  "type": "LEGAL",
-                  "name": "SHASHANK STORE"
-                }
-              ],
-              "business_description": "Arts and handicrafts",
-              "event_dates": [
-                {
-                  "event_type": "ESTABLISHED",
-                  "event_date": "2009-01-31T13:59:45Z"
-                }
-              ],
-              "website_urls": [
-                "https://example.com/mystore/"
-              ],
-              "annual_sales_volume_range": {
-                "minimum_amount": {
-                  "currency": "USD",
-                  "value": "2000"
-                },
-                "maximum_amount": {
-                  "currency": "USD",
-                  "value": "3000"
-                }
-              },
-              "average_monthly_volume_range": {},
-              "identity_documents": [
-                {
-                  "type": "TAX_IDENTIFICATION_NUMBER",
-                  "value": "ABCDEF34646",
-                  "partial_value": false,
-                  "issuer_country_code": "US"
-                }
-              ],
-              "email_contacts": [
-                {
-                  "email_address": "customer-service@example.com",
-                  "role": "CUSTOMER_SERVICE"
-                }
-              ]
-            },
-            "financial_instrument_data": {
-              "bank_details": [
-                {
-                  "nick_name": "Bank of America",
-                  "account_number": "123405668293",
-                  "account_type": "CHECKING",
-                  "currency_code": "USD",
-                  "identifiers": [
-                    {
-                      "type": "ROUTING_NUMBER_1",
-                      "value": "123456789"
-                    }
-                  ]
-                }
-              ]
-            },
-            "preferred_language_code": "en_US",
-            "primary_currency_code": "USD",
-            "referral_user_payer_id": {
-              "type": "PAYER_ID",
-              "value": "RFYUH2QQDGUQU"
-            },
-            "partner_specific_identifiers": [
-              {
-                "type": "TRACKING_ID",
-                "value": "ABJSDFO343SD"
-              }
+      },
+      "error_details-3": {
+        "type": "object",
+        "title": "Error Details",
+        "description": "The error details. Required for client-side `4XX` errors.",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The name of the field that caused the error."
+          },
+          "issue": {
+            "type": "string",
+            "description": "The reason for the error."
+          }
+        },
+        "required": [
+          "field",
+          "issue"
+        ]
+      },
+      "error-2": {
+        "type": "object",
+        "title": "Error",
+        "description": "The error information.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The human-readable, unique name of the error.",
+            "readOnly": true
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes.",
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "description": "The message that describes the error.",
+            "readOnly": true
+          },
+          "information_link": {
+            "type": "string",
+            "description": "The URI to detailed information related to this error for the developer.",
+            "readOnly": true
+          },
+          "details": {
+            "type": "array",
+            "description": "An array of additional details for the error.",
+            "readOnly": true,
+            "items": {
+              "$ref": "#/components/schemas/error_details-3"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "message",
+          "information_link"
+        ]
+      },
+      "product-integration": {
+        "type": "object",
+        "title": "Product Integration",
+        "description": "The required information for a partner to integrate this product.",
+        "properties": {
+          "product": {
+            "type": "string",
+            "description": "The product.",
+            "enum": [
+              "EXPRESS_CHECKOUT",
+              "WEBSITE_PAYMENTS_STANDARD",
+              "MASS_PAYMENT",
+              "EMAIL_PAYMENTS",
+              "EBAY_CHECKOUT",
+              "PAYFLOW_LINK",
+              "PAYFLOW_PRO",
+              "WEBSITE_PAYMENTS_PRO_3_0",
+              "WEBSITE_PAYMENTS_PRO_2_0",
+              "VIRTUAL_TERMINAL",
+              "HOSTED_SOLE_SOLUTION",
+              "BILL_ME_LATER",
+              "MOBILE_EXPRESS_CHECKOUT",
+              "PAYPAL_HERE",
+              "MOBILE_IN_STORE",
+              "PAYPAL_STANDARD",
+              "MOBILE_PAYPAL_STANDARD",
+              "MOBILE_PAYMENT_ACCEPTANCE",
+              "PAYPAL_ADVANCED",
+              "PAYPAL_PRO",
+              "ENHANCED_RECURRING_PAYMENTS"
             ]
           },
-          "requested_capabilities": [
-            {
-              "capability": "BANK_ADDITION"
-            }
-          ],
-          "web_experience_preference": {
-            "partner_logo_url": "https://example.com/logo/",
-            "return_url": "https://example.com/",
-            "action_renewal_url": "https://example.com/renew/"
+          "integration_type": {
+            "type": "string",
+            "description": "The integration type for the product as third or first party or sellers that are onboarded through this partner.",
+            "enum": [
+              "FIRST_PARTY",
+              "THIRD_PARTY"
+            ]
           },
-          "collected_consents": [
-            {
-              "type": "SHARE_DATA_CONSENT",
-              "granted": true
+          "credential_type": {
+            "type": "string",
+            "description": "The credential type for a first-party integration. Required if `integration_type` is provided.",
+            "enum": [
+              "SIGNATURE",
+              "CERTIFICATE",
+              "OAUTH_TOKEN"
+            ]
+          },
+          "permissions": {
+            "type": "array",
+            "description": "An array of permissions that the partner expects that the seller has granted for a third-party integration. Different products need different permissions, so permissions also depend on the product.",
+            "items": {
+              "type": "string",
+              "description": "Permission given to the partner.",
+              "enum": [
+                "EXPRESS_CHECKOUT",
+                "REFUND",
+                "DIRECT_PAYMENT",
+                "AUTH_CAPTURE",
+                "BUTTON_MANAGER",
+                "ACCOUNT_BALANCE",
+                "TRANSACTION_DETAILS",
+                "TRANSACTION_SEARCH",
+                "REFERENCE_TRANSACTION",
+                "RECURRING_PAYMENTS",
+                "BILLING_AGREEMENT",
+                "MANAGE_PENDING_TRANSACTION_STATUS",
+                "NON_REFERENCED_CREDIT",
+                "MASS_PAY",
+                "ENCRYPTED_WEBSITE_PAYMENTS",
+                "SETTLEMENT_CONSOLIDATION",
+                "SETTLEMENT_REPORTING",
+                "MOBILE_CHECKOUT",
+                "AIR_TRAVEL",
+                "INVOICING",
+                "RECURRING_PAYMENT_REPORT",
+                "EXTENDED_PRO_PROCESSING_REPORT",
+                "EXCEPTION_PROCESSING_REPORT",
+                "TRANSACTION_DETAIL_REPORT",
+                "ACCOUNT_MANAGEMENT_PERMISSION",
+                "ACCESS_BASIC_PERSONAL_DATA",
+                "ACCESS_ADVANCED_PERSONAL_DATA"
+              ]
             }
-          ],
-          "products": [
-            "EXPRESS_CHECKOUT"
-          ]
+          }
+        }
+      },
+      "product-preferences": {
+        "type": "object",
+        "title": "Product Preferences",
+        "description": "The product preferences. A partner can customize these preferences based on the country and product.",
+        "properties": {
+          "product": {
+            "type": "string",
+            "description": "The product to which these preferences belong.",
+            "enum": [
+              "EXPRESS_CHECKOUT",
+              "WEBSITE_PAYMENTS_STANDARD",
+              "MASS_PAYMENT",
+              "EMAIL_PAYMENTS",
+              "EBAY_CHECKOUT",
+              "PAYFLOW_LINK",
+              "PAYFLOW_PRO",
+              "WEBSITE_PAYMENTS_PRO_3_0",
+              "WEBSITE_PAYMENTS_PRO_2_0",
+              "VIRTUAL_TERMINAL",
+              "HOSTED_SOLE_SOLUTION",
+              "BILL_ME_LATER",
+              "MOBILE_EXPRESS_CHECKOUT",
+              "PAYPAL_HERE",
+              "MOBILE_IN_STORE",
+              "PAYPAL_STANDARD",
+              "MOBILE_PAYPAL_STANDARD",
+              "MOBILE_PAYMENT_ACCEPTANCE",
+              "PAYPAL_ADVANCED",
+              "PAYPAL_PRO",
+              "ENHANCED_RECURRING_PAYMENTS"
+            ]
+          },
+          "url": {
+            "type": "string",
+            "description": "The URL to which to redirect the seller after sign-up is complete.",
+            "format": "uri",
+            "maxLength": 2048
+          }
+        }
+      },
+      "message": {
+        "type": "object",
+        "title": "Message",
+        "description": "The user- and seller-provided messages.",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "The message text.",
+            "maxLength": 255
+          },
+          "language_code": {
+            "type": "string",
+            "description": "The [locale code](/docs/api/reference/locale-codes/) for the language of the message, such as `en_US`."
+          }
+        }
+      },
+      "region-preferences": {
+        "type": "object",
+        "title": "Region Preferences",
+        "description": "The region preferences.",
+        "properties": {
+          "country_code": {
+            "type": "string",
+            "description": "The [two-character ISO-3166-1 country code](/docs/api/reference/country-codes/) for the country that is associated with the preferences."
+          },
+          "product_preferences": {
+            "type": "array",
+            "description": "An array of product preferences. Can change for a country or product.",
+            "items": {
+              "$ref": "#/components/schemas/product-preferences"
+            }
+          },
+          "return_message": {
+            "type": "array",
+            "description": "An array of messages to the seller from the partner after completion of sign-up. The message can change by country and language.",
+            "items": {
+              "$ref": "#/components/schemas/message"
+            }
+          }
+        }
+      },
+      "partner": {
+        "type": "object",
+        "title": "Partner",
+        "description": "The seller acquisition partner-related information. Defines the settings for the customized onboarding experience of the seller.",
+        "properties": {
+          "partner_id": {
+            "type": "string",
+            "description": "The account ID of the partner."
+          },
+          "launch_type": {
+            "type": "string",
+            "description": "Indicates whether the onboarding occurs in a full browser, mini-browser, or light box.",
+            "default": "FULL_BROWSER",
+            "enum": [
+              "FULL_BROWSER",
+              "LIGHT_BOX",
+              "EMBEDDED",
+              "MINI_BROWSER"
+            ]
+          },
+          "receives_credential": {
+            "type": "boolean",
+            "description": "Indicates whether the partner is integrated to receive a seller credential.",
+            "default": false
+          },
+          "product_selection": {
+            "type": "string",
+            "description": "Indicates whether the seller can select a product with which to integrate.",
+            "enum": [
+              "Y",
+              "N",
+              "P"
+            ]
+          },
+          "logo_url": {
+            "type": "string",
+            "description": "The partner logo URL. Provides a way for partners to update their logo through preferences. This logo over-writes any image URL provided earlier for their business accounts.",
+            "format": "uri"
+          },
+          "notification_url": {
+            "type": "string",
+            "description": "The partner-provided URL for notifications.",
+            "format": "uri"
+          },
+          "integration_preferences": {
+            "type": "array",
+            "description": "An array of required information for a partner to integrate this product. Varies based on the product to integrate.",
+            "items": {
+              "$ref": "#/components/schemas/product-integration"
+            }
+          },
+          "region_preferences": {
+            "type": "array",
+            "description": "An array of region-specific preferences.",
+            "items": {
+              "$ref": "#/components/schemas/region-preferences"
+            }
+          },
+          "agreement_types": {
+            "type": "array",
+            "description": "An array of partner-accepted agreements.",
+            "items": {
+              "description": "A partner-accepted agreement.",
+              "enum": [
+                "VENDOR_SECURITY_POLICY_AGREEMENT"
+              ]
+            }
+          },
+          "display_name": {
+            "type": "string",
+            "description": "The display name of the partner.",
+            "readOnly": true
+          }
+        }
+      }
+    },
+    "parameters": {
+      "partner_referral_id": {
+        "name": "partner_referral_id",
+        "in": "path",
+        "description": "The ID of the partner-referrals data for which to show details.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "partner_id": {
+        "name": "partner_id",
+        "in": "path",
+        "description": "The ID of the partner for which to show onboarded seller's credentials, which is the partner's PayPal account number. To find this ID, log in to the partner's PayPal business account. Navigate to **Profile**, click **Profile and settings**, and click **My business info**. The account number appears in the **Merchant account ID** section.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "tracking_id": {
+        "name": "tracking_id",
+        "in": "query",
+        "description": "Filters the sellers in the response by this partner-provided seller ID (`merchant_id`).",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "merchant_id": {
+        "name": "merchant_id",
+        "in": "path",
+        "description": "The ID of the seller for which to show status information.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "fields": {
+        "name": "fields",
+        "in": "query",
+        "description": "Filters the fields in the response to this comma-separated list of fields.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "id": {
+        "name": "id",
+        "in": "path",
+        "description": "The ID of the partner, which is the partner's PayPal account number. To find this ID, log in to the partner's PayPal business account. Navigate to **Profile**, click **Profile and settings**, and click **My business info**. The account number appears in the **Merchant account ID** section.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "pattern": "^.*$"
+        }
+      },
+      "country_code": {
+        "name": "country_code",
+        "in": "query",
+        "description": "The country code to load region preferences.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "pattern": "^([a-zA-Z]{2})$"
+        }
+      },
+      "product": {
+        "name": "product",
+        "in": "query",
+        "description": "The product to load region and integration preferences.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "pattern": "^.*$"
+        }
+      },
+      "content_type": {
+        "name": "Content-type",
+        "in": "header",
+        "description": "The Content-type header MUST be described in all externally-accessible APIs.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000,
+          "pattern": "^.*$"
+        }
+      },
+      "x_paypal_security_context": {
+        "name": "X-PAYPAL-SECURITY-CONTEXT",
+        "in": "header",
+        "description": "The X-PAYPAL-SECURITY-CONTEXT header MUST be described in all externally-accessible APIs.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000,
+          "pattern": "^.*$"
         }
       }
     }

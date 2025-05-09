@@ -3,7 +3,31 @@
   "info": {
     "title": "Orders",
     "description": "An order represents a payment between two or more parties. Use the Orders API to create, update, retrieve, authorize, and capture orders.",
-    "version": "2.13"
+    "version": "2.13",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "orders",
+      "description": "Use the `/orders` resource to create, update, retrieve, authorize, capture and track orders."
+    },
+    {
+      "name": "trackers",
+      "description": "Use the `/trackers` resource to update and retrieve tracking information for PayPal orders."
+    }
+  ],
+  "externalDocs": {
+    "url": "https://developer.paypal.com/docs/api/orders/v2/"
   },
   "paths": {
     "/v2/checkout/orders": {
@@ -30,8 +54,19 @@
                   "$ref": "#/components/schemas/order"
                 },
                 "examples": {
-                  "0": {
-                    "$ref": "#/components/examples/order_request_create"
+                  "orders_request_create": {
+                    "value": {
+                      "intent": "CAPTURE",
+                      "purchase_units": [
+                        {
+                          "reference_id": "d9f80740-38f0-11e8-b467-0ed5f89f718b",
+                          "amount": {
+                            "currency_code": "USD",
+                            "value": "100.00"
+                          }
+                        }
+                      ]
+                    }
                   }
                 }
               }
@@ -104,9 +139,6 @@
           },
           {
             "$ref": "#/components/parameters/prefer"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -116,8 +148,33 @@
                 "$ref": "#/components/schemas/order_request"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/order_request"
+                "order_request": {
+                  "value": {
+                    "intent": "CAPTURE",
+                    "purchase_units": [
+                      {
+                        "reference_id": "d9f80740-38f0-11e8-b467-0ed5f89f718b",
+                        "amount": {
+                          "currency_code": "USD",
+                          "value": "100.00"
+                        }
+                      }
+                    ],
+                    "payment_source": {
+                      "paypal": {
+                        "experience_context": {
+                          "payment_method_preference": "IMMEDIATE_PAYMENT_REQUIRED",
+                          "payment_method_selected": "PAYPAL",
+                          "brand_name": "EXAMPLE INC",
+                          "locale": "en-US",
+                          "landing_page": "LOGIN",
+                          "user_action": "PAY_NOW",
+                          "return_url": "https://example.com/returnUrl",
+                          "cancel_url": "https://example.com/cancelUrl"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -194,9 +251,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           },
           {
             "$ref": "#/components/parameters/fields"
@@ -297,9 +351,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -407,9 +458,6 @@
             "$ref": "#/components/parameters/id"
           },
           {
-            "$ref": "#/components/parameters/content_type"
-          },
-          {
             "$ref": "#/components/parameters/prefer"
           }
         ],
@@ -420,8 +468,29 @@
                 "$ref": "#/components/schemas/confirm_order_request"
               },
               "examples": {
-                "0": {
-                  "$ref": "#/components/examples/confirm_order_request"
+                "confirm_order_request": {
+                  "value": {
+                    "payment_source": {
+                      "paypal": {
+                        "name": {
+                          "given_name": "John",
+                          "surname": "Doe"
+                        },
+                        "email_address": "customer@example.com",
+                        "experience_context": {
+                          "payment_method_preference": "IMMEDIATE_PAYMENT_REQUIRED",
+                          "payment_method_selected": "PAYPAL",
+                          "brand_name": "EXAMPLE INC",
+                          "locale": "en-US",
+                          "landing_page": "LOGIN",
+                          "shipping_preference": "SET_PROVIDED_ADDRESS",
+                          "user_action": "PAY_NOW",
+                          "return_url": "https://example.com/returnUrl",
+                          "cancel_url": "https://example.com/cancelUrl"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -580,9 +649,6 @@
           },
           {
             "$ref": "#/components/parameters/paypal_auth_assertion"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -747,9 +813,6 @@
           },
           {
             "$ref": "#/components/parameters/paypal_auth_assertion"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -888,9 +951,6 @@
           },
           {
             "$ref": "#/components/parameters/paypal_auth_assertion"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
@@ -918,7 +978,7 @@
     "/v2/checkout/orders/{id}/trackers/{tracker_id}": {
       "patch": {
         "summary": "Update or cancel tracking information for a PayPal order",
-        "description": "Updates or cancels the tracking information for a PayPal order, by ID. Updatable attributes or objects:<br/><br/><table><thead><th>Attribute</th><th>Op</th><th>Notes</th></thead><tbody></tr><tr><td><code>items</code></td><td>replace</td><td>Using replace op for <code>items</code> will replace the entire <code>items</code> object with the value sent in request.</td></tr><tr><td><code>notify_payer</code></td><td>replace, add</td><td></td></tr></tbody></table>",
+        "description": "Updates or cancels the tracking information for a PayPal order, by ID. Updatable attributes or objects:<br/><br/><table><thead><th>Attribute</th><th>Op</th><th>Notes</th></thead><tbody></tr><tr><td><code>items</code></td><td>replace</td><td>Using replace op for <code>items</code> will replace the entire <code>items</code> object with the value sent in request.</td></tr><tr><td><code>notify_payer</code></td><td>replace, add</td><td></td></tr><tr><td><code>status</code></td><td>replace</td><td>Only patching status to CANCELLED is currently supported.</td></tr></tbody></table>",
         "operationId": "orders.trackers.patch",
         "responses": {
           "204": {
@@ -1012,13 +1072,34 @@
           },
           {
             "$ref": "#/components/parameters/tracker_id"
-          },
-          {
-            "$ref": "#/components/parameters/content_type"
           }
         ],
         "requestBody": {
-          "$ref": "#/components/requestBodies/patch_request"
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/patch_request"
+              },
+              "examples": {
+                "orders_patch_request": {
+                  "value": [
+                    {
+                      "op": "replace",
+                      "path": "/purchase_units/@reference_id=='PUHF'/shipping/address",
+                      "value": {
+                        "address_line_1": "2211 N First Street",
+                        "address_line_2": "Building 17",
+                        "admin_area_2": "San Jose",
+                        "admin_area_1": "CA",
+                        "postal_code": "95131",
+                        "country_code": "US"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
         },
         "security": [
           {
@@ -1033,29 +1114,6 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "orders",
-      "description": "Use the `/orders` resource to create, update, retrieve, authorize, capture and track orders."
-    },
-    {
-      "name": "trackers",
-      "description": "Use the `/trackers` resource to update and retrieve tracking information for PayPal orders."
-    }
-  ],
-  "externalDocs": {
-    "url": "https://developer.paypal.com/docs/api/orders/v2/"
-  },
-  "servers": [
-    {
-      "url": "https://api-m.sandbox.paypal.com",
-      "description": "PayPal Sandbox Environment"
-    },
-    {
-      "url": "https://api-m.paypal.com",
-      "description": "PayPal Live Environment"
-    }
-  ],
   "components": {
     "requestBodies": {
       "patch_request": {
@@ -1063,11 +1121,6 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/patch_request"
-            },
-            "examples": {
-              "0": {
-                "$ref": "#/components/examples/patch_request"
-              }
             }
           }
         }
@@ -1090,107 +1143,6 @@
         }
       }
     },
-    "parameters": {
-      "paypal_request_id": {
-        "name": "PayPal-Request-Id",
-        "in": "header",
-        "description": "The server stores keys for 6 hours. The API callers can request the times to up to 72 hours by speaking to their Account Manager.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 108
-        }
-      },
-      "paypal_partner_attribution_id": {
-        "name": "PayPal-Partner-Attribution-Id",
-        "in": "header",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 36
-        }
-      },
-      "paypal_client_metadata_id": {
-        "name": "PayPal-Client-Metadata-Id",
-        "in": "header",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 36
-        }
-      },
-      "prefer": {
-        "name": "Prefer",
-        "in": "header",
-        "description": "The preferred server response upon successful completion of the request. Value is:<ul><li><code>return=minimal</code>. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the <code>id</code>, <code>status</code> and HATEOAS links.</li><li><code>return=representation</code>. The server returns a complete resource representation, including the current state of the resource.</li></ul>",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 25,
-          "pattern": "^[a-zA-Z=]*$",
-          "default": "return=minimal"
-        }
-      },
-      "content_type": {
-        "name": "Content-Type",
-        "in": "header",
-        "description": "The media type. Required for operations with a request body. The value is `application/<format>`, where `format` is `json`.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 255,
-          "default": "application/json"
-        }
-      },
-      "id": {
-        "name": "id",
-        "in": "path",
-        "description": "The ID of the order for which to update payment details.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 36,
-          "pattern": "^[A-Z0-9]+$"
-        }
-      },
-      "fields": {
-        "name": "fields",
-        "description": "A comma-separated list of fields that should be returned for the order. Valid filter field is `payment_source`.",
-        "in": "query",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "pattern": "^[a-z_]*$"
-        }
-      },
-      "paypal_auth_assertion": {
-        "name": "PayPal-Auth-Assertion",
-        "in": "header",
-        "description": "An API-caller-provided JSON Web Token (JWT) assertion that identifies the merchant. For details, see <a href=\"/api/rest/requests/#paypal-auth-assertion\">PayPal-Auth-Assertion</a>.",
-        "required": false,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "tracker_id": {
-        "name": "tracker_id",
-        "in": "path",
-        "description": "The order tracking ID.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 36,
-          "pattern": "^[A-Z0-9]+$"
-        }
-      }
-    },
     "responses": {
       "default": {
         "description": "The default response.",
@@ -1206,7 +1158,7 @@
     "schemas": {
       "400": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -1387,7 +1339,7 @@
       },
       "401": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -1415,7 +1367,7 @@
       },
       "403": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -1477,7 +1429,7 @@
       },
       "404": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -1505,7 +1457,7 @@
       },
       "422": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -3157,6 +3109,40 @@
                       ]
                     }
                   }
+                },
+                {
+                  "title": "ALIAS_DECLINED_BY_PROCESSOR",
+                  "properties": {
+                    "issue": {
+                      "type": "string",
+                      "enum": [
+                        "ALIAS_DECLINED_BY_PROCESSOR"
+                      ]
+                    },
+                    "description": {
+                      "type": "string",
+                      "enum": [
+                        "The provided alias was declined by the processor. Please create a new order with a different alias_key and/or alias_label and try again."
+                      ]
+                    }
+                  }
+                },
+                {
+                  "title": "BLIK_ONE_CLICK_MISSING_REQUIRED_PARAMETER",
+                  "properties": {
+                    "issue": {
+                      "type": "string",
+                      "enum": [
+                        "BLIK_ONE_CLICK_MISSING_REQUIRED_PARAMETER"
+                      ]
+                    },
+                    "description": {
+                      "type": "string",
+                      "enum": [
+                        "Blik's one_click flow requires one_click.auth_code and one_click.alias_label parameters for the buyer's first transaction. For all subsequent transactions,only the one_click.alias_key parameter is required."
+                      ]
+                    }
+                  }
                 }
               ]
             }
@@ -3177,9 +3163,7 @@
             "description": "The value of the field that caused the error."
           },
           "location": {
-            "type": "string",
-            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
-            "default": "body"
+            "$ref": "#/components/schemas/error_location"
           },
           "issue": {
             "type": "string",
@@ -3193,6 +3177,16 @@
         "required": [
           "issue"
         ]
+      },
+      "error_location": {
+        "type": "string",
+        "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+        "enum": [
+          "body",
+          "path",
+          "query"
+        ],
+        "default": "body"
       },
       "error_default": {
         "description": "The default error response.",
@@ -3226,10 +3220,49 @@
           }
         ]
       },
+      "error_link_description": {
+        "title": "Link Description",
+        "description": "The request-related [HATEOAS link](/api/rest/responses/#hateoas-links) information.",
+        "type": "object",
+        "required": [
+          "href",
+          "rel"
+        ],
+        "properties": {
+          "href": {
+            "description": "The complete target URL. To make the related call, combine the method with this [URI Template-formatted](https://tools.ietf.org/html/rfc6570) link. For pre-processing, include the `$`, `(`, and `)` characters. The `href` is the key HATEOAS component that links a completed call with a subsequent call.",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20000,
+            "pattern": "^.*$"
+          },
+          "rel": {
+            "description": "The [link relation type](https://tools.ietf.org/html/rfc5988#section-4), which serves as an ID for a link that unambiguously describes the semantics of the link. See [Link Relations](https://www.iana.org/assignments/link-relations/link-relations.xhtml).",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 100,
+            "pattern": "^.*$"
+          },
+          "method": {
+            "description": "The HTTP method required to make the related call.",
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 6,
+            "pattern": "^[A-Z]*$",
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE",
+              "PATCH"
+            ]
+          }
+        }
+      },
       "error_400": {
         "type": "object",
-        "title": "400 Error",
-        "description": "Error response for 400",
+        "title": "Bad Request Error",
+        "description": "Request is not well-formed, syntactically incorrect, or violates schema.",
         "properties": {
           "name": {
             "type": "string",
@@ -3243,7 +3276,7 @@
               "Request is not well-formed, syntactically incorrect, or violates schema."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -3253,17 +3286,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_401": {
         "type": "object",
-        "title": "401 Error",
-        "description": "Error response for 401",
+        "title": "Unauthorized Error",
+        "description": "Authentication failed due to missing Authorization header, or invalid authentication credentials.",
         "properties": {
           "name": {
             "type": "string",
@@ -3277,7 +3314,7 @@
               "Authentication failed due to missing authorization header, or invalid authentication credentials."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -3287,17 +3324,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_403": {
         "type": "object",
-        "title": "403 Error",
-        "description": "Error response for 403",
+        "title": "Not Authorized Error",
+        "description": "The client is not authorized to access this resource, although it may have valid credentials. ",
         "properties": {
           "name": {
             "type": "string",
@@ -3311,7 +3352,7 @@
               "Authorization failed due to insufficient permissions."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -3321,17 +3362,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_404": {
         "type": "object",
-        "title": "404 Error",
-        "description": "Error response for 404",
+        "title": "Not found Error",
+        "description": "The server has not found anything matching the request URI. This either means that the URI is incorrect or the resource is not available.",
         "properties": {
           "name": {
             "type": "string",
@@ -3345,7 +3390,7 @@
               "The specified resource does not exist."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -3355,17 +3400,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_409": {
         "type": "object",
-        "title": "409 Error",
-        "description": "Error response for 409",
+        "title": "Resource Conflict Error",
+        "description": "The server has detected a conflict while processing this request.",
         "properties": {
           "name": {
             "type": "string",
@@ -3379,7 +3428,7 @@
               "The server has detected a conflict while processing this request."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -3389,17 +3438,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_415": {
         "type": "object",
-        "title": "409 Error",
-        "description": "Error response for 415",
+        "title": "Unsupported Media Type Error",
+        "description": "The server does not support the request payload's media type.",
         "properties": {
           "name": {
             "type": "string",
@@ -3413,7 +3466,7 @@
               "The server does not support the request payload's media type."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -3423,17 +3476,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_422": {
         "type": "object",
-        "title": "422 Error",
-        "description": "Error response for 422",
+        "title": "Unprocessable Entity Error",
+        "description": "The requested action cannot be performed and may require interaction with APIs or processes outside of the current request. This is distinct from a 500 response in that there are no systemic problems limiting the API from performing the request.",
         "properties": {
           "name": {
             "type": "string",
@@ -3447,7 +3504,7 @@
               "The requested action could not be performed, semantically incorrect, or failed business validation."
             ]
           },
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/error_details"
@@ -3457,17 +3514,21 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         }
       },
       "error_500": {
         "type": "object",
-        "title": "500 Error",
-        "description": "Error response for 500",
+        "title": "Internal Server Error",
+        "description": "This is either a system or application error, and generally indicates that although the client appeared to provide a correct request, something unexpected has gone wrong on the server.",
         "properties": {
           "name": {
             "type": "string",
@@ -3485,26 +3546,32 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "enum": [
-              "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR"
-            ],
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         },
         "example": {
           "name": "INTERNAL_SERVER_ERROR",
           "message": "An internal server error occurred.",
           "debug_id": "90957fca61718",
-          "information_link": "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR"
+          "links": [
+            {
+              "href": "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR",
+              "rel": "information_link"
+            }
+          ]
         }
       },
       "error_503": {
         "type": "object",
-        "title": "503 Error",
-        "description": "Error response for 503",
+        "title": "Service Unavailable Error",
+        "description": "The server is temporarily unable to handle the request, for example, because of planned maintenance or downtime.",
         "properties": {
           "name": {
             "type": "string",
@@ -3522,10 +3589,14 @@
             "type": "string",
             "description": "The PayPal internal ID. Used for correlation purposes."
           },
-          "information_link": {
-            "type": "string",
-            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
-            "readOnly": true
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
           }
         },
         "example": {
@@ -4075,6 +4146,51 @@
           "quantity"
         ]
       },
+      "shipping_type": {
+        "type": "string",
+        "title": "Shipping Type",
+        "description": "A classification for the method of purchase fulfillment.",
+        "enum": [
+          "SHIPPING",
+          "PICKUP",
+          "PICKUP_IN_STORE",
+          "PICKUP_FROM_PERSON"
+        ]
+      },
+      "shipping_option": {
+        "type": "object",
+        "title": "Shipping Option",
+        "description": "The options that the payee or merchant offers to the payer to ship or pick up their items.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A unique ID that identifies a payer-selected shipping option.",
+            "maxLength": 127
+          },
+          "label": {
+            "type": "string",
+            "description": "A description that the payer sees, which helps them choose an appropriate shipping option. For example, `Free Shipping`, `USPS Priority Shipping`, `Expédition prioritaire USPS`, or `USPS yōuxiān fā huò`. Localize this description to the payer's locale.",
+            "maxLength": 127
+          },
+          "type": {
+            "description": "A classification for the method of purchase fulfillment.",
+            "$ref": "#/components/schemas/shipping_type"
+          },
+          "amount": {
+            "description": "The shipping cost for the selected option.",
+            "$ref": "#/components/schemas/money"
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "If the API request sets `selected = true`, it represents the shipping option that the payee or merchant expects to be pre-selected for the payer when they first view the `shipping.options` in the PayPal Checkout experience. As part of the response if a `shipping.option` contains `selected=true`, it represents the shipping option that the payer selected during the course of checkout with PayPal. Only one `shipping.option` can be set to `selected=true`."
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "selected"
+        ]
+      },
       "shipping_detail": {
         "type": "object",
         "description": "The shipping details.",
@@ -4085,15 +4201,27 @@
             "$ref": "#/components/schemas/name"
           },
           "type": {
-            "description": "The method by which the payer wants to get their items from the payee e.g shipping, in-person pickup. Either type or options but not both may be present.",
+            "description": "A classification for the method of purchase fulfillment (e.g shipping, in-store pickup, etc). Either `type` or `options` may be present, but not both.",
             "type": "string",
             "minLength": 1,
             "maxLength": 255,
             "pattern": "^[0-9A-Z_]+$",
             "enum": [
               "SHIPPING",
-              "PICKUP_IN_PERSON"
+              "PICKUP_IN_PERSON",
+              "PICKUP_IN_STORE",
+              "PICKUP_FROM_PERSON"
             ]
+          },
+          "options": {
+            "type": "array",
+            "description": "An array of shipping options that the payee or merchant offers to the payer to ship or pick up their items.",
+            "minItems": 0,
+            "maxItems": 10,
+            "items": {
+              "description": "The option that the payee or merchant offers to the payer to ship or pick up their items.",
+              "$ref": "#/components/schemas/shipping_option"
+            }
           },
           "address": {
             "description": "The address of the person to whom to ship the items. Supports only the `address_line_1`, `address_line_2`, `admin_area_1`, `admin_area_2`, `postal_code`, and `country_code` properties.",
@@ -4518,7 +4646,7 @@
             "type": "string",
             "minLength": 9,
             "maxLength": 36,
-            "pattern": "^[a-zA-Z0-9-]+$",
+            "pattern": "^[a-zA-Z0-9-_@.:&+=*^'~#!$%()]+$",
             "description": "Transaction reference id returned by the scheme. For Visa and Amex, this is the \"Tran id\" field in response. For MasterCard, this is the \"BankNet reference id\" field in response. For Discover, this is the \"NRID\" field in response. The pattern we expect for this field from Visa/Amex/CB/Discover is numeric, Mastercard/BNPP is alphanumeric and Paysecure is alphanumeric with special character -."
           },
           "date": {
@@ -4567,6 +4695,88 @@
           "payment_type"
         ]
       },
+      "eci_flag": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[0-9A-Z_]+$",
+        "description": "Electronic Commerce Indicator (ECI). The ECI value is part of the 2 data elements that indicate the transaction was processed electronically. This should be passed on the authorization transaction to the Gateway/Processor.",
+        "enum": [
+          "MASTERCARD_NON_3D_SECURE_TRANSACTION",
+          "MASTERCARD_ATTEMPTED_AUTHENTICATION_TRANSACTION",
+          "MASTERCARD_FULLY_AUTHENTICATED_TRANSACTION",
+          "FULLY_AUTHENTICATED_TRANSACTION",
+          "ATTEMPTED_AUTHENTICATION_TRANSACTION",
+          "NON_3D_SECURE_TRANSACTION"
+        ]
+      },
+      "network_token_request": {
+        "type": "object",
+        "title": "Network Token",
+        "description": "The Third Party Network token used to fund a payment.",
+        "properties": {
+          "number": {
+            "type": "string",
+            "description": "Third party network token number.",
+            "pattern": "^[0-9]{13,19}$",
+            "minLength": 13,
+            "maxLength": 19
+          },
+          "expiry": {
+            "description": "The card expiration year and month, in [Internet date format](https://tools.ietf.org/html/rfc3339#section-5.6).",
+            "$ref": "#/components/schemas/date_year_month"
+          },
+          "cryptogram": {
+            "type": "string",
+            "description": "An Encrypted one-time use value that's sent along with Network Token. This field is not required to be present for recurring transactions.",
+            "pattern": "^.*$",
+            "minLength": 28,
+            "maxLength": 32
+          },
+          "eci_flag": {
+            "$ref": "#/components/schemas/eci_flag"
+          },
+          "token_requestor_id": {
+            "type": "string",
+            "description": "A TRID, or a Token Requestor ID, is an identifier used by merchants to request network tokens from card networks. A TRID is a precursor to obtaining a network token for a credit card primary account number (PAN), and will aid in enabling secure card on file (COF) payments and reducing fraud.",
+            "pattern": "^[0-9A-Z_]+$",
+            "minLength": 1,
+            "maxLength": 11
+          }
+        },
+        "required": [
+          "number",
+          "expiry"
+        ]
+      },
+      "url": {
+        "type": "string",
+        "description": "Describes the URL.",
+        "format": "uri"
+      },
+      "card_experience_context": {
+        "type": "object",
+        "title": "Card Experience Context",
+        "description": "Customizes the payer experience during the 3DS Approval for payment.",
+        "properties": {
+          "return_url": {
+            "description": "The URL where the customer will be redirected upon successfully completing the 3DS challenge.",
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 4000,
+            "format": "uri",
+            "$ref": "#/components/schemas/url"
+          },
+          "cancel_url": {
+            "description": "The URL where the customer will be redirected upon cancelling the 3DS challenge.",
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 4000,
+            "format": "uri",
+            "$ref": "#/components/schemas/url"
+          }
+        }
+      },
       "card_request": {
         "type": "object",
         "title": "Card Request",
@@ -4583,6 +4793,13 @@
               },
               "stored_credential": {
                 "$ref": "#/components/schemas/card_stored_credential"
+              },
+              "network_token": {
+                "description": "A 3rd party network token refers to a network token that the merchant provisions from and vaults with an external TSP (Token Service Provider) other than PayPal.",
+                "$ref": "#/components/schemas/network_token_request"
+              },
+              "experience_context": {
+                "$ref": "#/components/schemas/card_experience_context"
               }
             }
           }
@@ -4751,6 +4968,20 @@
           "country_code"
         ]
       },
+      "paypal_wallet_customer": {
+        "type": "object",
+        "title": "Customer information based on PayPal's system of record",
+        "description": "The details about a customer in PayPal's system of record.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/customer"
+          },
+          {
+            "properties": {}
+          }
+        ]
+      },
+      "vault_owner_id": {},
       "vault_paypal_wallet_base": {
         "type": "object",
         "title": "Vaulted PayPal Wallet Common Attributes",
@@ -4796,6 +5027,9 @@
                   "PLATFORM"
                 ]
               },
+              "owner_id": {
+                "$ref": "#/components/schemas/vault_owner_id"
+              },
               "customer_type": {
                 "type": "string",
                 "description": "The customer type associated with the PayPal payment token. This is to indicate whether the customer acting on the merchant / platform is either a business or a consumer.",
@@ -4826,7 +5060,7 @@
         "description": "Additional attributes associated with the use of this PayPal Wallet.",
         "properties": {
           "customer": {
-            "$ref": "#/components/schemas/customer"
+            "$ref": "#/components/schemas/paypal_wallet_customer"
           },
           "vault": {
             "description": "Attributes used to provide the instructions during vaulting of the PayPal Wallet.",
@@ -4841,11 +5075,6 @@
         "maxLength": 10,
         "minLength": 2,
         "pattern": "^[a-z]{2}(?:-[A-Z][a-z]{3})?(?:-(?:[A-Z]{2}|[0-9]{3}))?$"
-      },
-      "url": {
-        "type": "string",
-        "description": "Describes the URL.",
-        "format": "uri"
       },
       "paypal_wallet_experience_context": {
         "type": "object",
@@ -4877,12 +5106,12 @@
             ]
           },
           "return_url": {
-            "description": "The URL where the customer is redirected after the customer approves the payment.",
+            "description": "The URL where the customer will be redirected upon approving a payment.",
             "format": "uri",
             "$ref": "#/components/schemas/url"
           },
           "cancel_url": {
-            "description": "The URL where the customer is redirected after the customer cancels the payment.",
+            "description": "The URL where the customer will be redirected upon cancelling the payment approval.",
             "format": "uri",
             "$ref": "#/components/schemas/url"
           },
@@ -5024,6 +5253,7 @@
           }
         }
       },
+      "altpay_recurring_attributes_request": {},
       "bancontact_request": {
         "type": "object",
         "title": "Bancontact payment object",
@@ -5040,6 +5270,10 @@
           "experience_context": {
             "description": "Customizes the payer experience during the approval process for the payment.",
             "$ref": "#/components/schemas/experience_context_base"
+          },
+          "attributes": {
+            "description": "Attributes for altpay recurring.",
+            "$ref": "#/components/schemas/altpay_recurring_attributes_request"
           }
         },
         "required": [
@@ -5053,7 +5287,96 @@
         "format": "ppaas_common_email_address_v2",
         "minLength": 3,
         "maxLength": 254,
-        "pattern": "^.+@[^\"\\-].+$"
+        "pattern": "^(?:[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[A-Za-z0-9-]*[A-Za-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])$"
+      },
+      "ip_address": {
+        "type": "string",
+        "title": "IP Address",
+        "description": "An Internet Protocol address (IP address). This address assigns a numerical label to each device that is connected to a computer network through the Internet Protocol. Supports IPv4 and IPv6 addresses.",
+        "format": "ppaas_ip_address_v1",
+        "minLength": 7,
+        "maxLength": 39,
+        "pattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\\-]*[A-Za-z0-9])$|^\\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:)))(%.+)?\\s*$"
+      },
+      "blik_experience_context": {
+        "type": "object",
+        "title": "BLIK Experience Context",
+        "description": "Customizes the payer experience during the approval process for the BLIK payment.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/experience_context_base"
+          },
+          {
+            "properties": {
+              "consumer_ip": {
+                "description": "The IP address of the consumer. It could be either IPv4 or IPv6.",
+                "$ref": "#/components/schemas/ip_address"
+              },
+              "consumer_user_agent": {
+                "type": "string",
+                "description": "The payer's User Agent. For example, Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0).",
+                "minLength": 1,
+                "maxLength": 256,
+                "pattern": "^.*$"
+              }
+            }
+          }
+        ]
+      },
+      "blik_seamless": {
+        "type": "object",
+        "title": "BLIK level_0 payment object",
+        "description": "Information used to pay using BLIK level_0 flow.",
+        "properties": {
+          "auth_code": {
+            "type": "string",
+            "description": "The 6-digit code used to authenticate a consumer within BLIK.",
+            "minLength": 6,
+            "maxLength": 6,
+            "pattern": "^[0-9]{6}$"
+          }
+        },
+        "required": [
+          "auth_code"
+        ]
+      },
+      "blik_one_click": {
+        "type": "object",
+        "title": "BLIK one-click payment object",
+        "description": "Information used to pay using BLIK one-click flow.",
+        "properties": {
+          "auth_code": {
+            "type": "string",
+            "description": "The 6-digit code used to authenticate a consumer within BLIK.",
+            "minLength": 6,
+            "maxLength": 6,
+            "pattern": "^[0-9]{6}$"
+          },
+          "consumer_reference": {
+            "type": "string",
+            "description": "The merchant generated, unique reference serving as a primary identifier for accounts connected between Blik and a merchant.",
+            "minLength": 3,
+            "maxLength": 64,
+            "pattern": "^[ -~]{3,64}$"
+          },
+          "alias_label": {
+            "type": "string",
+            "description": "A bank defined identifier used as a display name to allow the payer to differentiate between multiple registered bank accounts.",
+            "minLength": 8,
+            "maxLength": 35,
+            "pattern": "^[ -~]{8,35}$"
+          },
+          "alias_key": {
+            "type": "string",
+            "description": "A Blik-defined identifier for a specific Blik-enabled bank account that is associated with a given merchant. Used only in conjunction with a Consumer Reference.",
+            "minLength": 1,
+            "maxLength": 19,
+            "pattern": "^[0-9]+$"
+          }
+        },
+        "required": [
+          "consumer_reference"
+        ]
       },
       "blik_request": {
         "type": "object",
@@ -5074,7 +5397,15 @@
           },
           "experience_context": {
             "description": "Customizes the payer experience during the approval process for the payment.",
-            "$ref": "#/components/schemas/experience_context_base"
+            "$ref": "#/components/schemas/blik_experience_context"
+          },
+          "level_0": {
+            "description": "The level_0 integration flow object.",
+            "$ref": "#/components/schemas/blik_seamless"
+          },
+          "one_click": {
+            "description": "The one-click integration flow object.",
+            "$ref": "#/components/schemas/blik_one_click"
           }
         },
         "required": [
@@ -5156,6 +5487,10 @@
           "experience_context": {
             "description": "Customizes the payer experience during the approval process for the payment.",
             "$ref": "#/components/schemas/experience_context_base"
+          },
+          "attributes": {
+            "description": "Attributes for altpay recurring.",
+            "$ref": "#/components/schemas/altpay_recurring_attributes_request"
           }
         },
         "required": [
@@ -5865,6 +6200,7 @@
         }
       },
       "authentication_flow": {},
+      "exemption_details": {},
       "authentication_response": {
         "type": "object",
         "title": "Authentication Response",
@@ -5878,6 +6214,10 @@
           },
           "authentication_flow": {
             "$ref": "#/components/schemas/authentication_flow"
+          },
+          "exemption_details": {
+            "description": "Exemption details of 3D Secure Authentication.",
+            "$ref": "#/components/schemas/exemption_details"
           }
         }
       },
@@ -6119,6 +6459,26 @@
           "national_number"
         ]
       },
+      "paypal_wallet_vault_response": {
+        "type": "object",
+        "title": "Saved PayPal Wallet Payment Source Response",
+        "description": "The details about a saved PayPal Wallet payment source.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/vault_response"
+          },
+          {
+            "properties": {
+              "customer": {
+                "$ref": "#/components/schemas/paypal_wallet_customer"
+              },
+              "owner_id": {
+                "$ref": "#/components/schemas/vault_owner_id"
+              }
+            }
+          }
+        ]
+      },
       "cobranded_card": {
         "type": "object",
         "title": "cobranded card object",
@@ -6152,7 +6512,7 @@
         "description": "Additional attributes associated with the use of a PayPal Wallet.",
         "properties": {
           "vault": {
-            "$ref": "#/components/schemas/vault_response"
+            "$ref": "#/components/schemas/paypal_wallet_vault_response"
           },
           "cobranded_cards": {
             "type": "array",
@@ -6178,6 +6538,18 @@
             "description": "The PayPal-assigned ID for the PayPal account holder.",
             "readOnly": true,
             "$ref": "#/components/schemas/account_id-2"
+          },
+          "account_status": {
+            "type": "string",
+            "description": "The account status indicates whether the buyer has verified the financial details associated with their PayPal account.",
+            "readOnly": true,
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^[A-Z_]+$",
+            "enum": [
+              "VERIFIED",
+              "UNVERIFIED"
+            ]
           },
           "name": {
             "description": "The name of the PayPal account holder. Supports only the `given_name` and `surname` properties.",
@@ -6214,6 +6586,7 @@
         "maxLength": 34,
         "pattern": "[a-zA-Z0-9]{4}"
       },
+      "altpay_recurring_attributes": {},
       "bancontact": {
         "type": "object",
         "title": "Bancontact payment object",
@@ -6240,6 +6613,24 @@
             "maxLength": 4,
             "pattern": "[0-9]{4}",
             "description": "The last digits of the card used to fund the Bancontact payment."
+          },
+          "attributes": {
+            "description": "Attributes for SEPA direct debit object.",
+            "$ref": "#/components/schemas/altpay_recurring_attributes"
+          }
+        }
+      },
+      "blik_one_click_response": {
+        "type": "object",
+        "title": "BLIK one-click payment object",
+        "description": "Information used to pay using BLIK one-click flow.",
+        "properties": {
+          "consumer_reference": {
+            "type": "string",
+            "description": "The merchant generated, unique reference serving as a primary identifier for accounts connected between Blik and a merchant.",
+            "minLength": 3,
+            "maxLength": 64,
+            "pattern": "^[ -~]{3,64}$"
           }
         }
       },
@@ -6259,6 +6650,10 @@
           "email": {
             "description": "The email address of the account holder associated with this payment method.",
             "$ref": "#/components/schemas/email_address"
+          },
+          "one_click": {
+            "description": "The one-click integration flow object.",
+            "$ref": "#/components/schemas/blik_one_click_response"
           }
         }
       },
@@ -6319,6 +6714,10 @@
           },
           "iban_last_chars": {
             "$ref": "#/components/schemas/iban_last_chars"
+          },
+          "attributes": {
+            "description": "Attributes for SEPA direct debit object.",
+            "$ref": "#/components/schemas/altpay_recurring_attributes"
           }
         }
       },
@@ -6529,6 +6928,7 @@
           "NO_INSTRUCTION"
         ]
       },
+      "tracker_status": {},
       "universal_product_code": {},
       "tracker_item": {
         "type": "object",
@@ -6553,6 +6953,13 @@
             "description": "The stock keeping unit (SKU) for the item. This can contain unicode characters.",
             "minLength": 1,
             "maxLength": 127
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "minLength": 1,
+            "maxLength": 2048,
+            "description": "The URL to the item being purchased. Visible to buyer and used in buyer experiences."
           },
           "image_url": {
             "type": "string",
@@ -6579,6 +6986,9 @@
                 "type": "string",
                 "description": "The tracker id.",
                 "readOnly": true
+              },
+              "status": {
+                "$ref": "#/components/schemas/tracker_status"
               },
               "items": {
                 "type": "array",
@@ -7586,7 +7996,7 @@
       },
       "orders.patch-400": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -7750,7 +8160,7 @@
       },
       "orders.patch-422": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -8459,7 +8869,7 @@
       },
       "orders.confirm-400": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -8572,7 +8982,7 @@
       },
       "orders.confirm-422": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -9527,6 +9937,57 @@
                       ]
                     }
                   }
+                },
+                {
+                  "title": "ALIAS_DECLINED_BY_PROCESSOR",
+                  "properties": {
+                    "issue": {
+                      "type": "string",
+                      "enum": [
+                        "ALIAS_DECLINED_BY_PROCESSOR"
+                      ]
+                    },
+                    "description": {
+                      "type": "string",
+                      "enum": [
+                        "The provided alias was declined by the processor. Please create a new order with a different alias_key and/or alias_label and try again."
+                      ]
+                    }
+                  }
+                },
+                {
+                  "title": "BLIK_ONE_CLICK_MISSING_REQUIRED_PARAMETER",
+                  "properties": {
+                    "issue": {
+                      "type": "string",
+                      "enum": [
+                        "BLIK_ONE_CLICK_MISSING_REQUIRED_PARAMETER"
+                      ]
+                    },
+                    "description": {
+                      "type": "string",
+                      "enum": [
+                        "Blik's one_click flow requires one_click.auth_code and one_click.alias_label parameters for the buyer's first transaction. For all subsequent transactions,only the one_click.alias_key parameter is required."
+                      ]
+                    }
+                  }
+                },
+                {
+                  "title": "TRANSACTION_LIMIT_EXCEEDED",
+                  "properties": {
+                    "issue": {
+                      "type": "string",
+                      "enum": [
+                        "TRANSACTION_LIMIT_EXCEEDED"
+                      ]
+                    },
+                    "description": {
+                      "type": "string",
+                      "enum": [
+                        "Total payment amount exceeded transaction limit."
+                      ]
+                    }
+                  }
                 }
               ]
             }
@@ -9600,7 +10061,7 @@
       },
       "orders.authorize-400": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -9713,7 +10174,7 @@
       },
       "orders.authorize-403": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -9775,7 +10236,7 @@
       },
       "orders.authorize-422": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -10850,7 +11311,7 @@
       },
       "orders.capture-400": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -10946,7 +11407,7 @@
       },
       "orders.capture-403": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -11025,7 +11486,7 @@
       },
       "orders.capture-422": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -13656,7 +14117,7 @@
       },
       "orders.track.create-400": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -13735,7 +14196,7 @@
       },
       "orders.track.create-403": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -13763,7 +14224,7 @@
       },
       "orders.track.create-422": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -13842,7 +14303,7 @@
       },
       "orders.trackers.patch-400": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -13955,7 +14416,7 @@
       },
       "orders.trackers.patch-403": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -13983,7 +14444,7 @@
       },
       "orders.trackers.patch-404": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -14011,7 +14472,7 @@
       },
       "orders.trackers.patch-422": {
         "properties": {
-          "issues": {
+          "details": {
             "type": "array",
             "items": {
               "anyOf": [
@@ -14106,87 +14567,92 @@
         }
       }
     },
-    "examples": {
-      "patch_request": {
-        "value": [
-          {
-            "op": "replace",
-            "path": "/purchase_units/@reference_id=='PUHF'/shipping/address",
-            "value": {
-              "address_line_1": "2211 N First Street",
-              "address_line_2": "Building 17",
-              "admin_area_2": "San Jose",
-              "admin_area_1": "CA",
-              "postal_code": "95131",
-              "country_code": "US"
-            }
-          }
-        ]
-      },
-      "confirm_order_request": {
-        "value": {
-          "payment_source": {
-            "paypal": {
-              "name": {
-                "given_name": "John",
-                "surname": "Doe"
-              },
-              "email_address": "customer@example.com",
-              "experience_context": {
-                "payment_method_preference": "IMMEDIATE_PAYMENT_REQUIRED",
-                "payment_method_selected": "PAYPAL",
-                "brand_name": "EXAMPLE INC",
-                "locale": "en-US",
-                "landing_page": "LOGIN",
-                "shipping_preference": "SET_PROVIDED_ADDRESS",
-                "user_action": "PAY_NOW",
-                "return_url": "https://example.com/returnUrl",
-                "cancel_url": "https://example.com/cancelUrl"
-              }
-            }
-          }
+    "parameters": {
+      "paypal_request_id": {
+        "name": "PayPal-Request-Id",
+        "in": "header",
+        "description": "The server stores keys for 6 hours. The API callers can request the times to up to 72 hours by speaking to their Account Manager.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 108
         }
       },
-      "order_request_create": {
-        "value": {
-          "intent": "CAPTURE",
-          "purchase_units": [
-            {
-              "reference_id": "d9f80740-38f0-11e8-b467-0ed5f89f718b",
-              "amount": {
-                "currency_code": "USD",
-                "value": "100.00"
-              }
-            }
-          ]
+      "paypal_partner_attribution_id": {
+        "name": "PayPal-Partner-Attribution-Id",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 36
         }
       },
-      "order_request": {
-        "value": {
-          "intent": "CAPTURE",
-          "purchase_units": [
-            {
-              "reference_id": "d9f80740-38f0-11e8-b467-0ed5f89f718b",
-              "amount": {
-                "currency_code": "USD",
-                "value": "100.00"
-              }
-            }
-          ],
-          "payment_source": {
-            "paypal": {
-              "experience_context": {
-                "payment_method_preference": "IMMEDIATE_PAYMENT_REQUIRED",
-                "payment_method_selected": "PAYPAL",
-                "brand_name": "EXAMPLE INC",
-                "locale": "en-US",
-                "landing_page": "LOGIN",
-                "user_action": "PAY_NOW",
-                "return_url": "https://example.com/returnUrl",
-                "cancel_url": "https://example.com/cancelUrl"
-              }
-            }
-          }
+      "paypal_client_metadata_id": {
+        "name": "PayPal-Client-Metadata-Id",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 36
+        }
+      },
+      "prefer": {
+        "name": "Prefer",
+        "in": "header",
+        "description": "The preferred server response upon successful completion of the request. Value is:<ul><li><code>return=minimal</code>. The server returns a minimal response to optimize communication between the API caller and the server. A minimal response includes the <code>id</code>, <code>status</code> and HATEOAS links.</li><li><code>return=representation</code>. The server returns a complete resource representation, including the current state of the resource.</li></ul>",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 25,
+          "pattern": "^[a-zA-Z=]*$",
+          "default": "return=minimal"
+        }
+      },
+      "id": {
+        "name": "id",
+        "in": "path",
+        "description": "The ID of the order that the tracking information is associated with.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 36,
+          "pattern": "^[A-Z0-9]+$"
+        }
+      },
+      "fields": {
+        "name": "fields",
+        "description": "A comma-separated list of fields that should be returned for the order. Valid filter field is `payment_source`.",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "pattern": "^[a-z_]*$"
+        }
+      },
+      "paypal_auth_assertion": {
+        "name": "PayPal-Auth-Assertion",
+        "in": "header",
+        "description": "An API-caller-provided JSON Web Token (JWT) assertion that identifies the merchant. For details, see <a href=\"/api/rest/requests/#paypal-auth-assertion\">PayPal-Auth-Assertion</a>.",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "tracker_id": {
+        "name": "tracker_id",
+        "in": "path",
+        "description": "The order tracking ID.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 36,
+          "pattern": "^[A-Z0-9]+$"
         }
       }
     }
