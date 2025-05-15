@@ -437,6 +437,9 @@
             "$ref": "#/components/parameters/paypal_auth_assertion"
           },
           {
+            "$ref": "#/components/parameters/paypal_request_id"
+          },
+          {
             "$ref": "#/components/parameters/prefer"
           }
         ],
