@@ -1226,6 +1226,38 @@
           "information_link": "https://developer.paypal.com/docs/api/orders/v2/#error-SERVICE_UNAVAILABLE"
         }
       },
+      "error_default": {
+        "description": "The default error response.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/error_400"
+          },
+          {
+            "$ref": "#/components/schemas/error_401"
+          },
+          {
+            "$ref": "#/components/schemas/error_403"
+          },
+          {
+            "$ref": "#/components/schemas/error_404"
+          },
+          {
+            "$ref": "#/components/schemas/error_409"
+          },
+          {
+            "$ref": "#/components/schemas/error_415"
+          },
+          {
+            "$ref": "#/components/schemas/error_422"
+          },
+          {
+            "$ref": "#/components/schemas/error_500"
+          },
+          {
+            "$ref": "#/components/schemas/error_503"
+          }
+        ]
+      },
       "error_details": {
         "title": "Error Details",
         "type": "object",
@@ -1319,6 +1351,13 @@
           }
         }
       },
+      "error_list": {
+        "type": "array",
+        "description": "An array of webhooks errors.",
+        "items": {
+          "$ref": "#/components/schemas/error"
+        }
+      },
       "error_location": {
         "type": "string",
         "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
@@ -1347,6 +1386,13 @@
           }
         },
         "required": ["name"]
+      },
+      "error_type_list": {
+        "type": "array",
+        "description": "An array of webhooks error types.",
+        "items": {
+          "$ref": "#/components/schemas/error_type"
+        }
       },
       "event": {
         "type": "object",
@@ -1617,6 +1663,14 @@
       },
       "swagger_link_description": {
         "$ref": "#/components/schemas/link_description"
+      },
+      "swagger_link_description_list": {
+        "type": "array",
+        "description": "An array of request-related [HATEOAS links](/docs/api/reference/api-responses/#hateoas-links).",
+        "readOnly": true,
+        "items": {
+          "$ref": "#/components/schemas/link_description"
+        }
       },
       "verify_webhook_signature": {
         "type": "object",

@@ -1224,6 +1224,9 @@
                 "description": "List of beneficial owners part of the entity. They can be either a Person or a business entity.",
                 "$ref": "#/components/schemas/beneficial_owners"
               },
+              "office_bearers": {
+                "$ref": "#/components/schemas/office_bearer_list"
+              },
               "annual_sales_volume_range": {
                 "description": "The range for the total annual sales volume of the business.",
                 "$ref": "#/components/schemas/currency_range"
@@ -1617,6 +1620,7 @@
           "GOOGLE_PAY"
         ]
       },
+      "office_bearer_list": {},
       "capabilities_list": {
         "type": "array",
         "description": "An array of capabilities which the partner wants to enable for the selected products. Supported only when products are specified.",
@@ -3455,6 +3459,20 @@
               }
             ],
             "enum": ["BRAINTREE", "PAYPAL", "SDK"]
+          },
+          "integration_channel": {
+            "type": "string",
+            "description": "The rest api integration channel.",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Z0-9_]+$",
+            "x-enumDescriptions": [
+              {
+                "value": "DEFERRED_ONBOARDING",
+                "description": "Partners referral merchants onboard with PayPal through the deferred onboarding flow."
+              }
+            ],
+            "enum": ["DEFERRED_ONBOARDING"]
           },
           "integration_type": {
             "type": "string",

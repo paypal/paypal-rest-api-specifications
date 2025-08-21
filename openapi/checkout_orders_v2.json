@@ -3,7 +3,7 @@
   "info": {
     "title": "Orders",
     "description": "An order represents a payment between two or more parties. Use the Orders API to create, update, retrieve, authorize, and capture orders.",
-    "version": "2.25",
+    "version": "2.26",
     "contact": {}
   },
   "servers": [
@@ -1229,6 +1229,17 @@
       }
     },
     "schemas": {
+      "2": {
+        "type": "object",
+        "title": "Payer",
+        "description": "The customer who approves and pays for the order. The customer is also known as the payer.",
+        "format": "payer_v1"
+      },
+      "3": {
+        "type": "object",
+        "title": "Order Authorize Response",
+        "description": "The order authorize response."
+      },
       "400": {
         "properties": {
           "details": {
@@ -3424,6 +3435,7 @@
           }
         }
       },
+      "3_definition_link_description": {},
       "account_id": {
         "type": "string",
         "title": "PayPal Account Identifier",
@@ -3457,6 +3469,42 @@
             "$ref": "#/components/schemas/date_time"
           }
         }
+      },
+      "address": {
+        "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
+        "type": "object",
+        "title": "Portable Postal Address (Medium-Grained)",
+        "properties": {
+          "address_line_1": {
+            "type": "string",
+            "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
+            "maxLength": 300
+          },
+          "address_line_2": {
+            "type": "string",
+            "description": "The second line of the address, for example, a suite or apartment number.",
+            "maxLength": 300
+          },
+          "admin_area_2": {
+            "type": "string",
+            "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
+            "maxLength": 120
+          },
+          "admin_area_1": {
+            "type": "string",
+            "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
+            "maxLength": 300
+          },
+          "postal_code": {
+            "type": "string",
+            "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
+            "maxLength": 60
+          },
+          "country_code": {
+            "$ref": "#/components/schemas/country_code"
+          }
+        },
+        "required": ["country_code"]
       },
       "amount_breakdown": {
         "type": "object",
@@ -3538,19 +3586,7 @@
             "$ref": "#/components/schemas/email_address"
           },
           "phone_number": {
-            "description": "The phone number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en).",
-            "type": "object",
-            "title": "Phone",
-            "properties": {
-              "national_number": {
-                "type": "string",
-                "description": "The national number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the country calling code (CC) and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
-                "minLength": 1,
-                "maxLength": 14,
-                "pattern": "^[0-9]{1,14}?$"
-              }
-            },
-            "required": ["national_number"]
+            "$ref": "#/components/schemas/phone_number"
           },
           "card": {
             "description": "The payment card information.",
@@ -3638,40 +3674,7 @@
             "$ref": "#/components/schemas/card_stored_credential"
           },
           "billing_address": {
-            "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
-            "type": "object",
-            "title": "Portable Postal Address (Medium-Grained)",
-            "properties": {
-              "address_line_1": {
-                "type": "string",
-                "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
-                "maxLength": 300
-              },
-              "address_line_2": {
-                "type": "string",
-                "description": "The second line of the address, for example, a suite or apartment number.",
-                "maxLength": 300
-              },
-              "admin_area_2": {
-                "type": "string",
-                "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
-                "maxLength": 120
-              },
-              "admin_area_1": {
-                "type": "string",
-                "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
-                "maxLength": 300
-              },
-              "postal_code": {
-                "type": "string",
-                "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
-                "maxLength": 60
-              },
-              "country_code": {
-                "$ref": "#/components/schemas/country_code"
-              }
-            },
-            "required": ["country_code"]
+            "$ref": "#/components/schemas/billing_address"
           },
           "country_code": {
             "$ref": "#/components/schemas/country_code-2",
@@ -3689,79 +3692,7 @@
             "$ref": "#/components/schemas/money"
           },
           "tokenized_card": {
-            "description": "The payment card to use to fund a payment. Can be a credit or debit card.",
-            "type": "object",
-            "title": "Card",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "The card holder's name as it appears on the card.",
-                "maxLength": 300,
-                "minLength": 1,
-                "pattern": "^.{1,300}$"
-              },
-              "number": {
-                "type": "string",
-                "description": "The primary account number (PAN) for the payment card.",
-                "pattern": "^[0-9]{13,19}$",
-                "minLength": 13,
-                "maxLength": 19
-              },
-              "expiry": {
-                "description": "The card expiration year and month, in [Internet date format](https://tools.ietf.org/html/rfc3339#section-5.6) For example: 2028-04",
-                "$ref": "#/components/schemas/date_year_month"
-              },
-              "card_type": {
-                "description": "The card brand or network. Typically used in the response.",
-                "readOnly": true,
-                "$ref": "#/components/schemas/card_brand",
-                "deprecated": true
-              },
-              "type": {
-                "description": "The payment card type.",
-                "$ref": "#/components/schemas/card_type"
-              },
-              "brand": {
-                "description": "The card brand or network. Typically used in the response.",
-                "$ref": "#/components/schemas/card_brand"
-              },
-              "billing_address": {
-                "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
-                "type": "object",
-                "title": "Portable Postal Address (Medium-Grained)",
-                "properties": {
-                  "address_line_1": {
-                    "type": "string",
-                    "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
-                    "maxLength": 300
-                  },
-                  "address_line_2": {
-                    "type": "string",
-                    "description": "The second line of the address, for example, a suite or apartment number.",
-                    "maxLength": 300
-                  },
-                  "admin_area_2": {
-                    "type": "string",
-                    "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
-                    "maxLength": 120
-                  },
-                  "admin_area_1": {
-                    "type": "string",
-                    "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
-                    "maxLength": 300
-                  },
-                  "postal_code": {
-                    "type": "string",
-                    "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
-                    "maxLength": 60
-                  },
-                  "country_code": {
-                    "$ref": "#/components/schemas/country_code"
-                  }
-                },
-                "required": ["country_code"]
-              }
-            }
+            "$ref": "#/components/schemas/tokenized_card"
           },
           "device_manufacturer_id": {
             "description": "Apple Pay Hex-encoded device manufacturer identifier. The pattern is defined by an external party and supports Unicode.",
@@ -3869,19 +3800,7 @@
             "$ref": "#/components/schemas/email_address"
           },
           "phone_number": {
-            "description": "The phone number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en).",
-            "type": "object",
-            "title": "Phone",
-            "properties": {
-              "national_number": {
-                "type": "string",
-                "description": "The national number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the country calling code (CC) and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
-                "minLength": 1,
-                "maxLength": 14,
-                "pattern": "^[0-9]{1,14}?$"
-              }
-            },
-            "required": ["national_number"]
+            "$ref": "#/components/schemas/phone_number"
           },
           "decrypted_token": {
             "description": "The decrypted payload details for the apple pay token.",
@@ -4152,6 +4071,42 @@
         "minLength": 8,
         "maxLength": 11,
         "pattern": "^[A-Z-a-z0-9]{4}[A-Z-a-z]{2}[A-Z-a-z0-9]{2}([A-Z-a-z0-9]{3})?$"
+      },
+      "billing_address": {
+        "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
+        "type": "object",
+        "title": "Portable Postal Address (Medium-Grained)",
+        "properties": {
+          "address_line_1": {
+            "type": "string",
+            "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
+            "maxLength": 300
+          },
+          "address_line_2": {
+            "type": "string",
+            "description": "The second line of the address, for example, a suite or apartment number.",
+            "maxLength": 300
+          },
+          "admin_area_2": {
+            "type": "string",
+            "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
+            "maxLength": 120
+          },
+          "admin_area_1": {
+            "type": "string",
+            "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
+            "maxLength": 300
+          },
+          "postal_code": {
+            "type": "string",
+            "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
+            "maxLength": 60
+          },
+          "country_code": {
+            "$ref": "#/components/schemas/country_code"
+          }
+        },
+        "required": ["country_code"]
       },
       "billing_agreement_id": {
         "type": "string",
@@ -4652,6 +4607,31 @@
           }
         }
       },
+      "card": {
+        "description": "The payment card used to fund a Google Pay payment. Can be a credit or debit card.",
+        "type": "object",
+        "title": "Google Pay Card",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The card holder's name as it appears on the card.",
+            "maxLength": 300,
+            "minLength": 1,
+            "pattern": "^.{1,300}$"
+          },
+          "type": {
+            "description": "The payment card type.",
+            "$ref": "#/components/schemas/card_type"
+          },
+          "brand": {
+            "description": "The card brand or network. Typically used in the response.",
+            "$ref": "#/components/schemas/card_brand"
+          },
+          "billing_address": {
+            "$ref": "#/components/schemas/card_billing_address"
+          }
+        }
+      },
       "card_attributes": {
         "type": "object",
         "title": "Card Attributes",
@@ -4679,6 +4659,42 @@
             "$ref": "#/components/schemas/card_vault_response"
           }
         }
+      },
+      "card_billing_address": {
+        "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
+        "type": "object",
+        "title": "Portable Postal Address (Medium-Grained)",
+        "properties": {
+          "address_line_1": {
+            "type": "string",
+            "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
+            "maxLength": 300
+          },
+          "address_line_2": {
+            "type": "string",
+            "description": "The second line of the address, for example, a suite or apartment number.",
+            "maxLength": 300
+          },
+          "admin_area_2": {
+            "type": "string",
+            "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
+            "maxLength": 120
+          },
+          "admin_area_1": {
+            "type": "string",
+            "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
+            "maxLength": 300
+          },
+          "postal_code": {
+            "type": "string",
+            "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
+            "maxLength": 60
+          },
+          "country_code": {
+            "$ref": "#/components/schemas/country_code"
+          }
+        },
+        "required": ["country_code"]
       },
       "card_brand": {
         "type": "string",
@@ -4946,40 +4962,7 @@
             "maxLength": 4
           },
           "billing_address": {
-            "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
-            "type": "object",
-            "title": "Portable Postal Address (Medium-Grained)",
-            "properties": {
-              "address_line_1": {
-                "type": "string",
-                "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
-                "maxLength": 300
-              },
-              "address_line_2": {
-                "type": "string",
-                "description": "The second line of the address, for example, a suite or apartment number.",
-                "maxLength": 300
-              },
-              "admin_area_2": {
-                "type": "string",
-                "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
-                "maxLength": 120
-              },
-              "admin_area_1": {
-                "type": "string",
-                "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
-                "maxLength": 300
-              },
-              "postal_code": {
-                "type": "string",
-                "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
-                "maxLength": 60
-              },
-              "country_code": {
-                "$ref": "#/components/schemas/country_code"
-              }
-            },
-            "required": ["country_code"]
+            "$ref": "#/components/schemas/billing_address"
           },
           "attributes": {
             "description": "Additional attributes associated with the use of this card.",
@@ -5295,19 +5278,7 @@
             "$ref": "#/components/schemas/labels_list"
           },
           "payee": {
-            "description": "The details for the merchant who receives the funds and fulfills the order. The merchant is also known as the payee.",
-            "type": "object",
-            "title": "Payee Base",
-            "properties": {
-              "email_address": {
-                "description": "The email address of merchant.",
-                "$ref": "#/components/schemas/email"
-              },
-              "merchant_id": {
-                "description": "The encrypted PayPal account ID of the merchant.",
-                "$ref": "#/components/schemas/account_id"
-              }
-            }
+            "$ref": "#/components/schemas/definitions-payee"
           },
           "amount": {
             "description": "Amount that was charged to the cobranded card.",
@@ -5368,16 +5339,6 @@
           "data_category": "INTRINSIC"
         }
       },
-      "currency_code-2": {
-        "description": "The [3-character ISO-4217 currency code](/api/rest/reference/currency-codes/) that identifies the currency.",
-        "type": "string",
-        "minLength": 3,
-        "maxLength": 3,
-        "x-security-classification": {
-          "data_class": "class4",
-          "data_category": "INTRINSIC"
-        }
-      },
       "customer": {
         "type": "object",
         "title": "Customer Information",
@@ -5395,21 +5356,24 @@
             "$ref": "#/components/schemas/phone_with_type"
           },
           "name": {
-            "description": "The name of the party.",
-            "type": "object",
-            "title": "Name",
-            "properties": {
-              "given_name": {
-                "type": "string",
-                "description": "When the party is a person, the party's given, or first, name.",
-                "maxLength": 140
-              },
-              "surname": {
-                "type": "string",
-                "description": "When the party is a person, the party's surname or family name. Also known as the last name. Required when the party is a person. Use also to store multiple surnames including the matronymic, or mother's, surname.",
-                "maxLength": 140
-              }
-            }
+            "$ref": "#/components/schemas/name"
+          }
+        }
+      },
+      "customer_name": {
+        "description": "The name of the party.",
+        "type": "object",
+        "title": "Name",
+        "properties": {
+          "given_name": {
+            "type": "string",
+            "description": "When the party is a person, the party's given, or first, name.",
+            "maxLength": 140
+          },
+          "surname": {
+            "type": "string",
+            "description": "When the party is a person, the party's surname or family name. Also known as the last name. Required when the party is a person. Use also to store multiple surnames including the matronymic, or mother's, surname.",
+            "maxLength": 140
           }
         }
       },
@@ -5436,6 +5400,69 @@
         "maxLength": 7,
         "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])$"
       },
+      "definitions-2": {
+        "type": "object",
+        "title": "Vaulted PayPal Wallet Common Attributes",
+        "description": "Resource consolidating common request and response attributes for vaulting PayPal Wallet.",
+        "required": ["usage_type"]
+      },
+      "definitions-card": {
+        "description": "The payment card used to fund a Google Pay payment. Can be a credit or debit card.",
+        "type": "object",
+        "title": "Google Pay Card",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The card holder's name as it appears on the card.",
+            "maxLength": 300,
+            "minLength": 1,
+            "pattern": "^.{1,300}$"
+          },
+          "number": {
+            "type": "string",
+            "description": "The primary account number (PAN) for the payment card.",
+            "pattern": "^[0-9]{13,19}$",
+            "minLength": 13,
+            "maxLength": 19
+          },
+          "expiry": {
+            "description": "The card expiration year and month, in [Internet date format](https://tools.ietf.org/html/rfc3339#section-5.6).",
+            "$ref": "#/components/schemas/date_year_month"
+          },
+          "last_digits": {
+            "type": "string",
+            "description": "The last digits of the payment card.",
+            "pattern": "^[0-9]{2,4}$",
+            "minLength": 2,
+            "maxLength": 4,
+            "readOnly": true
+          },
+          "type": {
+            "description": "The payment card type.",
+            "$ref": "#/components/schemas/card_type"
+          },
+          "brand": {
+            "description": "The card brand or network. Typically used in the response.",
+            "$ref": "#/components/schemas/card_brand"
+          },
+          "billing_address": {
+            "$ref": "#/components/schemas/card_billing_address"
+          }
+        }
+      },
+      "definitions-customer": {
+        "type": "object",
+        "title": "Customer Information",
+        "description": "This object represents a merchant’s customer, allowing them to store contact details, and track all payments associated with the same customer.",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/merchant_partner_customer_id"
+          },
+          "name": {
+            "$ref": "#/components/schemas/customer_name"
+          }
+        }
+      },
       "definitions-link_description_list": {
         "type": "array",
         "description": "An array of request-related HATEOAS links.",
@@ -5443,6 +5470,84 @@
         "items": {
           "$ref": "#/components/schemas/link_description"
         }
+      },
+      "definitions-name": {
+        "description": "The name of the party.",
+        "type": "object",
+        "title": "Name",
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "description": "When the party is a person, the party's full name.",
+            "maxLength": 300
+          }
+        }
+      },
+      "definitions-payee": {
+        "description": "The details for the merchant who receives the funds and fulfills the order. The merchant is also known as the payee.",
+        "type": "object",
+        "title": "Payee Base",
+        "properties": {
+          "email_address": {
+            "description": "The email address of merchant.",
+            "$ref": "#/components/schemas/email"
+          },
+          "merchant_id": {
+            "description": "The encrypted PayPal account ID of the merchant.",
+            "$ref": "#/components/schemas/account_id"
+          }
+        }
+      },
+      "definitions-payment_source": {
+        "type": "object",
+        "title": "Payment Source",
+        "description": "The payment source definition.",
+        "properties": {
+          "card": {
+            "$ref": "#/components/schemas/card_request"
+          },
+          "token": {
+            "$ref": "#/components/schemas/token"
+          },
+          "paypal": {
+            "description": "Indicates that PayPal Wallet is the payment source. Main use of this selection is to provide additional instructions associated with this choice like vaulting.",
+            "$ref": "#/components/schemas/paypal_wallet"
+          },
+          "apple_pay": {
+            "description": "ApplePay payment source, allows buyer to pay using ApplePay, both on Web as well as on Native.",
+            "$ref": "#/components/schemas/apple_pay_request"
+          },
+          "google_pay": {
+            "description": "Google Pay payment source, allows buyer to pay using Google Pay.",
+            "$ref": "#/components/schemas/google_pay_request"
+          },
+          "venmo": {
+            "description": "Information needed to indicate that Venmo is being used to fund the payment.",
+            "$ref": "#/components/schemas/venmo_wallet_request"
+          }
+        }
+      },
+      "definitions-phone_number": {
+        "description": "The phone number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en).",
+        "type": "object",
+        "title": "Phone",
+        "properties": {
+          "country_code": {
+            "type": "string",
+            "description": "The country calling code (CC), in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the CC and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
+            "minLength": 1,
+            "maxLength": 3,
+            "pattern": "^[0-9]{1,3}?$"
+          },
+          "national_number": {
+            "type": "string",
+            "description": "The national number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the country calling code (CC) and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
+            "minLength": 1,
+            "maxLength": 14,
+            "pattern": "^[0-9]{1,14}?$"
+          }
+        },
+        "required": ["country_code", "national_number"]
       },
       "definitions-platform_fee_list": {
         "type": "array",
@@ -5461,6 +5566,58 @@
         "items": {
           "$ref": "#/components/schemas/purchase_unit_request"
         }
+      },
+      "definitions-shipping_address": {
+        "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
+        "type": "object",
+        "title": "Portable Postal Address (Medium-Grained)",
+        "properties": {
+          "admin_area_2": {
+            "type": "string",
+            "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
+            "maxLength": 120
+          },
+          "admin_area_1": {
+            "type": "string",
+            "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
+            "maxLength": 300
+          },
+          "postal_code": {
+            "type": "string",
+            "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
+            "maxLength": 60
+          },
+          "country_code": {
+            "$ref": "#/components/schemas/country_code"
+          }
+        },
+        "required": ["country_code"]
+      },
+      "definitions-shipping_option": {
+        "description": "The options that the payee or merchant offers to the payer to ship or pick up their items.",
+        "type": "object",
+        "title": "Shipping Option",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A unique ID that identifies a payer-selected shipping option.",
+            "maxLength": 127
+          },
+          "label": {
+            "type": "string",
+            "description": "A description that the payer sees, which helps them choose an appropriate shipping option. For example, `Free Shipping`, `USPS Priority Shipping`, `Expédition prioritaire USPS`, or `USPS yōuxiān fā huò`. Localize this description to the payer's locale.",
+            "maxLength": 127
+          },
+          "type": {
+            "description": "A classification for the method of purchase fulfillment.",
+            "$ref": "#/components/schemas/shipping_type"
+          },
+          "amount": {
+            "description": "The shipping cost for the selected option.",
+            "$ref": "#/components/schemas/money"
+          }
+        },
+        "required": ["id", "label"]
       },
       "definitions-shipping_option_list": {
         "type": "array",
@@ -5885,6 +6042,25 @@
           }
         }
       },
+      "error_429": {
+        "type": "object",
+        "title": "Too many requests",
+        "description": "Too many requests. Blocked due to rate limiting.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["RATE_LIMIT_REACHED"]
+          },
+          "message": {
+            "type": "string",
+            "enum": ["Too many requests. Blocked due to rate limiting."]
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          }
+        }
+      },
       "error_500": {
         "type": "object",
         "title": "Internal Server Error",
@@ -5981,6 +6157,9 @@
           },
           {
             "$ref": "#/components/schemas/error_422"
+          },
+          {
+            "$ref": "#/components/schemas/error_429"
           },
           {
             "$ref": "#/components/schemas/error_500"
@@ -6124,62 +6303,6 @@
           }
         }
       },
-      "experience_context_swish": {
-        "type": "object",
-        "title": "Experience Context Swish",
-        "description": "Customizes the payer experience during the approval process for the payment.",
-        "properties": {
-          "brand_name": {
-            "type": "string",
-            "description": "The label that overrides the business name in the PayPal account on the PayPal site. The pattern is defined by an external party and supports Unicode.",
-            "minLength": 1,
-            "maxLength": 127,
-            "pattern": "^.*$"
-          },
-          "locale": {
-            "description": "The BCP 47-formatted locale of pages that the PayPal payment experience shows. PayPal supports a five-character code. For example, `da-DK`, `he-IL`, `id-ID`, `ja-JP`, `no-NO`, `pt-BR`, `ru-RU`, `sv-SE`, `th-TH`, `zh-CN`, `zh-HK`, or `zh-TW`.",
-            "$ref": "#/components/schemas/language"
-          },
-          "shipping_preference": {
-            "type": "string",
-            "description": "The location from which the shipping address is derived.",
-            "minLength": 1,
-            "maxLength": 24,
-            "pattern": "^[A-Z0-9_]+$",
-            "default": "GET_FROM_FILE",
-            "x-enumDescriptions": [
-              {
-                "value": "GET_FROM_FILE",
-                "description": "Get the customer-provided shipping address on the PayPal site."
-              },
-              {
-                "value": "NO_SHIPPING",
-                "description": "Redacts the shipping address from the PayPal site. Recommended for digital goods."
-              },
-              {
-                "value": "SET_PROVIDED_ADDRESS",
-                "description": "Get the merchant-provided address. The customer cannot change this address on the PayPal site. If merchant does not pass an address, customer can choose the address on PayPal pages."
-              }
-            ],
-            "enum": ["GET_FROM_FILE", "NO_SHIPPING", "SET_PROVIDED_ADDRESS"]
-          },
-          "return_url": {
-            "description": "The URL where the customer is redirected after the customer approves the payment.",
-            "format": "uri",
-            "$ref": "#/components/schemas/url"
-          },
-          "cancel_url": {
-            "description": "The URL where the customer is redirected after the customer cancels the payment.",
-            "format": "uri",
-            "$ref": "#/components/schemas/url"
-          },
-          "return_intent_url": {
-            "description": "The URL where we identify whether intent_url field should be returned in the response.",
-            "format": "uri",
-            "$ref": "#/components/schemas/url"
-          }
-        }
-      },
       "frequency": {},
       "full_name": {
         "type": "string",
@@ -6240,26 +6363,7 @@
             "$ref": "#/components/schemas/email_address"
           },
           "phone_number": {
-            "description": "The phone number in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en).",
-            "type": "object",
-            "title": "Phone",
-            "properties": {
-              "country_code": {
-                "type": "string",
-                "description": "The country calling code (CC), in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the CC and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
-                "minLength": 1,
-                "maxLength": 3,
-                "pattern": "^[0-9]{1,3}?$"
-              },
-              "national_number": {
-                "type": "string",
-                "description": "The national number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the country calling code (CC) and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
-                "minLength": 1,
-                "maxLength": 14,
-                "pattern": "^[0-9]{1,14}?$"
-              }
-            },
-            "required": ["country_code", "national_number"]
+            "$ref": "#/components/schemas/google_pay_definitions-phone_number"
           },
           "card": {
             "description": "The Card from Google Pay Wallet used to fund the payment.",
@@ -6297,40 +6401,7 @@
             "$ref": "#/components/schemas/card_brand"
           },
           "billing_address": {
-            "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
-            "type": "object",
-            "title": "Portable Postal Address (Medium-Grained)",
-            "properties": {
-              "address_line_1": {
-                "type": "string",
-                "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
-                "maxLength": 300
-              },
-              "address_line_2": {
-                "type": "string",
-                "description": "The second line of the address, for example, a suite or apartment number.",
-                "maxLength": 300
-              },
-              "admin_area_2": {
-                "type": "string",
-                "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
-                "maxLength": 120
-              },
-              "admin_area_1": {
-                "type": "string",
-                "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
-                "maxLength": 300
-              },
-              "postal_code": {
-                "type": "string",
-                "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
-                "maxLength": 60
-              },
-              "country_code": {
-                "$ref": "#/components/schemas/country_code"
-              }
-            },
-            "required": ["country_code"]
+            "$ref": "#/components/schemas/billing_address"
           },
           "authentication_result": {
             "$ref": "#/components/schemas/authentication_response"
@@ -6370,81 +6441,7 @@
             "enum": ["CARD"]
           },
           "card": {
-            "description": "The payment card used to fund a Google Pay payment. Can be a credit or debit card.",
-            "type": "object",
-            "title": "Google Pay Card",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "The card holder's name as it appears on the card.",
-                "maxLength": 300,
-                "minLength": 1,
-                "pattern": "^.{1,300}$"
-              },
-              "number": {
-                "type": "string",
-                "description": "The primary account number (PAN) for the payment card.",
-                "pattern": "^[0-9]{13,19}$",
-                "minLength": 13,
-                "maxLength": 19
-              },
-              "expiry": {
-                "description": "The card expiration year and month, in [Internet date format](https://tools.ietf.org/html/rfc3339#section-5.6).",
-                "$ref": "#/components/schemas/date_year_month"
-              },
-              "last_digits": {
-                "type": "string",
-                "description": "The last digits of the payment card.",
-                "pattern": "^[0-9]{2,4}$",
-                "minLength": 2,
-                "maxLength": 4,
-                "readOnly": true
-              },
-              "type": {
-                "description": "The payment card type.",
-                "$ref": "#/components/schemas/card_type"
-              },
-              "brand": {
-                "description": "The card brand or network. Typically used in the response.",
-                "$ref": "#/components/schemas/card_brand"
-              },
-              "billing_address": {
-                "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
-                "type": "object",
-                "title": "Portable Postal Address (Medium-Grained)",
-                "properties": {
-                  "address_line_1": {
-                    "type": "string",
-                    "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
-                    "maxLength": 300
-                  },
-                  "address_line_2": {
-                    "type": "string",
-                    "description": "The second line of the address, for example, a suite or apartment number.",
-                    "maxLength": 300
-                  },
-                  "admin_area_2": {
-                    "type": "string",
-                    "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
-                    "maxLength": 120
-                  },
-                  "admin_area_1": {
-                    "type": "string",
-                    "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
-                    "maxLength": 300
-                  },
-                  "postal_code": {
-                    "type": "string",
-                    "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
-                    "maxLength": 60
-                  },
-                  "country_code": {
-                    "$ref": "#/components/schemas/country_code"
-                  }
-                },
-                "required": ["country_code"]
-              }
-            }
+            "$ref": "#/components/schemas/definitions-card"
           },
           "authentication_method": {
             "description": "Authentication Method which is used for the card transaction.",
@@ -6479,6 +6476,28 @@
         },
         "required": ["payment_method", "card", "authentication_method"]
       },
+      "google_pay_definitions-phone_number": {
+        "description": "The phone number in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en).",
+        "type": "object",
+        "title": "Phone",
+        "properties": {
+          "country_code": {
+            "type": "string",
+            "description": "The country calling code (CC), in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the CC and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
+            "minLength": 1,
+            "maxLength": 3,
+            "pattern": "^[0-9]{1,3}?$"
+          },
+          "national_number": {
+            "type": "string",
+            "description": "The national number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the country calling code (CC) and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
+            "minLength": 1,
+            "maxLength": 14,
+            "pattern": "^[0-9]{1,14}?$"
+          }
+        },
+        "required": ["country_code", "national_number"]
+      },
       "google_pay_experience_context": {
         "type": "object",
         "title": "Google Pay Experience Context",
@@ -6511,84 +6530,10 @@
             "$ref": "#/components/schemas/email_address"
           },
           "phone_number": {
-            "description": "The phone number in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en).",
-            "type": "object",
-            "title": "Phone",
-            "properties": {
-              "country_code": {
-                "type": "string",
-                "description": "The country calling code (CC), in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the CC and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
-                "minLength": 1,
-                "maxLength": 3,
-                "pattern": "^[0-9]{1,3}?$"
-              },
-              "national_number": {
-                "type": "string",
-                "description": "The national number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the country calling code (CC) and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
-                "minLength": 1,
-                "maxLength": 14,
-                "pattern": "^[0-9]{1,14}?$"
-              }
-            },
-            "required": ["country_code", "national_number"]
+            "$ref": "#/components/schemas/google_pay_request_definitions-phone_number"
           },
           "card": {
-            "description": "The payment card used to fund a Google Pay payment. Can be a credit or debit card.",
-            "type": "object",
-            "title": "Google Pay Card",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "The card holder's name as it appears on the card.",
-                "maxLength": 300,
-                "minLength": 1,
-                "pattern": "^.{1,300}$"
-              },
-              "type": {
-                "description": "The payment card type.",
-                "$ref": "#/components/schemas/card_type"
-              },
-              "brand": {
-                "description": "The card brand or network. Typically used in the response.",
-                "$ref": "#/components/schemas/card_brand"
-              },
-              "billing_address": {
-                "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
-                "type": "object",
-                "title": "Portable Postal Address (Medium-Grained)",
-                "properties": {
-                  "address_line_1": {
-                    "type": "string",
-                    "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
-                    "maxLength": 300
-                  },
-                  "address_line_2": {
-                    "type": "string",
-                    "description": "The second line of the address, for example, a suite or apartment number.",
-                    "maxLength": 300
-                  },
-                  "admin_area_2": {
-                    "type": "string",
-                    "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
-                    "maxLength": 120
-                  },
-                  "admin_area_1": {
-                    "type": "string",
-                    "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
-                    "maxLength": 300
-                  },
-                  "postal_code": {
-                    "type": "string",
-                    "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
-                    "maxLength": 60
-                  },
-                  "country_code": {
-                    "$ref": "#/components/schemas/country_code"
-                  }
-                },
-                "required": ["country_code"]
-              }
-            }
+            "$ref": "#/components/schemas/card"
           },
           "decrypted_token": {
             "description": "The decrypted payload details for the Google Pay token.",
@@ -6605,6 +6550,28 @@
             "$ref": "#/components/schemas/google_pay_experience_context"
           }
         }
+      },
+      "google_pay_request_definitions-phone_number": {
+        "description": "The phone number in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en).",
+        "type": "object",
+        "title": "Phone",
+        "properties": {
+          "country_code": {
+            "type": "string",
+            "description": "The country calling code (CC), in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the CC and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
+            "minLength": 1,
+            "maxLength": 3,
+            "pattern": "^[0-9]{1,3}?$"
+          },
+          "national_number": {
+            "type": "string",
+            "description": "The national number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the country calling code (CC) and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
+            "minLength": 1,
+            "maxLength": 14,
+            "pattern": "^[0-9]{1,14}?$"
+          }
+        },
+        "required": ["country_code", "national_number"]
       },
       "iban_last_chars": {
         "type": "string",
@@ -6756,6 +6723,94 @@
           "$ref": "#/components/schemas/item"
         }
       },
+      "item_request": {
+        "type": "object",
+        "title": "Item Request",
+        "description": "The details for the items to be purchased.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The item name or title.",
+            "minLength": 1,
+            "maxLength": 127
+          },
+          "unit_amount": {
+            "description": "The item price or rate per unit. If you specify <code>unit_amount</code>, <code>purchase_units[].amount.breakdown.item_total</code> is required. Must equal <code>unit_amount * quantity</code> for all items. <code>unit_amount.value</code> can not be a negative number.",
+            "$ref": "#/components/schemas/money"
+          },
+          "tax": {
+            "description": "The item tax for each unit. If <code>tax</code> is specified, <code>purchase_units[].amount.breakdown.tax_total</code> is required. Must equal <code>tax * quantity</code> for all items. <code>tax.value</code> can not be a negative number.",
+            "$ref": "#/components/schemas/money"
+          },
+          "quantity": {
+            "type": "string",
+            "description": "The item quantity. Must be a whole number.",
+            "maxLength": 10,
+            "pattern": "^[1-9][0-9]{0,9}$"
+          },
+          "description": {
+            "type": "string",
+            "description": "<blockquote>This field accepts a <strong>maximum of 2048 total characters (including spaces)</strong>. Excess characters are automatically truncated.</blockquote>The detailed item description.",
+            "maxLength": 4000
+          },
+          "sku": {
+            "type": "string",
+            "description": "The stock keeping unit (SKU) for the item.",
+            "maxLength": 127
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "minLength": 1,
+            "maxLength": 2048,
+            "description": "The URL to the item being purchased. Visible to buyer and used in buyer experiences."
+          },
+          "category": {
+            "type": "string",
+            "description": "The item category type.",
+            "x-enumDescriptions": [
+              {
+                "value": "DIGITAL_GOODS",
+                "description": "Goods that are stored, delivered, and used in their electronic format. This value is not currently supported for API callers that leverage the <a href=\"https://www.paypal.com/us/webapps/mpp/commerce-platform\">PayPal for Commerce Platform</a> product."
+              },
+              {
+                "value": "PHYSICAL_GOODS",
+                "description": "A tangible item that can be shipped with proof of delivery."
+              },
+              {
+                "value": "DONATION",
+                "description": "A contribution or gift for which no good or service is exchanged, usually to a not for profit organization."
+              }
+            ],
+            "minLength": 1,
+            "maxLength": 20,
+            "enum": ["DIGITAL_GOODS", "PHYSICAL_GOODS", "DONATION"]
+          },
+          "image_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL of the item's image. File type and size restrictions apply. An image that violates these restrictions will not be honored.",
+            "minLength": 1,
+            "maxLength": 2048,
+            "pattern": "^(https:)([/|.|\\w|\\s|-])*\\.(?:jpg|gif|png|jpeg|JPG|GIF|PNG|JPEG)"
+          },
+          "upc": {
+            "description": "The Universal Product Code of the item.",
+            "$ref": "#/components/schemas/universal_product_code"
+          },
+          "billing_plan": {
+            "$ref": "#/components/schemas/order_billing_plan"
+          }
+        },
+        "required": ["name", "unit_amount", "quantity"]
+      },
+      "item_request_list": {
+        "type": "array",
+        "description": "An array of items that the customer purchases from the merchant.",
+        "items": {
+          "$ref": "#/components/schemas/item_request"
+        }
+      },
       "labels": {
         "type": "string",
         "description": "Label for the cobranded card.",
@@ -6815,40 +6870,7 @@
             "$ref": "#/components/schemas/money"
           },
           "shipping_address": {
-            "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
-            "type": "object",
-            "title": "Portable Postal Address (Medium-Grained)",
-            "properties": {
-              "address_line_1": {
-                "type": "string",
-                "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
-                "maxLength": 300
-              },
-              "address_line_2": {
-                "type": "string",
-                "description": "The second line of the address, for example, a suite or apartment number.",
-                "maxLength": 300
-              },
-              "admin_area_2": {
-                "type": "string",
-                "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
-                "maxLength": 120
-              },
-              "admin_area_1": {
-                "type": "string",
-                "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
-                "maxLength": 300
-              },
-              "postal_code": {
-                "type": "string",
-                "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
-                "maxLength": 60
-              },
-              "country_code": {
-                "$ref": "#/components/schemas/country_code"
-              }
-            },
-            "required": ["country_code"]
+            "$ref": "#/components/schemas/shipping_address"
           },
           "ships_from_postal_code": {
             "type": "string",
@@ -7100,6 +7122,23 @@
           }
         },
         "required": ["name", "country_code"]
+      },
+      "name": {
+        "description": "The name of the party.",
+        "type": "object",
+        "title": "Name",
+        "properties": {
+          "given_name": {
+            "type": "string",
+            "description": "When the party is a person, the party's given, or first, name.",
+            "maxLength": 140
+          },
+          "surname": {
+            "type": "string",
+            "description": "When the party is a person, the party's surname or family name. Also known as the last name. Required when the party is a person. Use also to store multiple surnames including the matronymic, or mother's, surname.",
+            "maxLength": 140
+          }
+        }
       },
       "net_amount_breakdown_item": {
         "type": "object",
@@ -7366,41 +7405,7 @@
         "description": "The authorization of an order request.",
         "properties": {
           "payment_source": {
-            "description": "The payment source definition.",
-            "type": "object",
-            "title": "Payment Source",
-            "properties": {
-              "card": {
-                "$ref": "#/components/schemas/card_request"
-              },
-              "token": {
-                "$ref": "#/components/schemas/token"
-              },
-              "paypal": {
-                "description": "Indicates that PayPal Wallet is the payment source. Main use of this selection is to provide additional instructions associated with this choice like vaulting.",
-                "$ref": "#/components/schemas/paypal_wallet"
-              },
-              "swish": {
-                "description": "The Sweden payment method Swish is an online payment method that enables consumers to pay online through their own bank.",
-                "$ref": "#/components/schemas/swish_request"
-              },
-              "pix": {
-                "description": "PIX is a local payment method in Brazil, that enables consumers to pay online through their own bank.",
-                "$ref": "#/components/schemas/pix_request"
-              },
-              "apple_pay": {
-                "description": "ApplePay payment source, allows buyer to pay using ApplePay, both on Web as well as on Native.",
-                "$ref": "#/components/schemas/apple_pay_request"
-              },
-              "google_pay": {
-                "description": "Google Pay payment source, allows buyer to pay using Google Pay.",
-                "$ref": "#/components/schemas/google_pay_request"
-              },
-              "venmo": {
-                "description": "Information needed to indicate that Venmo is being used to fund the payment.",
-                "$ref": "#/components/schemas/venmo_wallet_request"
-              }
-            }
+            "$ref": "#/components/schemas/definitions-payment_source"
           }
         }
       },
@@ -7418,35 +7423,7 @@
                 "readOnly": true
               },
               "payment_source": {
-                "type": "object",
-                "title": "Payment Source Response",
-                "description": "The payment source used to fund the payment.",
-                "properties": {
-                  "card": {
-                    "$ref": "#/components/schemas/card_response"
-                  },
-                  "paypal": {
-                    "$ref": "#/components/schemas/paypal_wallet_response"
-                  },
-                  "swish": {
-                    "$ref": "#/components/schemas/swish"
-                  },
-                  "apple_pay": {
-                    "$ref": "#/components/schemas/apple_pay"
-                  },
-                  "google_pay": {
-                    "$ref": "#/components/schemas/google_pay"
-                  },
-                  "venmo": {
-                    "$ref": "#/components/schemas/venmo_wallet_response"
-                  },
-                  "pix": {
-                    "$ref": "#/components/schemas/pix"
-                  },
-                  "crypto": {
-                    "$ref": "#/components/schemas/crypto"
-                  }
-                }
+                "$ref": "#/components/schemas/order_authorize_response_definitions-payment_source"
               },
               "intent": {
                 "$ref": "#/components/schemas/checkout_payment_intent"
@@ -7470,11 +7447,34 @@
             }
           },
           {
-            "type": "object",
-            "title": "Order Authorize Response",
-            "description": "The order authorize response."
+            "$ref": "#/components/schemas/3"
           }
         ]
+      },
+      "order_authorize_response_definitions-payment_source": {
+        "type": "object",
+        "title": "Payment Source Response",
+        "description": "The payment source used to fund the payment.",
+        "properties": {
+          "card": {
+            "$ref": "#/components/schemas/card_response"
+          },
+          "paypal": {
+            "$ref": "#/components/schemas/paypal_wallet_response"
+          },
+          "apple_pay": {
+            "$ref": "#/components/schemas/apple_pay"
+          },
+          "google_pay": {
+            "$ref": "#/components/schemas/google_pay"
+          },
+          "venmo": {
+            "$ref": "#/components/schemas/venmo_wallet_response"
+          },
+          "crypto": {
+            "$ref": "#/components/schemas/crypto"
+          }
+        }
       },
       "order_billing_plan": {
         "title": "Billing Plan",
@@ -7504,41 +7504,7 @@
         "description": "Completes an capture payment for an order.",
         "properties": {
           "payment_source": {
-            "type": "object",
-            "title": "Payment Source",
-            "description": "The payment source definition.",
-            "properties": {
-              "card": {
-                "$ref": "#/components/schemas/card_request"
-              },
-              "token": {
-                "$ref": "#/components/schemas/token"
-              },
-              "paypal": {
-                "description": "Indicates that PayPal Wallet is the payment source. Main use of this selection is to provide additional instructions associated with this choice like vaulting.",
-                "$ref": "#/components/schemas/paypal_wallet"
-              },
-              "swish": {
-                "description": "The Sweden payment method Swish is an online payment method that enables consumers to pay online through their own bank.",
-                "$ref": "#/components/schemas/swish_request"
-              },
-              "pix": {
-                "description": "PIX is a local payment method in Brazil, that enables consumers to pay online through their own bank.",
-                "$ref": "#/components/schemas/pix_request"
-              },
-              "apple_pay": {
-                "description": "ApplePay payment source, allows buyer to pay using ApplePay, both on Web as well as on Native.",
-                "$ref": "#/components/schemas/apple_pay_request"
-              },
-              "google_pay": {
-                "description": "Google Pay payment source, allows buyer to pay using Google Pay.",
-                "$ref": "#/components/schemas/google_pay_request"
-              },
-              "venmo": {
-                "description": "Information needed to indicate that Venmo is being used to fund the payment.",
-                "$ref": "#/components/schemas/venmo_wallet_request"
-              }
-            }
+            "$ref": "#/components/schemas/definitions-payment_source"
           }
         }
       },
@@ -7704,56 +7670,10 @@
             "pattern": "^[A-Z0-9-]+$"
           },
           "shipping_address": {
-            "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
-            "type": "object",
-            "title": "Portable Postal Address (Medium-Grained)",
-            "properties": {
-              "admin_area_2": {
-                "type": "string",
-                "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
-                "maxLength": 120
-              },
-              "admin_area_1": {
-                "type": "string",
-                "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
-                "maxLength": 300
-              },
-              "postal_code": {
-                "type": "string",
-                "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
-                "maxLength": 60
-              },
-              "country_code": {
-                "$ref": "#/components/schemas/country_code"
-              }
-            },
-            "required": ["country_code"]
+            "$ref": "#/components/schemas/definitions-shipping_address"
           },
           "shipping_option": {
-            "description": "The options that the payee or merchant offers to the payer to ship or pick up their items.",
-            "type": "object",
-            "title": "Shipping Option",
-            "properties": {
-              "id": {
-                "type": "string",
-                "description": "A unique ID that identifies a payer-selected shipping option.",
-                "maxLength": 127
-              },
-              "label": {
-                "type": "string",
-                "description": "A description that the payer sees, which helps them choose an appropriate shipping option. For example, `Free Shipping`, `USPS Priority Shipping`, `Expédition prioritaire USPS`, or `USPS yōuxiān fā huò`. Localize this description to the payer's locale.",
-                "maxLength": 127
-              },
-              "type": {
-                "description": "A classification for the method of purchase fulfillment.",
-                "$ref": "#/components/schemas/shipping_type"
-              },
-              "amount": {
-                "description": "The shipping cost for the selected option.",
-                "$ref": "#/components/schemas/money"
-              }
-            },
-            "required": ["id", "label"]
+            "$ref": "#/components/schemas/definitions-shipping_option"
           },
           "purchase_units": {
             "$ref": "#/components/schemas/definitions-purchase_unit_request_list"
@@ -13194,21 +13114,7 @@
           {
             "properties": {
               "name": {
-                "description": "The name of the party.",
-                "type": "object",
-                "title": "Name",
-                "properties": {
-                  "given_name": {
-                    "type": "string",
-                    "description": "When the party is a person, the party's given, or first, name.",
-                    "maxLength": 140
-                  },
-                  "surname": {
-                    "type": "string",
-                    "description": "When the party is a person, the party's surname or family name. Also known as the last name. Required when the party is a person. Use also to store multiple surnames including the matronymic, or mother's, surname.",
-                    "maxLength": 140
-                  }
-                }
+                "$ref": "#/components/schemas/name"
               },
               "phone": {
                 "description": "The phone number of the customer. Available only when you enable the **Contact Telephone Number** option in the <a href=\"https://www.paypal.com/cgi-bin/customerprofileweb?cmd=_profile-website-payments\">**Profile & Settings**</a> for the merchant's PayPal account. The `phone.phone_number` supports only `national_number`.",
@@ -13223,48 +13129,12 @@
                 "$ref": "#/components/schemas/tax_info"
               },
               "address": {
-                "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
-                "type": "object",
-                "title": "Portable Postal Address (Medium-Grained)",
-                "properties": {
-                  "address_line_1": {
-                    "type": "string",
-                    "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
-                    "maxLength": 300
-                  },
-                  "address_line_2": {
-                    "type": "string",
-                    "description": "The second line of the address, for example, a suite or apartment number.",
-                    "maxLength": 300
-                  },
-                  "admin_area_2": {
-                    "type": "string",
-                    "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
-                    "maxLength": 120
-                  },
-                  "admin_area_1": {
-                    "type": "string",
-                    "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
-                    "maxLength": 300
-                  },
-                  "postal_code": {
-                    "type": "string",
-                    "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
-                    "maxLength": 60
-                  },
-                  "country_code": {
-                    "$ref": "#/components/schemas/country_code"
-                  }
-                },
-                "required": ["country_code"]
+                "$ref": "#/components/schemas/address"
               }
             }
           },
           {
-            "type": "object",
-            "title": "Payer",
-            "description": "The customer who approves and pays for the order. The customer is also known as the payer.",
-            "format": "payer_v1"
+            "$ref": "#/components/schemas/2"
           }
         ]
       },
@@ -13421,10 +13291,6 @@
             "description": "The Sweden payment method Swish is an online payment method that enables consumers to pay online through their own bank.",
             "$ref": "#/components/schemas/swish_request"
           },
-          "pix": {
-            "description": "PIX is a local payment method in Brazil, that enables consumers to pay online through their own bank.",
-            "$ref": "#/components/schemas/pix_request"
-          },
           "mybank": {
             "description": "MyBank is an e-authorisation solution which enables safe digital payments and identity authentication through a consumer’s own online banking portal or mobile application. [More Details](https://www.mybank.eu/).",
             "$ref": "#/components/schemas/mybank_request"
@@ -13509,9 +13375,6 @@
           "venmo": {
             "$ref": "#/components/schemas/venmo_wallet_response"
           },
-          "pix": {
-            "$ref": "#/components/schemas/pix"
-          },
           "crypto": {
             "$ref": "#/components/schemas/crypto"
           }
@@ -13531,21 +13394,7 @@
             "$ref": "#/components/schemas/email"
           },
           "name": {
-            "description": "The name of the party.",
-            "type": "object",
-            "title": "Name",
-            "properties": {
-              "given_name": {
-                "type": "string",
-                "description": "When the party is a person, the party's given, or first, name.",
-                "maxLength": 140
-              },
-              "surname": {
-                "type": "string",
-                "description": "When the party is a person, the party's surname or family name. Also known as the last name. Required when the party is a person. Use also to store multiple surnames including the matronymic, or mother's, surname.",
-                "maxLength": 140
-              }
-            }
+            "$ref": "#/components/schemas/name"
           },
           "phone": {
             "description": "The phone number of the customer. Available only when you enable the **Contact Telephone Number** option in the <a href=\"https://www.paypal.com/cgi-bin/customerprofileweb?cmd=_profile-website-payments\">**Profile & Settings**</a> for the merchant's PayPal account. The `phone.phone_number` supports only `national_number`.",
@@ -13560,40 +13409,7 @@
             "$ref": "#/components/schemas/tax_info"
           },
           "address": {
-            "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
-            "type": "object",
-            "title": "Portable Postal Address (Medium-Grained)",
-            "properties": {
-              "address_line_1": {
-                "type": "string",
-                "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
-                "maxLength": 300
-              },
-              "address_line_2": {
-                "type": "string",
-                "description": "The second line of the address, for example, a suite or apartment number.",
-                "maxLength": 300
-              },
-              "admin_area_2": {
-                "type": "string",
-                "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
-                "maxLength": 120
-              },
-              "admin_area_1": {
-                "type": "string",
-                "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
-                "maxLength": 300
-              },
-              "postal_code": {
-                "type": "string",
-                "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
-                "maxLength": 60
-              },
-              "country_code": {
-                "$ref": "#/components/schemas/country_code"
-              }
-            },
-            "required": ["country_code"]
+            "$ref": "#/components/schemas/address"
           },
           "attributes": {
             "description": "Additional attributes associated with the use of this wallet.",
@@ -13749,10 +13565,7 @@
                 }
               },
               {
-                "type": "object",
-                "title": "Vaulted PayPal Wallet Common Attributes",
-                "description": "Resource consolidating common request and response attributes for vaulting PayPal Wallet.",
-                "required": ["usage_type"]
+                "$ref": "#/components/schemas/definitions-2"
               },
               {
                 "description": "Attributes used to provide the instructions during vaulting of the PayPal Wallet."
@@ -13974,21 +13787,7 @@
             "enum": ["VERIFIED", "UNVERIFIED"]
           },
           "name": {
-            "description": "The name of the party.",
-            "type": "object",
-            "title": "Name",
-            "properties": {
-              "given_name": {
-                "type": "string",
-                "description": "When the party is a person, the party's given, or first, name.",
-                "maxLength": 140
-              },
-              "surname": {
-                "type": "string",
-                "description": "When the party is a person, the party's surname or family name. Also known as the last name. Required when the party is a person. Use also to store multiple surnames including the matronymic, or mother's, surname.",
-                "maxLength": 140
-              }
-            }
+            "$ref": "#/components/schemas/name"
           },
           "phone_type": {
             "$ref": "#/components/schemas/phone_type"
@@ -14013,40 +13812,7 @@
             "$ref": "#/components/schemas/tax_info"
           },
           "address": {
-            "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
-            "type": "object",
-            "title": "Portable Postal Address (Medium-Grained)",
-            "properties": {
-              "address_line_1": {
-                "type": "string",
-                "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
-                "maxLength": 300
-              },
-              "address_line_2": {
-                "type": "string",
-                "description": "The second line of the address, for example, a suite or apartment number.",
-                "maxLength": 300
-              },
-              "admin_area_2": {
-                "type": "string",
-                "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
-                "maxLength": 120
-              },
-              "admin_area_1": {
-                "type": "string",
-                "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
-                "maxLength": 300
-              },
-              "postal_code": {
-                "type": "string",
-                "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
-                "maxLength": 60
-              },
-              "country_code": {
-                "$ref": "#/components/schemas/country_code"
-              }
-            },
-            "required": ["country_code"]
+            "$ref": "#/components/schemas/address"
           },
           "attributes": {
             "$ref": "#/components/schemas/paypal_wallet_attributes_response"
@@ -14136,6 +13902,21 @@
         },
         "required": ["national_number"]
       },
+      "phone_number": {
+        "description": "The phone number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en).",
+        "type": "object",
+        "title": "Phone",
+        "properties": {
+          "national_number": {
+            "type": "string",
+            "description": "The national number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the country calling code (CC) and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
+            "minLength": 1,
+            "maxLength": 14,
+            "pattern": "^[0-9]{1,14}?$"
+          }
+        },
+        "required": ["national_number"]
+      },
       "phone_type": {
         "type": "string",
         "title": "Phone Type",
@@ -14158,132 +13939,10 @@
             "$ref": "#/components/schemas/phone_type"
           },
           "phone_number": {
-            "description": "The phone number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en).",
-            "type": "object",
-            "title": "Phone",
-            "properties": {
-              "national_number": {
-                "type": "string",
-                "description": "The national number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the country calling code (CC) and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
-                "minLength": 1,
-                "maxLength": 14,
-                "pattern": "^[0-9]{1,14}?$"
-              }
-            },
-            "required": ["national_number"]
+            "$ref": "#/components/schemas/phone_number"
           }
         },
         "required": ["phone_number"]
-      },
-      "pix": {
-        "type": "object",
-        "title": "Pix payment object",
-        "description": "Information needed to pay using Pix.",
-        "properties": {
-          "country_code": {
-            "description": "The two-character ISO 3166-1 purchase country code.",
-            "$ref": "#/components/schemas/country_code"
-          },
-          "name": {
-            "description": "The name of the account holder associated with PIX.",
-            "$ref": "#/components/schemas/full_name"
-          },
-          "email_address": {
-            "description": "The email address of the account holder associated with Pix.",
-            "$ref": "#/components/schemas/email_address"
-          },
-          "phone_number": {
-            "description": "The phone number in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en).",
-            "type": "object",
-            "title": "Phone",
-            "properties": {
-              "country_code": {
-                "type": "string",
-                "description": "The country calling code (CC), in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the CC and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
-                "minLength": 1,
-                "maxLength": 3,
-                "pattern": "^[0-9]{1,3}?$"
-              },
-              "national_number": {
-                "type": "string",
-                "description": "The national number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the country calling code (CC) and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
-                "minLength": 1,
-                "maxLength": 14,
-                "pattern": "^[0-9]{1,14}?$"
-              }
-            },
-            "required": ["country_code", "national_number"]
-          },
-          "tax_info": {
-            "description": "The tax information of the account holder.",
-            "$ref": "#/components/schemas/tax_info"
-          },
-          "currency_code": {
-            "$ref": "#/components/schemas/currency_code-2"
-          },
-          "qr_details": {
-            "$ref": "#/components/schemas/qr_details"
-          }
-        }
-      },
-      "pix_request": {
-        "type": "object",
-        "title": "Pix payment object",
-        "description": "Information needed to pay using Pix.",
-        "properties": {
-          "country_code": {
-            "description": "The two-character ISO 3166-1 purchase country code.",
-            "$ref": "#/components/schemas/country_code"
-          },
-          "name": {
-            "description": "The name of the account holder associated with PIX.",
-            "$ref": "#/components/schemas/full_name"
-          },
-          "email_address": {
-            "description": "The email address of the account holder associated with Pix.",
-            "$ref": "#/components/schemas/email_address"
-          },
-          "phone_number": {
-            "description": "The phone number in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en).",
-            "type": "object",
-            "title": "Phone",
-            "properties": {
-              "country_code": {
-                "type": "string",
-                "description": "The country calling code (CC), in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the CC and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
-                "minLength": 1,
-                "maxLength": 3,
-                "pattern": "^[0-9]{1,3}?$"
-              },
-              "national_number": {
-                "type": "string",
-                "description": "The national number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the country calling code (CC) and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
-                "minLength": 1,
-                "maxLength": 14,
-                "pattern": "^[0-9]{1,14}?$"
-              }
-            },
-            "required": ["country_code", "national_number"]
-          },
-          "tax_info": {
-            "description": "The tax information of the account holder.",
-            "$ref": "#/components/schemas/tax_info"
-          },
-          "currency_code": {
-            "$ref": "#/components/schemas/currency_code-2"
-          },
-          "qr_details": {
-            "$ref": "#/components/schemas/qr_details"
-          }
-        },
-        "required": [
-          "country_code",
-          "name",
-          "email_address",
-          "phone_number",
-          "tax_info",
-          "currency_code"
-        ]
       },
       "platform_fee": {
         "type": "object",
@@ -15547,9 +15206,9 @@
           },
           "description": {
             "type": "string",
-            "description": "The purchase description. The maximum length of the character is dependent on the type of characters used. The character length is specified assuming a US ASCII character. Depending on type of character; (e.g. accented character, Japanese characters) the number of characters that that can be specified as input might not equal the permissible max length.",
+            "description": "<blockquote>This field accepts a <strong>maximum of 127 total characters (including spaces)</strong>. Excess characters are automatically truncated.</blockquote>The purchase description. The maximum length of the character is dependent on the type of characters used. The character length is specified assuming a US ASCII character. Depending on type of character; (e.g. accented character, Japanese characters) the number of characters that that can be specified as input might not equal the permissible max length.",
             "minLength": 1,
-            "maxLength": 127
+            "maxLength": 3000
           },
           "custom_id": {
             "type": "string",
@@ -15565,12 +15224,12 @@
           },
           "soft_descriptor": {
             "type": "string",
-            "description": "The soft descriptor is the dynamic text used to construct the statement descriptor that appears on a payer's card statement.<br><br>If an Order is paid using the \"PayPal Wallet\", the statement descriptor will appear in following format on the payer's card statement: <code><var>PAYPAL_prefix</var>+(space)+<var>merchant_descriptor</var>+(space)+ <var>soft_descriptor</var></code><blockquote><strong>Note:</strong> The merchant descriptor is the descriptor of the merchant’s payment receiving preferences which can be seen by logging into the merchant account https://www.sandbox.paypal.com/businessprofile/settings/info/edit</blockquote>The <code>PAYPAL</code> prefix uses 8 characters. Only the first 22 characters will be displayed in the statement. <br>For example, if:<ul><li>The PayPal prefix toggle is <code>PAYPAL *</code>.</li><li>The merchant descriptor in the profile is <code>Janes Gift</code>.</li><li>The soft descriptor is <code>800-123-1234</code>.</li></ul>Then, the statement descriptor on the card is <code>PAYPAL * Janes Gift 80</code>.",
+            "description": "<blockquote>This field accepts a <strong>maximum of 22 total characters (including spaces)</strong>. Excess characters are automatically truncated.</blockquote>The soft descriptor is the dynamic text used to construct the statement descriptor that appears on a payer's card statement.<br><br>If an Order is paid using the \"PayPal Wallet\", the statement descriptor will appear in following format on the payer's card statement: <code><var>PAYPAL_prefix</var>+(space)+<var>merchant_descriptor</var>+(space)+ <var>soft_descriptor</var></code><blockquote><strong>Note:</strong> The merchant descriptor is the descriptor of the merchant’s payment receiving preferences which can be seen by logging into the merchant account https://www.sandbox.paypal.com/businessprofile/settings/info/edit</blockquote>The <code>PAYPAL</code> prefix uses 8 characters. Only the first 22 characters will be displayed in the statement. <br>For example, if:<ul><li>The PayPal prefix toggle is <code>PAYPAL *</code>.</li><li>The merchant descriptor in the profile is <code>Janes Gift</code>.</li><li>The soft descriptor is <code>800-123-1234</code>.</li></ul>Then, the statement descriptor on the card is <code>PAYPAL * Janes Gift 80</code>.",
             "minLength": 1,
-            "maxLength": 22
+            "maxLength": 1000
           },
           "items": {
-            "$ref": "#/components/schemas/item_list"
+            "$ref": "#/components/schemas/item_request_list"
           },
           "shipping": {
             "description": "The name and address of the person to whom to ship the items.",
@@ -15590,46 +15249,6 @@
         "maxItems": 10,
         "items": {
           "$ref": "#/components/schemas/purchase_unit_request"
-        }
-      },
-      "qr_details": {
-        "type": "object",
-        "description": "QR details received from processor.",
-        "title": "QR Details",
-        "properties": {
-          "qr_expiry": {
-            "type": "string",
-            "description": "QR Expiry time in seconds",
-            "minLength": 3,
-            "maxLength": 6,
-            "pattern": "^[0-9]+$",
-            "x-security-classification": {
-              "data_class": "class4",
-              "data_category": "INTRINSIC"
-            }
-          },
-          "qr_image": {
-            "type": "string",
-            "description": "QR image received from APM processor, The pattern is not provided because the value is defined by an external party.",
-            "minLength": 20,
-            "maxLength": 520,
-            "pattern": "^.*$",
-            "x-security-classification": {
-              "data_class": "class4",
-              "data_category": "INTRINSIC"
-            }
-          },
-          "qr_payload": {
-            "type": "string",
-            "description": "QR payload received from APM processor, The pattern is not provided because the value is defined by an external party.",
-            "minLength": 20,
-            "maxLength": 520,
-            "pattern": "^.*$",
-            "x-security-classification": {
-              "data_class": "class4",
-              "data_category": "INTRINSIC"
-            }
-          }
         }
       },
       "refund": {
@@ -22785,48 +22404,56 @@
           "SPEDISCI"
         ]
       },
+      "shipping_address": {
+        "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
+        "type": "object",
+        "title": "Portable Postal Address (Medium-Grained)",
+        "properties": {
+          "address_line_1": {
+            "type": "string",
+            "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
+            "maxLength": 300
+          },
+          "address_line_2": {
+            "type": "string",
+            "description": "The second line of the address, for example, a suite or apartment number.",
+            "maxLength": 300
+          },
+          "admin_area_2": {
+            "type": "string",
+            "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
+            "maxLength": 120
+          },
+          "admin_area_1": {
+            "type": "string",
+            "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
+            "maxLength": 300
+          },
+          "postal_code": {
+            "type": "string",
+            "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
+            "maxLength": 60
+          },
+          "country_code": {
+            "$ref": "#/components/schemas/country_code"
+          }
+        },
+        "required": ["country_code"]
+      },
       "shipping_detail": {
         "type": "object",
         "description": "The shipping details.",
         "title": "Shipping Details",
         "properties": {
           "name": {
-            "description": "The name of the party.",
-            "type": "object",
-            "title": "Name",
-            "properties": {
-              "full_name": {
-                "type": "string",
-                "description": "When the party is a person, the party's full name.",
-                "maxLength": 300
-              }
-            }
+            "$ref": "#/components/schemas/definitions-name"
           },
           "email_address": {
             "description": "The email address of the recipient of the shipped items, which may belong to either the payer, or an alternate contact, for delivery.",
             "$ref": "#/components/schemas/email_address"
           },
           "phone_number": {
-            "description": "The phone number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en).",
-            "type": "object",
-            "title": "Phone",
-            "properties": {
-              "country_code": {
-                "type": "string",
-                "description": "The country calling code (CC), in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the CC and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
-                "minLength": 1,
-                "maxLength": 3,
-                "pattern": "^[0-9]{1,3}?$"
-              },
-              "national_number": {
-                "type": "string",
-                "description": "The national number, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). The combined length of the country calling code (CC) and the national number must not be greater than 15 digits. The national number consists of a national destination code (NDC) and subscriber number (SN).",
-                "minLength": 1,
-                "maxLength": 14,
-                "pattern": "^[0-9]{1,14}?$"
-              }
-            },
-            "required": ["country_code", "national_number"]
+            "$ref": "#/components/schemas/definitions-phone_number"
           },
           "type": {
             "title": "Fulfillment Type",
@@ -22865,40 +22492,7 @@
             "$ref": "#/components/schemas/shipping_option_list"
           },
           "address": {
-            "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
-            "type": "object",
-            "title": "Portable Postal Address (Medium-Grained)",
-            "properties": {
-              "address_line_1": {
-                "type": "string",
-                "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
-                "maxLength": 300
-              },
-              "address_line_2": {
-                "type": "string",
-                "description": "The second line of the address, for example, a suite or apartment number.",
-                "maxLength": 300
-              },
-              "admin_area_2": {
-                "type": "string",
-                "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
-                "maxLength": 120
-              },
-              "admin_area_1": {
-                "type": "string",
-                "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
-                "maxLength": 300
-              },
-              "postal_code": {
-                "type": "string",
-                "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
-                "maxLength": 60
-              },
-              "country_code": {
-                "$ref": "#/components/schemas/country_code"
-              }
-            },
-            "required": ["country_code"]
+            "$ref": "#/components/schemas/address"
           }
         }
       },
@@ -23147,64 +22741,8 @@
           }
         }
       },
-      "swish": {
-        "type": "object",
-        "title": "swish payment object",
-        "description": "Information used to pay using swish.",
-        "properties": {
-          "name": {
-            "description": "The name of the account holder associated with this payment method.",
-            "$ref": "#/components/schemas/full_name"
-          },
-          "country_code": {
-            "description": "The two-character ISO 3166-1 country code.",
-            "$ref": "#/components/schemas/country_code-2"
-          },
-          "qr_data": {
-            "description": "QR data received from APM processor, The pattern is not provided because the value is defined by an external party.",
-            "type": "string",
-            "minLength": 50,
-            "maxLength": 520,
-            "pattern": "^.*$"
-          },
-          "qr_image": {
-            "description": "QR image received from APM processor, The pattern is not provided because the value is defined by an external party.",
-            "type": "string",
-            "minLength": 75,
-            "maxLength": 80,
-            "pattern": "^.*$",
-            "x-security-classification": {
-              "data_class": "class4",
-              "data_category": "INTRINSIC"
-            }
-          },
-          "intent_url": {
-            "description": "The URL to open the Swish app.",
-            "type": "string",
-            "format": "uri"
-          }
-        }
-      },
-      "swish_request": {
-        "type": "object",
-        "title": "Payment request for Swish",
-        "description": "Information needed to pay using Swish.",
-        "properties": {
-          "name": {
-            "description": "The name of the account holder associated with this payment method.",
-            "$ref": "#/components/schemas/full_name"
-          },
-          "country_code": {
-            "description": "The two-character ISO 3166-1 country code.",
-            "$ref": "#/components/schemas/country_code-2"
-          },
-          "experience_context": {
-            "description": "Customizes the payer experience during the approval process for the payment.",
-            "$ref": "#/components/schemas/experience_context_swish"
-          }
-        },
-        "required": ["name", "country_code"]
-      },
+      "swish": {},
+      "swish_request": {},
       "tax_info": {
         "type": "object",
         "description": "The tax ID of the customer. The customer is also known as the payer. Both `tax_id` and `tax_id_type` are required.",
@@ -23281,6 +22819,84 @@
           }
         },
         "required": ["id", "type"]
+      },
+      "tokenized_card": {
+        "description": "The payment card to use to fund a payment. Can be a credit or debit card.",
+        "type": "object",
+        "title": "Card",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The card holder's name as it appears on the card.",
+            "maxLength": 300,
+            "minLength": 1,
+            "pattern": "^.{1,300}$"
+          },
+          "number": {
+            "type": "string",
+            "description": "The primary account number (PAN) for the payment card.",
+            "pattern": "^[0-9]{13,19}$",
+            "minLength": 13,
+            "maxLength": 19
+          },
+          "expiry": {
+            "description": "The card expiration year and month, in [Internet date format](https://tools.ietf.org/html/rfc3339#section-5.6) For example: 2028-04",
+            "$ref": "#/components/schemas/date_year_month"
+          },
+          "card_type": {
+            "description": "The card brand or network. Typically used in the response.",
+            "readOnly": true,
+            "$ref": "#/components/schemas/card_brand",
+            "deprecated": true
+          },
+          "type": {
+            "description": "The payment card type.",
+            "$ref": "#/components/schemas/card_type"
+          },
+          "brand": {
+            "description": "The card brand or network. Typically used in the response.",
+            "$ref": "#/components/schemas/card_brand"
+          },
+          "billing_address": {
+            "$ref": "#/components/schemas/tokenized_card_billing_address"
+          }
+        }
+      },
+      "tokenized_card_billing_address": {
+        "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
+        "type": "object",
+        "title": "Portable Postal Address (Medium-Grained)",
+        "properties": {
+          "address_line_1": {
+            "type": "string",
+            "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
+            "maxLength": 300
+          },
+          "address_line_2": {
+            "type": "string",
+            "description": "The second line of the address, for example, a suite or apartment number.",
+            "maxLength": 300
+          },
+          "admin_area_2": {
+            "type": "string",
+            "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
+            "maxLength": 120
+          },
+          "admin_area_1": {
+            "type": "string",
+            "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
+            "maxLength": 300
+          },
+          "postal_code": {
+            "type": "string",
+            "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
+            "maxLength": 60
+          },
+          "country_code": {
+            "$ref": "#/components/schemas/country_code"
+          }
+        },
+        "required": ["country_code"]
       },
       "tracker": {
         "type": "object",
@@ -23562,31 +23178,7 @@
             "enum": ["VAULTED", "CREATED", "APPROVED"]
           },
           "customer": {
-            "type": "object",
-            "title": "Customer Information",
-            "description": "This object represents a merchant’s customer, allowing them to store contact details, and track all payments associated with the same customer.",
-            "properties": {
-              "id": {
-                "$ref": "#/components/schemas/merchant_partner_customer_id"
-              },
-              "name": {
-                "description": "The name of the party.",
-                "type": "object",
-                "title": "Name",
-                "properties": {
-                  "given_name": {
-                    "type": "string",
-                    "description": "When the party is a person, the party's given, or first, name.",
-                    "maxLength": 140
-                  },
-                  "surname": {
-                    "type": "string",
-                    "description": "When the party is a person, the party's surname or family name. Also known as the last name. Required when the party is a person. Use also to store multiple surnames including the matronymic, or mother's, surname.",
-                    "maxLength": 140
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/schemas/definitions-customer"
           },
           "links": {
             "$ref": "#/components/schemas/link_description_list"
@@ -23810,61 +23402,14 @@
             "maxLength": 50
           },
           "name": {
-            "description": "The name of the party.",
-            "type": "object",
-            "title": "Name",
-            "properties": {
-              "given_name": {
-                "type": "string",
-                "description": "When the party is a person, the party's given, or first, name.",
-                "maxLength": 140
-              },
-              "surname": {
-                "type": "string",
-                "description": "When the party is a person, the party's surname or family name. Also known as the last name. Required when the party is a person. Use also to store multiple surnames including the matronymic, or mother's, surname.",
-                "maxLength": 140
-              }
-            }
+            "$ref": "#/components/schemas/name"
           },
           "phone_number": {
             "description": "The phone number associated with the Venmo account, in its canonical international [E.164 numbering plan format](https://www.itu.int/rec/T-REC-E.164/en). Supports only the `national_number` property.",
             "$ref": "#/components/schemas/phone"
           },
           "address": {
-            "description": "The portable international postal address. Maps to [AddressValidationMetadata](https://github.com/googlei18n/libaddressinput/wiki/AddressValidationMetadata) and HTML 5.1 [Autofilling form controls: the autocomplete attribute](https://www.w3.org/TR/html51/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute).",
-            "type": "object",
-            "title": "Portable Postal Address (Medium-Grained)",
-            "properties": {
-              "address_line_1": {
-                "type": "string",
-                "description": "The first line of the address, such as number and street, for example, `173 Drury Lane`. Needed for data entry, and Compliance and Risk checks. This field needs to pass the full address.",
-                "maxLength": 300
-              },
-              "address_line_2": {
-                "type": "string",
-                "description": "The second line of the address, for example, a suite or apartment number.",
-                "maxLength": 300
-              },
-              "admin_area_2": {
-                "type": "string",
-                "description": "A city, town, or village. Smaller than `admin_area_level_1`.",
-                "maxLength": 120
-              },
-              "admin_area_1": {
-                "type": "string",
-                "description": "The highest-level sub-division in a country, which is usually a province, state, or ISO-3166-2 subdivision. This data is formatted for postal delivery, for example, `CA` and not `California`. Value, by country, is:<ul><li>UK. A county.</li><li>US. A state.</li><li>Canada. A province.</li><li>Japan. A prefecture.</li><li>Switzerland. A *kanton*.</li></ul>",
-                "maxLength": 300
-              },
-              "postal_code": {
-                "type": "string",
-                "description": "The postal code, which is the ZIP code or equivalent. Typically required for countries with a postal code or an equivalent. See [postal code](https://en.wikipedia.org/wiki/Postal_code).",
-                "maxLength": 60
-              },
-              "country_code": {
-                "$ref": "#/components/schemas/country_code"
-              }
-            },
-            "required": ["country_code"]
+            "$ref": "#/components/schemas/address"
           },
           "attributes": {
             "$ref": "#/components/schemas/venmo_wallet_attributes_response"

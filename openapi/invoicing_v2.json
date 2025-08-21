@@ -585,6 +585,21 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests. Blocked due to rate limiting.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_429"
+                }
+              },
+              "multipart/mixed": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_429"
+                }
+              }
+            }
+          },
           "500": {
             "description": "An internal server error has occurred.",
             "content": {
@@ -1636,6 +1651,21 @@
                       "$ref": "#/components/schemas/invoices.update-422"
                     }
                   ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests. Blocked due to rate limiting.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_429"
+                }
+              },
+              "multipart/mixed": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_429"
                 }
               }
             }
@@ -3430,6 +3460,25 @@
           }
         }
       },
+      "error_429": {
+        "type": "object",
+        "title": "Too many requests",
+        "description": "Too many requests. Blocked due to rate limiting.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["RATE_LIMIT_REACHED"]
+          },
+          "message": {
+            "type": "string",
+            "enum": ["Too many requests. Blocked due to rate limiting."]
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          }
+        }
+      },
       "error_500": {
         "type": "object",
         "title": "Internal Server Error",
@@ -3526,6 +3575,9 @@
           },
           {
             "$ref": "#/components/schemas/error_422"
+          },
+          {
+            "$ref": "#/components/schemas/error_429"
           },
           {
             "$ref": "#/components/schemas/error_500"
