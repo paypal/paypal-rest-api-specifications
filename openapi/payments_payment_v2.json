@@ -3,7 +3,7 @@
   "info": {
     "title": "Payments",
     "description": "Call the Payments API to authorize payments, capture authorized payments, refund payments that have already been captured, and show payment information. Use the Payments API in conjunction with the <a href=\"/docs/api/orders/v2/\">Orders API</a>. For more information, see the <a href=\"/docs/checkout/\">PayPal Checkout Overview</a>.",
-    "version": "2.8",
+    "version": "2.9",
     "contact": {}
   },
   "servers": [
@@ -84,6 +84,23 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/error_401"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The request failed because the caller has insufficient permissions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/error_403"
+                    },
+                    {
+                      "$ref": "#/components/schemas/403"
+                    }
+                  ]
                 }
               }
             }
@@ -372,6 +389,23 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/error_401"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The request failed because the caller has insufficient permissions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/error_403"
+                    },
+                    {
+                      "$ref": "#/components/schemas/403"
+                    }
+                  ]
                 }
               }
             }
@@ -958,11 +992,6 @@
       }
     },
     "schemas": {
-      "2": {
-        "title": "Capture Request",
-        "type": "object",
-        "description": "Captures either a portion or the full authorized amount of an authorized payment."
-      },
       "400": {
         "properties": {
           "details": {
@@ -1503,7 +1532,7 @@
                 "maxLength": 255
               },
               "network_transaction_reference": {
-                "$ref": "#/components/schemas/network_transaction_reference"
+                "$ref": "#/components/schemas/network_transaction"
               },
               "seller_protection": {
                 "$ref": "#/components/schemas/seller_protection",
@@ -2044,7 +2073,7 @@
                 "maxLength": 255
               },
               "network_transaction_reference": {
-                "$ref": "#/components/schemas/network_transaction_reference"
+                "$ref": "#/components/schemas/network_transaction"
               },
               "seller_protection": {
                 "$ref": "#/components/schemas/seller_protection",
@@ -2123,7 +2152,25 @@
                 "default": false
               },
               "payment_instruction": {
-                "$ref": "#/components/schemas/payment_instruction"
+                "type": "object",
+                "title": "Payment Instruction",
+                "description": "Any additional payment instructions to be consider during payment processing. This processing instruction is applicable for Capturing an order or Authorizing an Order.",
+                "properties": {
+                  "platform_fees": {
+                    "$ref": "#/components/schemas/platform_fee_list"
+                  },
+                  "disbursement_mode": {
+                    "description": "The funds that are held payee by the marketplace/platform. This field is only applicable to merchants that been enabled for PayPal Complete Payments Platform for Marketplaces and Platforms capability.",
+                    "$ref": "#/components/schemas/disbursement_mode"
+                  },
+                  "payee_receivable_fx_rate_id": {
+                    "type": "string",
+                    "description": "FX identifier generated returned by PayPal to be used for payment processing in order to honor FX rate (for eligible integrations) to be used when amount is settled/received into the payee account.",
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "pattern": "^.*$"
+                  }
+                }
               },
               "note_to_payer": {
                 "description": "An informational note about this settlement. Appears in both the payer's transaction history and the emails that the payer receives.",
@@ -2138,7 +2185,9 @@
             }
           },
           {
-            "$ref": "#/components/schemas/2"
+            "title": "Capture Request",
+            "type": "object",
+            "description": "Captures either a portion or the full authorized amount of an authorized payment."
           }
         ]
       },
@@ -2787,6 +2836,26 @@
             "description": "The Electronic Fund Transfer At Point of Sale(EFTPOS) Debit card payment network."
           },
           {
+            "value": "CARTE_BANCAIRE",
+            "description": "The Carte Bancaire payment network."
+          },
+          {
+            "value": "STAR_ACCESS",
+            "description": "The Star Access payment network."
+          },
+          {
+            "value": "PULSE",
+            "description": "The Pulse payment network."
+          },
+          {
+            "value": "NYCE",
+            "description": "The NYCE payment network."
+          },
+          {
+            "value": "ACCEL",
+            "description": "The Accel payment network."
+          },
+          {
             "value": "UNKNOWN",
             "description": "UNKNOWN payment network."
           }
@@ -2816,6 +2885,11 @@
           "GE",
           "SYNCHRONY",
           "EFTPOS",
+          "CARTE_BANCAIRE",
+          "STAR_ACCESS",
+          "PULSE",
+          "NYCE",
+          "ACCEL",
           "UNKNOWN"
         ]
       },
@@ -3372,7 +3446,17 @@
               "CONNECT",
               "OPTIONS",
               "PATCH"
-            ]
+            ],
+            "x-enumDescriptions": {
+              "GET": "The HTTP GET method.",
+              "POST": "The HTTP POST method.",
+              "PUT": "The HTTP PUT method.",
+              "DELETE": "The HTTP DELETE method.",
+              "HEAD": "The HTTP HEAD method.",
+              "CONNECT": "The HTTP CONNECT method.",
+              "OPTIONS": "The HTTP OPTIONS method.",
+              "PATCH": "The HTTP PATCH method."
+            }
           }
         }
       },
@@ -3431,9 +3515,9 @@
         },
         "readOnly": true
       },
-      "network_transaction_reference": {
+      "network_transaction": {
         "type": "object",
-        "title": "Network Transaction Reference",
+        "title": "Network Transaction",
         "description": "Reference values used by the card network to identify a transaction.",
         "properties": {
           "id": {
@@ -3461,8 +3545,7 @@
             "maxLength": 36,
             "pattern": "^[a-zA-Z0-9]+$"
           }
-        },
-        "required": ["id"]
+        }
       },
       "payee_base": {
         "type": "object",
@@ -3481,42 +3564,12 @@
       },
       "payment_instruction": {
         "type": "object",
-        "title": "Payment Instruction",
-        "description": "Any additional payment instructions to be consider during payment processing. This processing instruction is applicable for Capturing an order or Authorizing an Order.",
-        "properties": {
-          "platform_fees": {
-            "$ref": "#/components/schemas/payment_instruction_definition_platform_fee_list"
-          },
-          "disbursement_mode": {
-            "description": "The funds that are held payee by the marketplace/platform. This field is only applicable to merchants that been enabled for PayPal Complete Payments Platform for Marketplaces and Platforms capability.",
-            "$ref": "#/components/schemas/disbursement_mode"
-          },
-          "payee_receivable_fx_rate_id": {
-            "type": "string",
-            "description": "FX identifier generated returned by PayPal to be used for payment processing in order to honor FX rate (for eligible integrations) to be used when amount is settled/received into the payee account.",
-            "maxLength": 4000,
-            "minLength": 1,
-            "pattern": "^.*$"
-          }
-        }
-      },
-      "payment_instruction-2": {
-        "type": "object",
         "title": "Refund Payment Instruction",
         "description": "Any additional payments instructions during refund payment processing. This object is only applicable to merchants that have been enabled for PayPal Commerce Platform for Marketplaces and Platforms capability. Please speak to your account manager if you want to use this capability.",
         "properties": {
           "platform_fees": {
             "$ref": "#/components/schemas/definitions-platform_fee_list"
           }
-        }
-      },
-      "payment_instruction_definition_platform_fee_list": {
-        "type": "array",
-        "description": "An array of various fees, commissions, tips, or donations. This field is only applicable to merchants that been enabled for PayPal Complete Payments Platform for Marketplaces and Platforms capability.",
-        "minItems": 0,
-        "maxItems": 1,
-        "items": {
-          "$ref": "#/components/schemas/platform_fee"
         }
       },
       "platform_fee": {
@@ -4736,7 +4789,7 @@
           },
           "payment_instruction": {
             "description": "Any additional refund instructions to be set during refund payment processing. This object is only applicable to merchants that have been enabled for PayPal Commerce Platform for Marketplaces and Platforms capability. Please speak to your account manager if you want to use this capability.",
-            "$ref": "#/components/schemas/payment_instruction-2"
+            "$ref": "#/components/schemas/payment_instruction"
           }
         }
       },
