@@ -6452,8 +6452,8 @@
             "type": "string",
             "description": "The ID for the invoice payment.",
             "readOnly": true,
-            "minLength": "1",
-            "maxLength": "22",
+            "minLength": 1,
+            "maxLength": 22,
             "pattern": "^[0-9A-Za-z_-]+$"
           }
         }
@@ -6731,8 +6731,8 @@
             "type": "string",
             "description": "The ID of the refund of an invoice payment.",
             "readOnly": true,
-            "minLength": "1",
-            "maxLength": "22",
+            "minLength": 1,
+            "maxLength": 22,
             "pattern": "^[0-9A-Za-z_-]+$"
           }
         }
