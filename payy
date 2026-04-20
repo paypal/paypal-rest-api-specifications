@@ -1,0 +1,7 @@
+
+        curl -v -X POST "https://api-m.sandbox.paypal.com/v1/oauth2/token"\
+ -u "CLIENT_ID:Aa9cuVPIXcNm_DGgxeQLdRqcMjAHaTIM0L3mPudn6GzXmfUkHL4MFiJXR52Ov7apy5IID26JtUSI_cDC
+CLIENT_SECRET"\Aa9cuVPIXcNm_DGgxeQLdRqcMjAHaTIM0L3mPudn6GzXmfUkHL4MFiJXR52Ov7apy5IID26JtUSI_cDC
+ -H "Content-Type: application/x-www-form-urlencoded"\
+ -d "grant_type=client_credentials"
+      
