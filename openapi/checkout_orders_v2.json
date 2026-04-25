@@ -12638,14 +12638,10 @@
                 "type": "object",
                 "allOf": [
                     {
-                        "allOf": [
-                            {
-                                "$ref": "#/components/schemas/activity_timestamps"
-                            },
-                            {
-                                "title": "activity_timestamps"
-                            }
-                        ]
+                        "$ref": "#/components/schemas/activity_timestamps"
+                    },
+                    {
+                        "title": "activity_timestamps"
                     },
                     {
                         "type": "object",
