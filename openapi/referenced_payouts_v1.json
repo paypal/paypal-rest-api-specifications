@@ -1,0 +1,1490 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Referenced Payouts",
+    "description": "The Referenced Payouts API enables partner merchants and developers to process individual referenced payouts to recipients. To use this API, you must request a build notation (BN) code. To learn more or to request a BN code, contact your partner manager or visit the <a href=\"https://www.paypal.com/us/webapps/mpp/partner-program\">PayPal Partner Portal</a>.",
+    "version": "1.6",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://api-m.sandbox.paypal.com",
+      "description": "PayPal Sandbox Environment"
+    },
+    {
+      "url": "https://api-m.paypal.com",
+      "description": "PayPal Live Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "referenced-payouts",
+      "description": "Enables you to create a referenced batch payout and list all items, with details, in a referenced batch payout."
+    },
+    {
+      "name": "referenced-payouts-items",
+      "description": "Enables you to create a referenced payout item and show details for a payout item, by ID."
+    },
+    {
+      "name": "customer-payouts",
+      "description": "The Customer Payouts API enables partner merchants and developers to process individual flex payouts to recipients."
+    }
+  ],
+  "externalDocs": {
+    "url": "https://developer.paypal.com/docs/api/referenced-payouts/v1/"
+  },
+  "paths": {
+    "/v1/payments/referenced-payouts": {
+      "post": {
+        "summary": "Create referenced batch payout",
+        "description": "Creates a referenced batch payout for asynchronous, offline processing. Include a `sender_batch_header` object and an `items` array in the request URI.",
+        "operationId": "referenced-payouts.create_batch",
+        "responses": {
+          "200": {
+            "description": "An idempotent duplicate request returns the HTTP `200 OK` status code and a JSON response body that lists all items, with details, in the referenced batch payout.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/referenced_payouts"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "A successful request returns the HTTP `201 CREATED` status code and a JSON response body that lists all items, with details in case of synchronous processing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/referenced_payouts"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "A successful request returns the HTTP `202 Accepted` status code and a JSON response body that includes a [HATEOAS link](/docs/api/reference/api-responses/#hateoas-links) to the ID for the batch payout.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/referenced_payouts"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed due to missing authorization header, or invalid authentication credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed due to insufficient permissions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The specified resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An internal server error has occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/prefer"
+          },
+          {
+            "$ref": "#/components/parameters/paypal_partner_attribution_id"
+          },
+          {
+            "$ref": "#/components/parameters/paypal_request_id"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/referenced_payouts"
+              },
+              "examples": {
+                "create_batch": {
+                  "value": {
+                    "referenced_payouts": [
+                      {
+                        "reference_id": "2KP03934U4415543C",
+                        "reference_type": "TRANSACTION_ID"
+                      },
+                      {
+                        "reference_id": "8TA4226978212399L",
+                        "reference_type": "TRANSACTION_ID"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Oauth2": [
+              "https://uri.paypal.com/services/payments/referenced-payouts/readwrite"
+            ]
+          }
+        ],
+        "tags": [
+          "referenced-payouts"
+        ]
+      }
+    },
+    "/v1/payments/referenced-payouts/{payouts_batch_id}": {
+      "get": {
+        "summary": "List items in referenced batch payout",
+        "description": "Lists the payout items in a referenced batch payout, by ID. Each item in the list includes payout item details.",
+        "operationId": "referenced-payouts.get_batch_details",
+        "responses": {
+          "200": {
+            "description": "A successful request returns the HTTP `200 OK` status code and a JSON response body that lists all items, with details, in the referenced batch payout.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/referenced_payouts"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed due to insufficient permissions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/payouts_batch_id"
+          }
+        ],
+        "security": [
+          {
+            "Oauth2": [
+              "https://uri.paypal.com/services/payments/referenced-payouts/readwrite"
+            ]
+          },
+          {
+            "Oauth2": [
+              "https://uri.paypal.com/services/payments/referenced-payouts/read"
+            ]
+          }
+        ],
+        "tags": [
+          "referenced-payouts"
+        ]
+      }
+    },
+    "/v1/payments/referenced-payouts-items": {
+      "post": {
+        "summary": "Create referenced payout item",
+        "description": "Creates a referenced payout item.",
+        "operationId": "referenced-payouts-items.create",
+        "responses": {
+          "200": {
+            "description": "If the payout item already exists and was processed, a successful request returns the HTTP `200 OK` status code and a JSON response body that shows payout item details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/referenced_payouts_item"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "If you omit the `Prefer` request header and the API successfully creates the referenced batch item, a successful request returns the HTTP `201 Created` status code and a JSON response body that shows payout item details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/referenced_payouts_item"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "If the `Prefer` request header is `respond-async` and the API successfully queued the request for processing, a successful request returns the HTTP `202 Accepted` status code and the API proceeds to process the request asynchronously.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/referenced_payouts_item"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed due to missing authorization header, or invalid authentication credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed due to insufficient permissions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The specified resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request failed because a previous call for the given resource is ongoing for the reference.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An internal server error has occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/prefer"
+          },
+          {
+            "$ref": "#/components/parameters/paypal_partner_attribution_id"
+          },
+          {
+            "$ref": "#/components/parameters/paypal_request_id"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/referenced_payouts_item"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Oauth2": [
+              "https://uri.paypal.com/services/payments/referenced-payouts-items/readwrite"
+            ]
+          }
+        ],
+        "tags": [
+          "referenced-payouts-items"
+        ]
+      }
+    },
+    "/v1/payments/referenced-payouts-items/{payouts_item_id}": {
+      "get": {
+        "summary": "Show referenced payout item details",
+        "description": "Shows details for a referenced payout item, by ID.",
+        "operationId": "referenced-payouts-items.get",
+        "responses": {
+          "200": {
+            "description": "A successful request returns the HTTP `200 OK` status code and a JSON response body that shows payout item details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/referenced_payouts_item"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed due to insufficient permissions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "The error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/paypal_partner_attribution_id"
+          },
+          {
+            "$ref": "#/components/parameters/payouts_item_id"
+          }
+        ],
+        "security": [
+          {
+            "Oauth2": [
+              "https://uri.paypal.com/services/payments/referenced-payouts-items/readwrite"
+            ]
+          },
+          {
+            "Oauth2": [
+              "https://uri.paypal.com/services/payments/referenced-payouts/read"
+            ]
+          },
+          {
+            "Oauth2": [
+              "https://uri.paypal.com/services/payments/referenced-payouts/readwrite"
+            ]
+          },
+          {
+            "Oauth2": [
+              "https://uri.paypal.com/services/payments/referenced-payouts-items/read"
+            ]
+          }
+        ],
+        "tags": [
+          "referenced-payouts-items"
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "Oauth2": {
+        "type": "oauth2",
+        "description": "Oauth 2.0 authentication",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "/v1/oauth2/token",
+            "scopes": {
+              "https://uri.paypal.com/services/payments/referenced-payouts/readwrite": "Submit batches and items for processing",
+              "https://uri.paypal.com/services/payments/referenced-payouts/read": "Retrieve batch or items",
+              "https://uri.paypal.com/services/payments/referenced-payouts-items/readwrite": "Submit items for processing",
+              "https://uri.paypal.com/services/payments/referenced-payouts-items/read": "Retrieve items",
+              "https://uri.paypal.com/services/payments/customer-payouts/read": "Retrieve Customer payouts",
+              "https://uri.paypal.com/services/payments/customer-payouts/readwrite": "Create and retrieve Customer Payout"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "currency_code": {
+        "description": "The [3-character ISO-4217 currency code](/api/rest/reference/currency-codes/) that identifies the currency.",
+        "type": "string",
+        "format": "ppaas_common_currency_code_v2",
+        "minLength": 3,
+        "maxLength": 3
+      },
+      "definitions-link_description_list": {
+        "type": "array",
+        "description": "An array of request-related [HATEOAS links](/docs/api/reference/api-responses/#hateoas-links).",
+        "readOnly": true,
+        "minItems": 1,
+        "maxItems": 10,
+        "items": {
+          "$ref": "#/components/schemas/link_description"
+        }
+      },
+      "email_address": {
+        "type": "string",
+        "description": "The internationalized email address.<blockquote><strong>Note:</strong> Up to 64 characters are allowed before and 255 characters are allowed after the <code>@</code> sign. However, the generally accepted maximum length for an email address is 254 characters. The pattern verifies that an unquoted <code>@</code> sign exists.</blockquote>",
+        "format": "ppaas_common_email_address_v2",
+        "minLength": 3,
+        "maxLength": 254,
+        "pattern": "^(?:[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[A-Za-z0-9-]*[A-Za-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])$"
+      },
+      "error": {
+        "type": "object",
+        "title": "Error",
+        "description": "The error details.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The human-readable, unique name of the error."
+          },
+          "message": {
+            "type": "string",
+            "description": "The message that describes the error."
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "information_link": {
+            "type": "string",
+            "description": "The information link, or URI, that shows detailed information about this error for the developer.",
+            "readOnly": true
+          },
+          "details": {
+            "$ref": "#/components/schemas/error_details_list"
+          },
+          "links": {
+            "$ref": "#/components/schemas/error_definitions-link_description_list"
+          }
+        },
+        "required": [
+          "name",
+          "message",
+          "debug_id"
+        ]
+      },
+      "error_400": {
+        "type": "object",
+        "title": "Bad Request Error",
+        "description": "Request is not well-formed, syntactically incorrect, or violates schema.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "INVALID_REQUEST"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Request is not well-formed, syntactically incorrect, or violates schema."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_401": {
+        "type": "object",
+        "title": "Unauthorized Error",
+        "description": "Authentication failed due to missing Authorization header, or invalid authentication credentials.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "AUTHENTICATION_FAILURE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Authentication failed due to missing authorization header, or invalid authentication credentials."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_403": {
+        "type": "object",
+        "title": "Not Authorized Error",
+        "description": "The client is not authorized to access this resource, although it may have valid credentials. ",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "NOT_AUTHORIZED"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Authorization failed due to insufficient permissions."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_404": {
+        "type": "object",
+        "title": "Not found Error",
+        "description": "The server has not found anything matching the request URI. This either means that the URI is incorrect or the resource is not available.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "RESOURCE_NOT_FOUND"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "The specified resource does not exist."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_409": {
+        "type": "object",
+        "title": "Resource Conflict Error",
+        "description": "The server has detected a conflict while processing this request.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "RESOURCE_CONFLICT"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "The server has detected a conflict while processing this request."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_415": {
+        "type": "object",
+        "title": "Unsupported Media Type Error",
+        "description": "The server does not support the request payload's media type.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "UNSUPPORTED_MEDIA_TYPE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "The server does not support the request payload's media type."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_422": {
+        "type": "object",
+        "title": "Unprocessable Entity Error",
+        "description": "The requested action cannot be performed and may require interaction with APIs or processes outside of the current request. This is distinct from a 500 response in that there are no systemic problems limiting the API from performing the request.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "UNPROCESSABLE_ENTITY"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "The requested action could not be performed, semantically incorrect, or failed business validation."
+            ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error_details"
+            }
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        }
+      },
+      "error_500": {
+        "type": "object",
+        "title": "Internal Server Error",
+        "description": "This is either a system or application error, and generally indicates that although the client appeared to provide a correct request, something unexpected has gone wrong on the server.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "INTERNAL_SERVER_ERROR"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "An internal server error occurred."
+            ]
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        },
+        "example": {
+          "name": "INTERNAL_SERVER_ERROR",
+          "message": "An internal server error occurred.",
+          "debug_id": "90957fca61718",
+          "links": [
+            {
+              "href": "https://developer.paypal.com/api/orders/v2/#error-INTERNAL_SERVER_ERROR",
+              "rel": "information_link"
+            }
+          ]
+        }
+      },
+      "error_503": {
+        "type": "object",
+        "title": "Service Unavailable Error",
+        "description": "The server is temporarily unable to handle the request, for example, because of planned maintenance or downtime.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "SERVICE_UNAVAILABLE"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Service Unavailable."
+            ]
+          },
+          "debug_id": {
+            "type": "string",
+            "description": "The PayPal internal ID. Used for correlation purposes."
+          },
+          "links": {
+            "description": "An array of request-related [HATEOAS links](https://en.wikipedia.org/wiki/HATEOAS).",
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/error_link_description"
+            }
+          }
+        },
+        "example": {
+          "name": "SERVICE_UNAVAILABLE",
+          "message": "Service Unavailable.",
+          "debug_id": "90957fca61718",
+          "information_link": "https://developer.paypal.com/docs/api/orders/v2/#error-SERVICE_UNAVAILABLE"
+        }
+      },
+      "error_default": {
+        "description": "The default error response.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/error_400"
+          },
+          {
+            "$ref": "#/components/schemas/error_401"
+          },
+          {
+            "$ref": "#/components/schemas/error_403"
+          },
+          {
+            "$ref": "#/components/schemas/error_404"
+          },
+          {
+            "$ref": "#/components/schemas/error_409"
+          },
+          {
+            "$ref": "#/components/schemas/error_415"
+          },
+          {
+            "$ref": "#/components/schemas/error_422"
+          },
+          {
+            "$ref": "#/components/schemas/error_500"
+          },
+          {
+            "$ref": "#/components/schemas/error_503"
+          }
+        ]
+      },
+      "error_definitions-link_description_list": {
+        "type": "array",
+        "description": "An array of request-related [HATEOAS links](/api/rest/responses/#hateoas-links).",
+        "readOnly": true,
+        "items": {
+          "$ref": "#/components/schemas/link_description"
+        }
+      },
+      "error_details": {
+        "title": "Error Details",
+        "type": "object",
+        "description": "The error details. Required for client-side `4XX` errors.",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The field that caused the error. If this field is in the body, set this value to the field's JSON pointer value. Required for client-side errors."
+          },
+          "value": {
+            "type": "string",
+            "description": "The value of the field that caused the error."
+          },
+          "location": {
+            "$ref": "#/components/schemas/error_location"
+          },
+          "issue": {
+            "type": "string",
+            "description": "The unique, fine-grained application-level error code."
+          },
+          "description": {
+            "type": "string",
+            "description": "The human-readable description for an issue. The description can change over the lifetime of an API, so clients must not depend on this value."
+          }
+        },
+        "required": [
+          "issue"
+        ]
+      },
+      "error_details-2": {
+        "title": "Error Details",
+        "type": "object",
+        "description": "The error details. Required for client-side `4XX` errors.",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The field that caused the error. If this field is in the body, set this value to the field's JSON pointer value. Required for client-side errors."
+          },
+          "value": {
+            "type": "string",
+            "description": "The value of the field that caused the error."
+          },
+          "location": {
+            "type": "string",
+            "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+            "default": "body"
+          },
+          "issue": {
+            "type": "string",
+            "description": "The unique, fine-grained application-level error code."
+          },
+          "description": {
+            "type": "string",
+            "description": "The human-readable description for an issue. The description can change over the lifetime of an API, so clients must not depend on this value."
+          }
+        },
+        "required": [
+          "issue"
+        ]
+      },
+      "error_details_list": {
+        "type": "array",
+        "description": "An array of additional details about the error.",
+        "items": {
+          "$ref": "#/components/schemas/error_details-2"
+        }
+      },
+      "error_link_description": {
+        "title": "Link Description",
+        "description": "The request-related [HATEOAS link](/api/rest/responses/#hateoas-links) information.",
+        "type": "object",
+        "required": [
+          "href",
+          "rel"
+        ],
+        "properties": {
+          "href": {
+            "description": "The complete target URL. To make the related call, combine the method with this [URI Template-formatted](https://tools.ietf.org/html/rfc6570) link. For pre-processing, include the `$`, `(`, and `)` characters. The `href` is the key HATEOAS component that links a completed call with a subsequent call.",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20000,
+            "pattern": "^.*$"
+          },
+          "rel": {
+            "description": "The [link relation type](https://tools.ietf.org/html/rfc5988#section-4), which serves as an ID for a link that unambiguously describes the semantics of the link. See [Link Relations](https://www.iana.org/assignments/link-relations/link-relations.xhtml).",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 100,
+            "pattern": "^.*$"
+          },
+          "method": {
+            "description": "The HTTP method required to make the related call.",
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 6,
+            "pattern": "^[A-Z]*$",
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE",
+              "PATCH"
+            ]
+          }
+        }
+      },
+      "error_location": {
+        "type": "string",
+        "description": "The location of the field that caused the error. Value is `body`, `path`, or `query`.",
+        "enum": [
+          "body",
+          "path",
+          "query"
+        ],
+        "default": "body"
+      },
+      "item_status_enum": {
+        "type": "string",
+        "title": "Item Status",
+        "description": "The item status.",
+        "minLength": 1,
+        "maxLength": 256,
+        "pattern": "^.*$",
+        "readOnly": true,
+        "x-enumDescriptions": [
+          {
+            "value": "PENDING",
+            "description": "The item is pending."
+          },
+          {
+            "value": "PROCESSING",
+            "description": "The item is processing."
+          },
+          {
+            "value": "SUCCESS",
+            "description": "The item succeeded."
+          },
+          {
+            "value": "FAILED",
+            "description": "The item failed."
+          },
+          {
+            "value": "PAYOUT_FAILED",
+            "description": "The payout failed for the item."
+          }
+        ],
+        "enum": [
+          "PENDING",
+          "PROCESSING",
+          "SUCCESS",
+          "FAILED",
+          "PAYOUT_FAILED"
+        ]
+      },
+      "link_description": {
+        "type": "object",
+        "title": "Link Description",
+        "description": "The request-related [HATEOAS link](/api/rest/responses/#hateoas-links) information.",
+        "required": [
+          "href",
+          "rel"
+        ],
+        "properties": {
+          "href": {
+            "type": "string",
+            "description": "The complete target URL. To make the related call, combine the method with this [URI Template-formatted](https://tools.ietf.org/html/rfc6570) link. For pre-processing, include the `$`, `(`, and `)` characters. The `href` is the key HATEOAS component that links a completed call with a subsequent call."
+          },
+          "rel": {
+            "type": "string",
+            "description": "The [link relation type](https://tools.ietf.org/html/rfc5988#section-4), which serves as an ID for a link that unambiguously describes the semantics of the link. See [Link Relations](https://www.iana.org/assignments/link-relations/link-relations.xhtml)."
+          },
+          "method": {
+            "type": "string",
+            "description": "The HTTP method required to make the related call.",
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE",
+              "HEAD",
+              "CONNECT",
+              "OPTIONS",
+              "PATCH"
+            ]
+          }
+        }
+      },
+      "link_description_list": {
+        "type": "array",
+        "description": "An array of request-related [HATEOAS links](/docs/api/reference/api-responses/#hateoas-links).",
+        "readOnly": true,
+        "minItems": 1,
+        "maxItems": 30,
+        "pattern": "^[a-zA-Z0-9-]*$",
+        "items": {
+          "$ref": "#/components/schemas/link_description"
+        }
+      },
+      "money": {
+        "type": "object",
+        "title": "Money",
+        "description": "The currency and amount for a financial transaction, such as a balance or payment due.",
+        "properties": {
+          "currency_code": {
+            "$ref": "#/components/schemas/currency_code"
+          },
+          "value": {
+            "type": "string",
+            "description": "The value, which might be:<ul><li>An integer for currencies like `JPY` that are not typically fractional.</li><li>A decimal fraction for currencies like `TND` that are subdivided into thousandths.</li></ul>For the required number of decimal places for a currency code, see [Currency Codes](/api/rest/reference/currency-codes/).",
+            "maxLength": 32,
+            "pattern": "^((-?[0-9]+)|(-?([0-9]+)?[.][0-9]+))$"
+          }
+        },
+        "required": [
+          "currency_code",
+          "value"
+        ]
+      },
+      "payout_directive": {
+        "type": "object",
+        "title": "Payout Directive",
+        "description": "The funding instrument that receives the payout.",
+        "properties": {
+          "destination": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9-]*$",
+            "description": "The destination can be one of the specified directive type that receives the payout."
+          },
+          "type": {
+            "$ref": "#/components/schemas/payout_directive_type"
+          }
+        },
+        "required": [
+          "destination",
+          "type"
+        ]
+      },
+      "payout_directive_type": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[A-Z_]+$",
+        "title": "Payout Directive Type",
+        "description": "The directive type.",
+        "x-enumDescriptions": [
+          {
+            "value": "FINANCIAL_INSTRUMENT_ID",
+            "description": "The paypal provided ID of the financial instrument that receives the payout."
+          },
+          {
+            "value": "EMAIL",
+            "description": "The valid paypal email address of an account that receives the payout."
+          },
+          {
+            "value": "ACCOUNT_ID",
+            "description": "The payer id of a valid paypal account that receives the payout."
+          }
+        ],
+        "enum": [
+          "FINANCIAL_INSTRUMENT_ID",
+          "EMAIL",
+          "ACCOUNT_ID"
+        ]
+      },
+      "processing_state": {
+        "type": "object",
+        "title": "Processing State",
+        "description": "The processing state of the referenced payout.",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[a-zA-Z0-9-]*$",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/item_status_enum"
+          },
+          "reason": {
+            "$ref": "#/components/schemas/reason_code"
+          }
+        }
+      },
+      "reason_code": {
+        "type": "string",
+        "title": "Reason Code",
+        "description": "The reason code.",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[a-zA-Z0-9-]*$",
+        "x-enumDescriptions": [
+          {
+            "value": "INTERNAL_ERROR",
+            "description": "An internal error occurred."
+          },
+          {
+            "value": "NOT_ENOUGH_BALANCE",
+            "description": "The balance is not enough."
+          },
+          {
+            "value": "AMOUNT_CHECK_FAILED",
+            "description": "The amount check failed."
+          },
+          {
+            "value": "MERCHANT_PARTNER_PERMISSIONS_ISSUE",
+            "description": "A merchant-partner permissions issue occurred."
+          },
+          {
+            "value": "MERCHANT_RESTRICTIONS",
+            "description": "The merchant has restrictions."
+          },
+          {
+            "value": "TRANSACTION_UNDER_DISPUTE",
+            "description": "The transaction is under dispute."
+          },
+          {
+            "value": "TRANSACTION_ON_HOLD",
+            "description": "A payout cannot be done for this transaction at this time because the underlying transaction is currently on hold."
+          },
+          {
+            "value": "TRANSACTION_NOT_VALID",
+            "description": "The transaction is not valid."
+          },
+          {
+            "value": "UNSUPPORTED_CURRENCY",
+            "description": "The currency is not supported."
+          },
+          {
+            "value": "PAYOUT_INITIATED",
+            "description": "The payout was already initiated."
+          },
+          {
+            "value": "PAYOUT_ALREADY_COMPLETED_FOR_REFERENCE",
+            "description": "The payout was already completed."
+          },
+          {
+            "value": "ONGOING_ACTIVITY_ON_REFERENCE",
+            "description": "The server is already processing a previous request on this reference, please try after some time."
+          },
+          {
+            "value": "INSUFFICIENT_AMOUNT",
+            "description": "Requested Payout Amount More Than Available Amount."
+          },
+          {
+            "value": "INVALID_PARAMETERS",
+            "description": "Invalid Parameters."
+          },
+          {
+            "value": "TRANSACTION_ALREADY_REVERSED",
+            "description": "Referenced Transaction Already Reversed."
+          },
+          {
+            "value": "TRANSACTION_DENIED",
+            "description": "Referenced Transaction Already Reversed Denied."
+          },
+          {
+            "value": "TRANSACTION_PENDING_FROM_RECEIPIENT",
+            "description": "Referenced Transaction Pending From Merchant."
+          },
+          {
+            "value": "NO_AMOUNT_AVAILABLE_TO_DISBURSE",
+            "description": "The application returns this error code when there is no money left to be held in DQ GL which happens when there is no money to be settled to merchants.Ex; PartnerFee >= TxnAmount."
+          },
+          {
+            "value": "TRANSACTION_REVERSAL_PENDING",
+            "description": "Referenced Transaction Reversal Pending From eCheck."
+          }
+        ],
+        "enum": [
+          "INTERNAL_ERROR",
+          "NOT_ENOUGH_BALANCE",
+          "AMOUNT_CHECK_FAILED",
+          "MERCHANT_PARTNER_PERMISSIONS_ISSUE",
+          "MERCHANT_RESTRICTIONS",
+          "TRANSACTION_UNDER_DISPUTE",
+          "TRANSACTION_ON_HOLD",
+          "TRANSACTION_NOT_VALID",
+          "UNSUPPORTED_CURRENCY",
+          "PAYOUT_INITIATED",
+          "PAYOUT_ALREADY_COMPLETED_FOR_REFERENCE",
+          "ONGOING_ACTIVITY_ON_REFERENCE",
+          "INSUFFICIENT_AMOUNT",
+          "INVALID_PARAMETERS",
+          "TRANSACTION_ALREADY_REVERSED",
+          "TRANSACTION_DENIED",
+          "TRANSACTION_PENDING_FROM_RECEIPIENT",
+          "NO_AMOUNT_AVAILABLE_TO_DISBURSE",
+          "TRANSACTION_REVERSAL_PENDING"
+        ]
+      },
+      "reference_type": {
+        "type": "string",
+        "title": "Reference Type",
+        "description": "The reference type.",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[A-Z_]+$",
+        "x-enumDescriptions": [
+          {
+            "value": "TRANSACTION_ID",
+            "description": "The reference type is a transaction ID."
+          },
+          {
+            "value": "OTHERS",
+            "description": "The reference type is other."
+          }
+        ],
+        "enum": [
+          "TRANSACTION_ID",
+          "OTHERS"
+        ]
+      },
+      "referenced_payouts": {
+        "type": "object",
+        "title": "Referenced Payouts",
+        "description": "An array of referenced payout batch items.",
+        "properties": {
+          "referenced_payouts": {
+            "$ref": "#/components/schemas/referenced_payouts_item_list"
+          },
+          "payout_directive": {
+            "$ref": "#/components/schemas/payout_directive",
+            "description": "The payout directive. Defines how the payout is made following the referenced payouts, if required. If you include this directive, all items in the request must be for the same original receiver. Otherwise, the request fails. You can override the payout directive at the item level to a different funding instrument, if required."
+          },
+          "links": {
+            "$ref": "#/components/schemas/definitions-link_description_list"
+          }
+        }
+      },
+      "referenced_payouts_item": {
+        "type": "object",
+        "title": "Referenced Payouts Item",
+        "description": "The referenced payouts item.",
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9-]*$",
+            "description": "The ID for the payout item request."
+          },
+          "processing_state": {
+            "$ref": "#/components/schemas/processing_state"
+          },
+          "reference_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9-]*$",
+            "description": "The original reference ID, based on `reference_type`, based on the type payout."
+          },
+          "reference_type": {
+            "$ref": "#/components/schemas/reference_type"
+          },
+          "payout_transaction_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9-]*$",
+            "description": "The encrypted PayPal transaction ID for the payout when the `item_status` is `success`.",
+            "readOnly": true
+          },
+          "disbursement_transaction_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9-]*$",
+            "description": "The encrypted PayPal transaction ID for the disbursement when the money is moved from settlement hold to receiver."
+          },
+          "external_merchant_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^[A-Z_]+$",
+            "description": "The unique ID for the merchant on the partner side. Can be used to retrieve the PayPal account linked to this ID for the payout."
+          },
+          "external_reference_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^[A-Z_]+$",
+            "description": "The reference ID for the request on the partner side. This is an external reference ID and means nothing in PayPal's system. The value is associated with any object created by the call and is included any time the object's data is returned. For example, in webhooks, GET operations, and the POST response."
+          },
+          "payee_email": {
+            "description": "The PayPal merchant account email that receives the payout. Can be used to override the default behavior where the payout receiver is derived from the reference that is passed.",
+            "$ref": "#/components/schemas/email_address"
+          },
+          "payout_amount": {
+            "description": "The amount to be paid to merchant.",
+            "$ref": "#/components/schemas/money"
+          },
+          "payout_destination": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9-]*$",
+            "description": "The encrypted PayPal account number or the ID of the financial instrument that received the payout.",
+            "readOnly": true
+          },
+          "invoice_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9-]*$",
+            "description": "The partner invoice ID for this referenced-payouts item. Used for reporting purposes only."
+          },
+          "custom": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9-]*$",
+            "description": "The partner custom data for this referenced-payouts item. Used for reporting purposes only."
+          },
+          "links": {
+            "$ref": "#/components/schemas/link_description_list"
+          }
+        }
+      },
+      "referenced_payouts_item_list": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 1000,
+        "description": "An array of referenced payouts items. For synchronous execution, the maximum number of items is `10`. If you include more than 10 items, the request is processed asynchronously no matter what the partner defined in the `Prefer` request header.",
+        "items": {
+          "$ref": "#/components/schemas/referenced_payouts_item"
+        }
+      }
+    },
+    "parameters": {
+      "prefer": {
+        "name": "Prefer",
+        "in": "header",
+        "description": "Indicates how the client expects the server to process this request. To process the request asynchronously, set this header to `respond-async`. If you omit this header, the API processes the request synchronously.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[a-zA-Z0-9-]*$"
+        }
+      },
+      "paypal_partner_attribution_id": {
+        "name": "PayPal-Partner-Attribution-Id",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[a-zA-Z0-9-]*$"
+        }
+      },
+      "paypal_request_id": {
+        "name": "PayPal-Request-Id",
+        "in": "header",
+        "description": "The server stores keys forever.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[a-zA-Z0-9-]*$"
+        }
+      },
+      "payouts_batch_id": {
+        "name": "payouts_batch_id",
+        "in": "path",
+        "description": "The ID of the reference batch payout for which to list items.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[a-zA-Z0-9-]*$"
+        }
+      },
+      "payouts_item_id": {
+        "name": "payouts_item_id",
+        "in": "path",
+        "description": "The ID of the referenced payout item for which to show details.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[a-zA-Z0-9-]*$"
+        }
+      }
+    }
+  }
+}
